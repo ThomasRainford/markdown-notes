@@ -1,4 +1,4 @@
-import { Collection, Entity, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
+import { Collection, Entity, OneToMany, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
 import { Field, ID, ObjectType } from "type-graphql";
 import { UserRegisterInput } from "../resolvers/input-types/UserRegisterInput";
@@ -36,7 +36,7 @@ export class User {
    followers: User[]
 
    @Field(() => [EntityCollection])
-   @Property()
+   @OneToMany(() => EntityCollection, collection => collection.owner)
    collections = new Collection<EntityCollection>(this)
 
    @Field(() => Date)

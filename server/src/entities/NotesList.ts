@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
+import { Entity, ManyToOne, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
 import { Field, ID, ObjectType } from "type-graphql";
 import { Collection } from "./Collection";
@@ -16,7 +16,7 @@ export class NotesList {
    id: string
 
    @Field(() => Collection)
-   @Property()
+   @ManyToOne()
    collection: Collection
 
    @Field()
