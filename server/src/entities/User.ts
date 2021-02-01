@@ -1,7 +1,8 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Collection, Entity, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
 import { Field, ID, ObjectType } from "type-graphql";
 import { UserRegisterInput } from "../resolvers/input-types/UserRegisterInput";
+import { Collection as EntityCollection } from './Collection'
 
 @ObjectType() // type-graphql
 @Entity()     // orm
@@ -11,10 +12,9 @@ export class User {
    @PrimaryKey()
    _id: ObjectId
 
-   // This can be added
-   // @Field()
-   // @SerializedPrimaryKey()
-   // id: string
+   @Field()
+   @SerializedPrimaryKey()
+   id: string
 
    @Field()
    @Property({ type: 'text', unique: true })
@@ -26,6 +26,18 @@ export class User {
 
    @Property()
    password!: string
+
+   @Field(() => [User])
+   @Property()
+   following: User[]
+
+   @Field(() => [User])
+   @Property()
+   followers: User[]
+
+   @Field(() => [EntityCollection])
+   @Property()
+   collections = new Collection<EntityCollection>(this)
 
    @Field(() => Date)
    @Property()
