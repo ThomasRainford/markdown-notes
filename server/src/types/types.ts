@@ -9,3 +9,8 @@ export type OrmContext = {
    res: Response,
    redis: Redis
 }
+
+export enum Visibility {
+   Public = "public",
+   Private = "private"
+}
