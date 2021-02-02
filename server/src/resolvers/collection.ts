@@ -4,6 +4,7 @@ import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { Collection } from "../entities/Collection";
 import { CollectionResponse } from "./object-types/CollectionResponse";
 import { validateVisibility } from "../utils/validateVisibility";
+import { validateTitle } from "../utils/validateTitle";
 
 @Resolver(Collection)
 export class CollectionResolver {
@@ -18,6 +19,11 @@ export class CollectionResolver {
       const visibilityError = validateVisibility(visibility)
       if (visibilityError) {
          return visibilityError
+      }
+
+      const titleError = await validateTitle(title, em)
+      if (titleError) {
+         return titleError
       }
 
       const repo = em.getRepository(User)
