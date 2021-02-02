@@ -55,14 +55,14 @@ export class CollectionResolver {
    @Query(() => CollectionResponse)
    @UseMiddleware(isAuth)
    async collection(
-      @Ctx() { em }: OrmContext,
+      @Ctx() { em, req }: OrmContext,
       @Arg('id', { nullable: true }) id?: string,
       @Arg('title', { nullable: true }) title?: string
    ): Promise<CollectionResponse> {
 
       const repo = em.getRepository(Collection)
 
-      const collection = await repo.findOne({ $or: [{ title }, { id }] })
+      const collection = await repo.findOne({ $or: [{ title }, { id }], $and: [{ owner: req.session.userId }] }, ['owner'])
 
       if (!collection) {
          return {
@@ -84,13 +84,39 @@ export class CollectionResolver {
 
       const repo = em.getRepository(Collection)
 
-      const collections = repo.find({ owner: req.session.userId })
+      const collections = repo.find({ owner: req.session.userId }, ['owner'])
 
       if (!collections) {
          return null
       }
 
       return collections
+   }
+
+   @Mutation(() => CollectionResponse)
+   @UseMiddleware(isAuth)
+   async update(
+      @Arg('id') id: string,
+      @Arg('title') title: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<CollectionResponse> {
+
+      const repo = em.getRepository(Collection)
+
+      const collection = await repo.findOne({ id, owner: req.session.userId }, ['owner'])
+
+      if (!collection) {
+         return {
+            error: {
+               property: 'collection',
+               message: 'Collection does not exist.'
+            }
+         }
+      }
+
+      collection.title = title
+
+      return { collection }
    }
 
 }
