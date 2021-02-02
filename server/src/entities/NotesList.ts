@@ -2,9 +2,9 @@ import { Entity, ManyToOne, PrimaryKey, Property, SerializedPrimaryKey } from "@
 import { ObjectId } from "@mikro-orm/mongodb";
 import { NotesListInput } from "../resolvers/input-types/NotesListInput";
 import { Note } from "../resolvers/object-types/Note";
-import { Visibility } from "../types/types";
 import { Field, ID, ObjectType } from "type-graphql";
 import { Collection } from "./Collection";
+import { Visibility } from "../resolvers/object-types/Visibility";
 
 @ObjectType()
 @Entity()
@@ -27,7 +27,7 @@ export class NotesList {
    notes: Note[]
 
    @Field(() => Collection)
-   @ManyToOne()
+   @ManyToOne(() => Collection)
    collection: Collection
 
    @Field(() => Visibility)

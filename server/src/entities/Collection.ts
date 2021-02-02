@@ -1,10 +1,10 @@
 import { Entity, PrimaryKey, Property, SerializedPrimaryKey, Collection as OrmCollection, ManyToOne, OneToMany } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
 import { CollectionInput } from "../resolvers/input-types/CollectionInput";
-import { Visibility } from "../types/types";
 import { Field, ID, ObjectType } from "type-graphql";
 import { NotesList } from "./NotesList";
 import { User } from "./User";
+import { Visibility } from "../resolvers/object-types/Visibility";
 
 @ObjectType()
 @Entity()

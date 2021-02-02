@@ -1,5 +1,5 @@
-import { Visibility } from "../../types/types";
 import { Field, InputType } from "type-graphql";
+import { Visibility } from "../object-types/Visibility";
 
 @InputType()
 export class CollectionInput {
