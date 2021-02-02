@@ -10,9 +10,18 @@ export class CollectionResolver {
    @Mutation(() => CollectionResponse)
    async createCollection(
       @Arg('title') title: string,
-      @Arg('visibility') visibility: Visibility,
+      @Arg('visibility') visibility: 'public' | 'private',
       @Ctx() { em, req }: OrmContext
    ): Promise<CollectionResponse> {
+
+      if (visibility !== 'public' && visibility !== 'private') {
+         return {
+            error: {
+               property: 'visibility',
+               message: 'Visibility can only be public or private.'
+            }
+         }
+      }
 
       const repo = em.getRepository(User)
 

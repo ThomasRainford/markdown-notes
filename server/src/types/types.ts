@@ -9,6 +9,6 @@ export type OrmContext = {
 }
 
 export enum Visibility {
-   Public = "public",
-   Private = "private"
+   Public = 'public',
+   Private = 'private'
 }

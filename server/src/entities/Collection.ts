@@ -4,7 +4,6 @@ import { CollectionInput } from "../resolvers/input-types/CollectionInput";
 import { Field, ID, ObjectType } from "type-graphql";
 import { NotesList } from "./NotesList";
 import { User } from "./User";
-import { Visibility } from "../resolvers/object-types/Visibility";
 
 @ObjectType()
 @Entity()
@@ -30,9 +29,9 @@ export class Collection {
    @OneToMany(() => NotesList, notesList => notesList.collection)
    collection = new OrmCollection<NotesList>(this)
 
-   @Field(() => Visibility)
+   @Field()
    @Property()
-   visibility: Visibility
+   visibility: 'public' | 'private'
 
    @Field(() => Date)
    @Property()

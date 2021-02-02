@@ -4,7 +4,6 @@ import { NotesListInput } from "../resolvers/input-types/NotesListInput";
 import { Note } from "../resolvers/object-types/Note";
 import { Field, ID, ObjectType } from "type-graphql";
 import { Collection } from "./Collection";
-import { Visibility } from "../resolvers/object-types/Visibility";
 
 @ObjectType()
 @Entity()
@@ -30,9 +29,9 @@ export class NotesList {
    @ManyToOne(() => Collection)
    collection: Collection
 
-   @Field(() => Visibility)
+   @Field()
    @Property()
-   visibility: Visibility
+   visibility: 'public' | 'private'
 
    @Field(() => Date)
    @Property()
