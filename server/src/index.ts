@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { MikroORM } from '@mikro-orm/core'
 import { ApolloServer } from "apollo-server-express"
 import cors from 'cors'

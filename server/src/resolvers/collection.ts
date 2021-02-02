@@ -1,4 +1,4 @@
-import { User } from "src/entities/User";
+import { User } from "../entities/User";
 import { OrmContext, Visibility } from "../types/types";
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { Collection } from "../entities/Collection";
