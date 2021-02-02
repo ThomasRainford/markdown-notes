@@ -43,6 +43,9 @@ export class CollectionResolver {
          }
       }
 
+      collection.owner = user
+      user.collections.add(collection)
+
       await em.persistAndFlush(collection)
 
       return { collection }
@@ -71,6 +74,23 @@ export class CollectionResolver {
       }
 
       return { collection }
+   }
+
+   @Query(() => [Collection])
+   @UseMiddleware(isAuth)
+   async collections(
+      @Ctx() { em, req }: OrmContext
+   ): Promise<Collection[] | null> {
+
+      const repo = em.getRepository(Collection)
+
+      const collections = repo.find({ owner: req.session.userId })
+
+      if (!collections) {
+         return null
+      }
+
+      return collections
    }
 
 }
