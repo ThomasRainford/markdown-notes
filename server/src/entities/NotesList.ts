@@ -2,6 +2,7 @@ import { Entity, ManyToOne, PrimaryKey, Property, SerializedPrimaryKey } from "@
 import { ObjectId } from "@mikro-orm/mongodb";
 import { NotesListInput } from "src/resolvers/input-types/NotesListInput";
 import { Note } from "src/resolvers/object-types/Note";
+import { Visibility } from "src/types/types";
 import { Field, ID, ObjectType } from "type-graphql";
 import { Collection } from "./Collection";
 
@@ -31,7 +32,7 @@ export class NotesList {
 
    @Field()
    @Property()
-   visibility: 'public' | 'private'
+   visibility: Visibility
 
    @Field()
    @Property()

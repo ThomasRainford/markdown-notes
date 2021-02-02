@@ -1,6 +1,7 @@
 import { Entity, PrimaryKey, Property, SerializedPrimaryKey, Collection as OrmCollection, ManyToOne, OneToMany } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
 import { CollectionInput } from "src/resolvers/input-types/CollectionInput";
+import { Visibility } from "src/types/types";
 import { Field, ID, ObjectType } from "type-graphql";
 import { NotesList } from "./NotesList";
 import { User } from "./User";
@@ -31,7 +32,7 @@ export class Collection {
 
    @Field()
    @Property()
-   visibility: 'public' | 'private'
+   visibility: Visibility
 
    @Field()
    @Property()
