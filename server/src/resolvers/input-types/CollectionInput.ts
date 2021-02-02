@@ -7,6 +7,6 @@ export class CollectionInput {
    title: string
 
    @Field()
-   visibility: 'public' | 'private'
+   visibility: string
 
 }

@@ -1,8 +1,9 @@
 import { User } from "../entities/User";
-import { OrmContext, Visibility } from "../types/types";
+import { OrmContext } from "../types/types";
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { Collection } from "../entities/Collection";
 import { CollectionResponse } from "./object-types/CollectionResponse";
+import { validateVisibility } from "../utils/validateVisibility";
 
 @Resolver(Collection)
 export class CollectionResolver {
@@ -10,17 +11,13 @@ export class CollectionResolver {
    @Mutation(() => CollectionResponse)
    async createCollection(
       @Arg('title') title: string,
-      @Arg('visibility') visibility: 'public' | 'private',
+      @Arg('visibility') visibility: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<CollectionResponse> {
 
-      if (visibility !== 'public' && visibility !== 'private') {
-         return {
-            error: {
-               property: 'visibility',
-               message: 'Visibility can only be public or private.'
-            }
-         }
+      const visibilityError = validateVisibility(visibility)
+      if (visibilityError) {
+         return visibilityError
       }
 
       const repo = em.getRepository(User)
