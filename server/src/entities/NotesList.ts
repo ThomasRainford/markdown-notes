@@ -15,6 +15,10 @@ export class NotesList {
    @SerializedPrimaryKey()
    id: string
 
+   @Field()
+   @Property()
+   title: string
+
    @Field(() => Collection)
    @ManyToOne()
    collection: Collection

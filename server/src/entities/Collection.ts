@@ -20,6 +20,10 @@ export class Collection {
    @ManyToOne()
    owner: User
 
+   @Field()
+   @Property()
+   title: string
+
    @Field(() => [NotesList])
    @OneToMany(() => NotesList, notesList => notesList.collection)
    collection = new OrmCollection<NotesList>(this)
