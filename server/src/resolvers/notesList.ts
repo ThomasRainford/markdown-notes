@@ -129,4 +129,7 @@ export class NotesListResolver {
       return notesLists
    }
 
+   // update
+   // delete
+
 }

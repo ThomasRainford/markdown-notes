@@ -205,4 +205,9 @@ export class UserResolver {
       }
    }
 
+   // change visibility of notes
+   // follow other users
+   // view other users public notes
+   // save other users public notes
+
 }
