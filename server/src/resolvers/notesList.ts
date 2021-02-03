@@ -129,7 +129,51 @@ export class NotesListResolver {
       return notesLists
    }
 
-   // update
+   @Mutation(() => NotesListResponse)
+   @UseMiddleware(isAuth)
+   async updateNotesList(
+      @Arg('collectionId') collectionId: string,
+      @Arg('listId') listId: string,
+      @Arg('title') title: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<NotesListResponse> {
+
+      const repo = em.getRepository(Collection)
+
+      const collection = await repo.findOne({ id: collectionId, owner: req.session.userId }, ['lists'])
+
+      if (!collection) {
+         return {
+            error: {
+               property: 'collection',
+               message: 'Collection not found.'
+            }
+         }
+      }
+
+      const notesLists = collection.lists.getItems()
+
+      const notesList = notesLists.filter((list) => {
+         return list.id === listId
+      })[0]
+
+      if (!notesList) {
+         return {
+            error: {
+               property: 'list',
+               message: 'List note found'
+            }
+         }
+      }
+
+      notesList.title = title
+
+      em.persistAndFlush(notesList)
+
+      return { notesList }
+   }
+
+
    // delete
 
 }

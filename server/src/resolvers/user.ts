@@ -209,5 +209,8 @@ export class UserResolver {
    // follow other users
    // view other users public notes
    // save other users public notes
+   // - save collections
+   // - save lists into a new collection
+   // - private lists will not be saved
 
 }
