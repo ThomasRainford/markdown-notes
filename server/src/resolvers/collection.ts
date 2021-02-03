@@ -12,7 +12,7 @@ export class CollectionResolver {
 
    @Mutation(() => CollectionResponse)
    @UseMiddleware(isAuth)
-   async create(
+   async createCollection(
       @Arg('title') title: string,
       @Arg('visibility') visibility: string,
       @Ctx() { em, req }: OrmContext
@@ -33,7 +33,6 @@ export class CollectionResolver {
       const repo = em.getRepository(User)
 
       const collection = new Collection({ title, visibility })
-      await em.populate(collection, ['owner'])
 
       const user = await repo.findOne({ id: req.session['userId']?.toString() })
 
@@ -48,6 +47,8 @@ export class CollectionResolver {
 
       collection.owner = user
       user.collections.add(collection)
+      await em.populate(collection, ['owner'])
+
 
       await em.persistAndFlush(collection)
 
@@ -98,7 +99,7 @@ export class CollectionResolver {
 
    @Mutation(() => CollectionResponse)
    @UseMiddleware(isAuth)
-   async update(
+   async updateCollection(
       @Arg('id') id: string,
       @Arg('title') title: string,
       @Ctx() { em, req }: OrmContext
@@ -124,7 +125,7 @@ export class CollectionResolver {
 
    @Mutation(() => Boolean)
    @UseMiddleware(isAuth)
-   async delete(
+   async deleteCollection(
       @Arg('id') id: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<boolean> {

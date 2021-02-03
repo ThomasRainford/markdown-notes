@@ -1,15 +1,20 @@
 import { NotesList } from "../entities/NotesList";
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import { NotesListResponse } from "./object-types/NotesListResponse";
 import { OrmContext } from "../types/types";
 import { validateVisibility } from "../utils/validateVisibility";
 import { Collection } from "../entities/Collection";
+import { NoteResponse } from "./object-types/NoteResponse";
+import { isAuth } from "../middleware/isAuth";
+import { NoteInput } from "./input-types/NoteInput";
+import { Note } from "./object-types/Note";
 
 @Resolver(NotesList)
 export class NotesListResolver {
 
    @Mutation(() => NotesListResponse)
-   async create(
+   @UseMiddleware(isAuth)
+   async createNotesList(
       @Arg('collectionId') collectionId: string,
       @Arg('title') title: string,
       @Arg('visibility') visibility: string,
@@ -37,6 +42,9 @@ export class NotesListResolver {
       }
 
       const notesList = new NotesList({ title, notes: [], visibility })
+      await em.populate(notesList, ['owner'])
+
+      notesList.owner = collection.owner
       notesList.collection = collection
       collection.collection.add(notesList)
 
@@ -44,6 +52,35 @@ export class NotesListResolver {
       em.flush()
 
       return { notesList }
+   }
+
+   @Mutation(() => NoteResponse)
+   @UseMiddleware(isAuth)
+   async addNote(
+      @Arg('listId') listId: string,
+      @Arg('noteInput') noteInput: NoteInput,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<NoteResponse> {
+
+      const repo = em.getRepository(NotesList)
+
+      const notesList = await repo.findOne({ id: listId, owner: req.session.userId }, ['owner'])
+
+      if (!notesList) {
+         return {
+            error: {
+               property: 'notesList',
+               message: 'Notes list note found'
+            }
+         }
+      }
+
+      const note = new Note(noteInput)
+      notesList.notes.push(note)
+
+      em.persistAndFlush(notesList)
+
+      return { note }
    }
 
 }
