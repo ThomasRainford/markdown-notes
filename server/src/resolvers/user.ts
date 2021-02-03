@@ -12,7 +12,7 @@ import { isAuth } from "../middleware/isAuth"
 export class UserResolver {
 
    @Query(() => User, { nullable: true })
-   //@UseMiddleware(isAuth)
+   @UseMiddleware(isAuth)
    async me(
       @Ctx() { em, req }: OrmContext
    ): Promise<User | null> {
