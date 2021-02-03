@@ -31,6 +31,7 @@ export class CollectionResolver {
       const repo = em.getRepository(User)
 
       const collection = new Collection({ title, visibility })
+      await em.populate(collection, ['owner'])
 
       const user = await repo.findOne({ id: req.session['userId']?.toString() })
 
