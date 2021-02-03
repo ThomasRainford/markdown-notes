@@ -267,21 +267,58 @@ export class NotesListResolver {
 
       const notesLists = collection.lists.getItems()
 
-      const notesListToDelete = notesLists.filter((list) => {
-         return list.id === listId
-      })[0]
+      const notesListToDelete = notesLists.filter((list) => (list.id === listId))[0]
 
       if (!notesListToDelete) {
          return false
       }
 
       const del = await em.nativeDelete(NotesList, { id: notesListToDelete.id })
+      collection.lists.remove(notesListToDelete)
 
       if (del === 0) {
          return false
       }
 
+      await em.persistAndFlush(collection)
       await em.persistAndFlush(notesListToDelete)
+
+      return true
+   }
+
+   @Mutation(() => Boolean)
+   async deleteNote(
+      @Arg('noteLocation') noteLocation: NoteLocationInput,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<boolean> {
+
+      const { collectionId, listId, noteId } = noteLocation
+
+      const repo = em.getRepository(Collection)
+
+      const collection = await repo.findOne({ id: collectionId, owner: req.session.userId }, ['owner', 'lists'])
+
+      if (!collection) {
+         return false
+      }
+
+      const notesLists = collection.lists.getItems()
+
+      const notesList = notesLists.filter((list) => (list.id === listId))[0]
+
+      const noteToDelete = notesList?.notes.find(note => note.id === noteId)
+
+      if (!noteToDelete || !notesList) {
+         return false
+      }
+
+      const newNotes = notesList.notes.filter((note: Note) => {
+         return note !== noteToDelete
+      })
+
+      notesList.notes = newNotes
+
+      await em.persistAndFlush(notesList)
 
       return true
    }
