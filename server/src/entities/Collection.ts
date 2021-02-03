@@ -27,7 +27,7 @@ export class Collection {
 
    @Field(() => [NotesList])
    @OneToMany(() => NotesList, notesList => notesList.collection)
-   collection = new OrmCollection<NotesList>(this)
+   lists = new OrmCollection<NotesList>(this)
 
    @Field()
    @Property()

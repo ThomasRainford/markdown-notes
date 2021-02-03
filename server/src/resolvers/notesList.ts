@@ -1,5 +1,5 @@
 import { NotesList } from "../entities/NotesList";
-import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { NotesListResponse } from "./object-types/NotesListResponse";
 import { OrmContext } from "../types/types";
 import { validateVisibility } from "../utils/validateVisibility";
@@ -45,7 +45,7 @@ export class NotesListResolver {
       await em.populate(notesList, ['collection'])
 
       notesList.collection = collection
-      collection.collection.add(notesList)
+      collection.lists.add(notesList)
 
       em.persistAndFlush([notesList, collection])
 
@@ -82,6 +82,26 @@ export class NotesListResolver {
       em.persistAndFlush(notesList)
 
       return { note }
+   }
+
+   @Query(() => [NotesList], { nullable: true })
+   @UseMiddleware(isAuth)
+   async notesLists(
+      @Arg('collectionId') collectionId: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<NotesList[] | null> {
+
+      const collectionRepo = em.getRepository(Collection)
+
+      const collection = await collectionRepo.findOne({ id: collectionId, owner: req.session.userId }, ['lists'])
+
+      if (!collection) {
+         return null
+      }
+
+      const notesLists = collection?.lists.getItems()
+
+      return notesLists
    }
 
 }
