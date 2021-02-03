@@ -120,6 +120,7 @@ export class CollectionResolver {
    }
 
    @Mutation(() => Boolean)
+   @UseMiddleware(isAuth)
    async delete(
       @Arg('id') id: string,
       @Ctx() { em, req }: OrmContext
