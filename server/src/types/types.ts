@@ -7,8 +7,3 @@ export type OrmContext = {
    req: Request & { session: { userId: ObjectId | undefined } },
    res: Response,
 }
-
-export enum Visibility {
-   Public = 'public',
-   Private = 'private'
-}

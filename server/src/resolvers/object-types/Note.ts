@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from "type-graphql";
 import { v4 as uuidv4 } from 'uuid'
+import { NoteInput } from "../input-types/NoteInput";
 
 @ObjectType() // type-graphql
 export class Note {
@@ -19,5 +20,9 @@ export class Note {
    @Field(() => Date)
    updatedAt = new Date()
 
+   constructor({ title, body }: NoteInput) {
+      this.title = title
+      this.body = body
+   }
 
 }

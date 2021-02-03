@@ -20,7 +20,9 @@ export class CollectionResolver {
 
       const visibilityError = validateVisibility(visibility)
       if (visibilityError) {
-         return visibilityError
+         return {
+            error: visibilityError
+         }
       }
 
       const titleError = await validateTitle(title, em)
@@ -45,6 +47,8 @@ export class CollectionResolver {
 
       collection.owner = user
       user.collections.add(collection)
+      await em.populate(collection, ['owner', 'lists'])
+
 
       await em.persistAndFlush(collection)
 
@@ -62,7 +66,7 @@ export class CollectionResolver {
 
       const repo = em.getRepository(Collection)
 
-      const collection = await repo.findOne({ $or: [{ title }, { id }], $and: [{ owner: req.session.userId }] }, ['owner'])
+      const collection = await repo.findOne({ $or: [{ title }, { id }], $and: [{ owner: req.session.userId }] }, ['owner', 'lists'])
 
       if (!collection) {
          return {
@@ -84,7 +88,7 @@ export class CollectionResolver {
 
       const repo = em.getRepository(Collection)
 
-      const collections = repo.find({ owner: req.session.userId }, ['owner'])
+      const collections = repo.find({ owner: req.session.userId }, ['owner', 'lists'])
 
       if (!collections) {
          return null
@@ -95,7 +99,7 @@ export class CollectionResolver {
 
    @Mutation(() => CollectionResponse)
    @UseMiddleware(isAuth)
-   async update(
+   async updateCollection(
       @Arg('id') id: string,
       @Arg('title') title: string,
       @Ctx() { em, req }: OrmContext
@@ -103,7 +107,7 @@ export class CollectionResolver {
 
       const repo = em.getRepository(Collection)
 
-      const collection = await repo.findOne({ id, owner: req.session.userId }, ['owner'])
+      const collection = await repo.findOne({ id, owner: req.session.userId }, ['owner', 'lists'])
 
       if (!collection) {
          return {
@@ -121,19 +125,25 @@ export class CollectionResolver {
 
    @Mutation(() => Boolean)
    @UseMiddleware(isAuth)
-   async delete(
+   async deleteCollection(
       @Arg('id') id: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<boolean> {
 
       const repo = em.getRepository(Collection)
 
-      const listToDelete = await repo.findOne({ id, owner: req.session.userId }, ['owner'])
+      const collectionToDelete = await repo.findOne({ id, owner: req.session.userId }, ['owner', 'lists'])
 
-      const didDelete = await repo.nativeDelete({ id: listToDelete?.id })
+      if (!collectionToDelete) {
+         return false
+      }
+
+      const didDelete = await repo.nativeDelete({ id: collectionToDelete.id })
       if (didDelete === 0) {
          return false
       }
+
+      await em.persistAndFlush(collectionToDelete)
 
       return true
    }
