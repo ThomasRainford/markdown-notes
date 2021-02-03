@@ -88,7 +88,7 @@ export class NotesListResolver {
    @UseMiddleware(isAuth)
    async notesList(
       @Arg('collectionId') collectionId: string,
-      @Arg('listId') listId: string
+      @Arg('listId') listId: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesList | null> {
 
