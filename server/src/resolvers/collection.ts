@@ -134,10 +134,16 @@ export class CollectionResolver {
 
       const collectionToDelete = await repo.findOne({ id, owner: req.session.userId }, ['owner', 'lists'])
 
-      const didDelete = await repo.nativeDelete({ id: collectionToDelete?.id })
+      if (!collectionToDelete) {
+         return false
+      }
+
+      const didDelete = await repo.nativeDelete({ id: collectionToDelete.id })
       if (didDelete === 0) {
          return false
       }
+
+      await em.persistAndFlush(collectionToDelete)
 
       return true
    }

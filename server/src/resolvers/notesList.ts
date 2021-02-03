@@ -15,6 +15,8 @@ import { NoteUpdateInput } from "./input-types/NoteUpdateInput";
 @Resolver(NotesList)
 export class NotesListResolver {
 
+   /* Create */
+
    @Mutation(() => NotesListResponse)
    @UseMiddleware(isAuth)
    async createNotesList(
@@ -88,6 +90,8 @@ export class NotesListResolver {
       return { note }
    }
 
+   /* Read */
+
    @Query(() => NotesList, { nullable: true })
    @UseMiddleware(isAuth)
    async notesList(
@@ -133,6 +137,8 @@ export class NotesListResolver {
 
       return notesLists
    }
+
+   /* Update */
 
    @Mutation(() => NotesListResponse)
    @UseMiddleware(isAuth)
@@ -241,9 +247,43 @@ export class NotesListResolver {
       return { note }
    }
 
+   /* Delete */
 
+   @Mutation(() => Boolean)
+   async deleteNotesList(
+      @Arg('listLocation') listLocation: ListLocationInput,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<boolean> {
 
+      const { collectionId, listId } = listLocation
 
-   // delete
+      const repo = em.getRepository(Collection)
+
+      const collection = await repo.findOne({ id: collectionId, owner: req.session.userId }, ['owner', 'lists'])
+
+      if (!collection) {
+         return false
+      }
+
+      const notesLists = collection.lists.getItems()
+
+      const notesListToDelete = notesLists.filter((list) => {
+         return list.id === listId
+      })[0]
+
+      if (!notesListToDelete) {
+         return false
+      }
+
+      const del = await em.nativeDelete(NotesList, { id: notesListToDelete.id })
+
+      if (del === 0) {
+         return false
+      }
+
+      await em.persistAndFlush(notesListToDelete)
+
+      return true
+   }
 
 }
