@@ -84,6 +84,31 @@ export class NotesListResolver {
       return { note }
    }
 
+   @Query(() => NotesList, { nullable: true })
+   @UseMiddleware(isAuth)
+   async notesList(
+      @Arg('collectionId') collectionId: string,
+      @Arg('listId') listId: string
+      @Ctx() { em, req }: OrmContext
+   ): Promise<NotesList | null> {
+
+      const repo = em.getRepository(Collection)
+
+      const collection = await repo.findOne({ id: collectionId, owner: req.session.userId }, ['lists'])
+
+      if (!collection) {
+         return null
+      }
+
+      const notesLists = collection.lists.getItems()
+
+      const list = notesLists.filter((list) => {
+         return list.id === listId
+      })
+
+      return list[0]
+   }
+
    @Query(() => [NotesList], { nullable: true })
    @UseMiddleware(isAuth)
    async notesLists(
