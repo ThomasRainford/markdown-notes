@@ -119,4 +119,22 @@ export class CollectionResolver {
       return { collection }
    }
 
+   @Mutation(() => Boolean)
+   async delete(
+      @Arg('id') id: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<boolean> {
+
+      const repo = em.getRepository(Collection)
+
+      const listToDelete = await repo.findOne({ id, owner: req.session.userId }, ['owner'])
+
+      const didDelete = await repo.nativeDelete({ id: listToDelete?.id })
+      if (didDelete === 0) {
+         return false
+      }
+
+      return true
+   }
+
 }
