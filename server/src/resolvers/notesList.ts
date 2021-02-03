@@ -8,6 +8,7 @@ import { NoteResponse } from "./object-types/NoteResponse";
 import { isAuth } from "../middleware/isAuth";
 import { NoteInput } from "./input-types/NoteInput";
 import { Note } from "./object-types/Note";
+import { ListLocationInput } from "./input-types/ListLocationInput";
 
 @Resolver(NotesList)
 export class NotesListResolver {
@@ -55,11 +56,12 @@ export class NotesListResolver {
    @Mutation(() => NoteResponse)
    @UseMiddleware(isAuth)
    async addNote(
-      @Arg('collectionId') collectionId: string,
-      @Arg('listId') listId: string,
+      @Arg('listLocation') listLocation: ListLocationInput,
       @Arg('noteInput') noteInput: NoteInput,
       @Ctx() { em, req }: OrmContext
    ): Promise<NoteResponse> {
+
+      const { collectionId, listId } = listLocation
 
       const notesListRepo = em.getRepository(NotesList)
       const collectionsRepo = em.getRepository(Collection)
@@ -87,10 +89,11 @@ export class NotesListResolver {
    @Query(() => NotesList, { nullable: true })
    @UseMiddleware(isAuth)
    async notesList(
-      @Arg('collectionId') collectionId: string,
-      @Arg('listId') listId: string,
+      @Arg('listLocation') listLocation: ListLocationInput,
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesList | null> {
+
+      const { collectionId, listId } = listLocation
 
       const repo = em.getRepository(Collection)
 
@@ -132,11 +135,12 @@ export class NotesListResolver {
    @Mutation(() => NotesListResponse)
    @UseMiddleware(isAuth)
    async updateNotesList(
-      @Arg('collectionId') collectionId: string,
-      @Arg('listId') listId: string,
+      @Arg('listLocation') listLocation: ListLocationInput,
       @Arg('title') title: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesListResponse> {
+
+      const { collectionId, listId } = listLocation
 
       const repo = em.getRepository(Collection)
 
@@ -172,6 +176,8 @@ export class NotesListResolver {
 
       return { notesList }
    }
+
+
 
 
    // delete
