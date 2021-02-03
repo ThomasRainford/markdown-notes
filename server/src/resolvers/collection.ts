@@ -12,7 +12,7 @@ export class CollectionResolver {
 
    @Mutation(() => CollectionResponse)
    @UseMiddleware(isAuth)
-   async createCollection(
+   async create(
       @Arg('title') title: string,
       @Arg('visibility') visibility: string,
       @Ctx() { em, req }: OrmContext
@@ -20,7 +20,9 @@ export class CollectionResolver {
 
       const visibilityError = validateVisibility(visibility)
       if (visibilityError) {
-         return visibilityError
+         return {
+            error: visibilityError
+         }
       }
 
       const titleError = await validateTitle(title, em)

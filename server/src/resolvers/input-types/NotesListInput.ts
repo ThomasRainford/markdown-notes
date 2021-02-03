@@ -1,4 +1,3 @@
-import { Visibility } from "../../types/types";
 import { Field, InputType } from "type-graphql";
 import { Note } from "../object-types/Note";
 
@@ -12,6 +11,6 @@ export class NotesListInput {
    notes: Note[]
 
    @Field()
-   visibility: Visibility
+   visibility: string
 
 }

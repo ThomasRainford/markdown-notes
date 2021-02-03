@@ -1,13 +1,11 @@
-import { CollectionResponse } from "../resolvers/object-types/CollectionResponse"
+import { Error } from '../resolvers/object-types/Error'
 
-export const validateVisibility = (visibility: string): CollectionResponse | null => {
+export const validateVisibility = (visibility: string): Error | null => {
 
    if (visibility !== 'public' && visibility !== 'private') {
       return {
-         error: {
-            property: 'visibility',
-            message: 'Visibility can only be public or private.'
-         }
+         property: 'visibility',
+         message: 'Visibility can only be public or private.'
       }
    }
 

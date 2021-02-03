@@ -31,7 +31,7 @@ export class NotesList {
 
    @Field()
    @Property()
-   visibility: 'public' | 'private'
+   visibility: string
 
    @Field(() => Date)
    @Property()
