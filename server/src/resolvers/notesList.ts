@@ -9,6 +9,8 @@ import { isAuth } from "../middleware/isAuth";
 import { NoteInput } from "./input-types/NoteInput";
 import { Note } from "./object-types/Note";
 import { ListLocationInput } from "./input-types/ListLocationInput";
+import { NoteLocationInput } from "./input-types/NoteLocationInput";
+import { NoteUpdateInput } from "./input-types/NoteUpdateInput";
 
 @Resolver(NotesList)
 export class NotesListResolver {
@@ -31,7 +33,7 @@ export class NotesListResolver {
 
       const collectionRepo = em.getRepository(Collection)
 
-      const collection = await collectionRepo.findOne({ id: collectionId, owner: req.session.userId }, ['owner'])
+      const collection = await collectionRepo.findOne({ id: collectionId, owner: req.session.userId }, ['owner', 'lists'])
 
       if (!collection) {
          return {
@@ -66,7 +68,7 @@ export class NotesListResolver {
       const notesListRepo = em.getRepository(NotesList)
       const collectionsRepo = em.getRepository(Collection)
 
-      const collection = await collectionsRepo.findOne({ id: collectionId, owner: req.session.userId }, ['owner'])
+      const collection = await collectionsRepo.findOne({ id: collectionId, owner: req.session.userId }, ['owner', 'lists'])
       const notesList = await notesListRepo.findOne({ id: listId, collection })
 
       if (!notesList) {
@@ -97,7 +99,7 @@ export class NotesListResolver {
 
       const repo = em.getRepository(Collection)
 
-      const collection = await repo.findOne({ id: collectionId, owner: req.session.userId }, ['lists'])
+      const collection = await repo.findOne({ id: collectionId, owner: req.session.userId }, ['owner', 'lists'])
 
       if (!collection) {
          return null
@@ -121,7 +123,7 @@ export class NotesListResolver {
 
       const collectionRepo = em.getRepository(Collection)
 
-      const collection = await collectionRepo.findOne({ id: collectionId, owner: req.session.userId }, ['lists'])
+      const collection = await collectionRepo.findOne({ id: collectionId, owner: req.session.userId }, ['owner', 'lists'])
 
       if (!collection) {
          return null
@@ -144,7 +146,7 @@ export class NotesListResolver {
 
       const repo = em.getRepository(Collection)
 
-      const collection = await repo.findOne({ id: collectionId, owner: req.session.userId }, ['lists'])
+      const collection = await repo.findOne({ id: collectionId, owner: req.session.userId }, ['owner', 'lists'])
 
       if (!collection) {
          return {
@@ -175,6 +177,68 @@ export class NotesListResolver {
       em.persistAndFlush(notesList)
 
       return { notesList }
+   }
+
+   @Mutation(() => NoteResponse)
+   async updateNote(
+      @Arg('noteLocaton') noteLocation: NoteLocationInput,
+      @Arg('noteInput') noteInput: NoteUpdateInput,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<NoteResponse> {
+
+      const { collectionId, listId, noteId } = noteLocation
+
+      const repo = em.getRepository(Collection)
+
+      const collection = await repo.findOne({ id: collectionId, owner: req.session.userId }, ['owner', 'lists'])
+
+      if (!collection) {
+         return {
+            error: {
+               property: 'collection',
+               message: 'Collection not found.'
+            }
+         }
+      }
+
+      const notesLists = collection.lists.getItems()
+
+      const notesList = notesLists.filter((list) => {
+         return list.id === listId
+      })[0]
+
+      if (!notesList) {
+         return {
+            error: {
+               property: 'list',
+               message: 'List note found'
+            }
+         }
+      }
+
+      const note = notesList?.notes.find(note => note.id === noteId)
+
+      if (!note) {
+         return {
+            error: {
+               property: 'note',
+               message: 'Note note found.'
+            }
+         }
+      }
+
+      Object.keys(note).forEach((key) => {
+         if (key === 'title' || key === 'body') {
+            if (noteInput[key]) {
+               const updated = noteInput[key] as string
+               note[key] = updated
+            }
+         }
+      })
+
+      em.persistAndFlush(notesList)
+
+      return { note }
    }
 
 

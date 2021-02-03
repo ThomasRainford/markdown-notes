@@ -66,7 +66,7 @@ export class CollectionResolver {
 
       const repo = em.getRepository(Collection)
 
-      const collection = await repo.findOne({ $or: [{ title }, { id }], $and: [{ owner: req.session.userId }] }, ['owner'])
+      const collection = await repo.findOne({ $or: [{ title }, { id }], $and: [{ owner: req.session.userId }] }, ['owner', 'lists'])
 
       if (!collection) {
          return {
@@ -88,7 +88,7 @@ export class CollectionResolver {
 
       const repo = em.getRepository(Collection)
 
-      const collections = repo.find({ owner: req.session.userId }, ['owner'])
+      const collections = repo.find({ owner: req.session.userId }, ['owner', 'lists'])
 
       if (!collections) {
          return null
@@ -107,7 +107,7 @@ export class CollectionResolver {
 
       const repo = em.getRepository(Collection)
 
-      const collection = await repo.findOne({ id, owner: req.session.userId }, ['owner'])
+      const collection = await repo.findOne({ id, owner: req.session.userId }, ['owner', 'lists'])
 
       if (!collection) {
          return {
@@ -132,9 +132,9 @@ export class CollectionResolver {
 
       const repo = em.getRepository(Collection)
 
-      const listToDelete = await repo.findOne({ id, owner: req.session.userId }, ['owner'])
+      const collectionToDelete = await repo.findOne({ id, owner: req.session.userId }, ['owner', 'lists'])
 
-      const didDelete = await repo.nativeDelete({ id: listToDelete?.id })
+      const didDelete = await repo.nativeDelete({ id: collectionToDelete?.id })
       if (didDelete === 0) {
          return false
       }
