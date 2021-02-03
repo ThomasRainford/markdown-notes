@@ -1,4 +1,3 @@
-import { Visibility } from "src/types/types";
 import { Field, InputType } from "type-graphql";
 
 @InputType()
@@ -8,6 +7,6 @@ export class CollectionInput {
    title: string
 
    @Field()
-   visibility: Visibility
+   visibility: string
 
 }

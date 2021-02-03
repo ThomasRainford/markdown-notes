@@ -1,7 +1,6 @@
 import { Entity, PrimaryKey, Property, SerializedPrimaryKey, Collection as OrmCollection, ManyToOne, OneToMany } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
-import { CollectionInput } from "src/resolvers/input-types/CollectionInput";
-import { Visibility } from "src/types/types";
+import { CollectionInput } from "../resolvers/input-types/CollectionInput";
 import { Field, ID, ObjectType } from "type-graphql";
 import { NotesList } from "./NotesList";
 import { User } from "./User";
@@ -32,13 +31,13 @@ export class Collection {
 
    @Field()
    @Property()
-   visibility: Visibility
+   visibility: string
 
-   @Field()
+   @Field(() => Date)
    @Property()
    createdAt = new Date()
 
-   @Field()
+   @Field(() => Date)
    @Property({ onUpdate: () => new Date() })
    updatedAt = new Date()
 

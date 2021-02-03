@@ -8,9 +8,6 @@ export default {
    entities: [User, Collection, NotesList],
    dbName: 'markdown-notes-db',
    type: 'mongo',
-   clientUrl: `mongodb+srv://
-   ${process.env.MONGO_USERNAME}:
-   ${process.env.MONGO_PASSWORD}@
-   ${process.env.MONGO_HOST}`,
+   clientUrl: `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}`,
    highlighter: new MongoHighlighter(),
 } as Parameters<typeof MikroORM.init>[0]

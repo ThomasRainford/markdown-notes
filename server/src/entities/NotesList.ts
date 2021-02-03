@@ -1,8 +1,7 @@
 import { Entity, ManyToOne, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
-import { NotesListInput } from "src/resolvers/input-types/NotesListInput";
-import { Note } from "src/resolvers/object-types/Note";
-import { Visibility } from "src/types/types";
+import { NotesListInput } from "../resolvers/input-types/NotesListInput";
+import { Note } from "../resolvers/object-types/Note";
 import { Field, ID, ObjectType } from "type-graphql";
 import { Collection } from "./Collection";
 
@@ -27,18 +26,18 @@ export class NotesList {
    notes: Note[]
 
    @Field(() => Collection)
-   @ManyToOne()
+   @ManyToOne(() => Collection)
    collection: Collection
 
    @Field()
    @Property()
-   visibility: Visibility
+   visibility: 'public' | 'private'
 
-   @Field()
+   @Field(() => Date)
    @Property()
    createdAt = new Date()
 
-   @Field()
+   @Field(() => Date)
    @Property({ onUpdate: () => new Date() })
    updatedAt = new Date()
 

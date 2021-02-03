@@ -11,6 +11,8 @@ import ormConfig from './mikro-orm.config'
 import { UserResolver } from "./resolvers/user"
 import { OrmContext } from './types/types'
 import MongoDBStore from 'connect-mongodb-session'
+import { CollectionResolver } from './resolvers/collection'
+import { NotesListResolver } from './resolvers/notesList'
 const MongoStore = MongoDBStore(session)
 
 const main = async () => {
@@ -48,7 +50,7 @@ const main = async () => {
 
    const apolloServer = new ApolloServer({
       schema: await buildSchema({
-         resolvers: [UserResolver],
+         resolvers: [UserResolver, CollectionResolver, NotesListResolver],
          validate: false
       }),
       context: ({ req, res }: never): OrmContext => ({
