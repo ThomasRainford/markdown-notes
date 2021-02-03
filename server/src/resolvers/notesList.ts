@@ -42,14 +42,12 @@ export class NotesListResolver {
       }
 
       const notesList = new NotesList({ title, notes: [], visibility })
-      await em.populate(notesList, ['owner'])
+      await em.populate(notesList, ['collection'])
 
-      notesList.owner = collection.owner
       notesList.collection = collection
       collection.collection.add(notesList)
 
-      em.persist([notesList, collection])
-      em.flush()
+      em.persistAndFlush([notesList, collection])
 
       return { notesList }
    }
@@ -57,14 +55,17 @@ export class NotesListResolver {
    @Mutation(() => NoteResponse)
    @UseMiddleware(isAuth)
    async addNote(
+      @Arg('collectionId') collectionId: string,
       @Arg('listId') listId: string,
       @Arg('noteInput') noteInput: NoteInput,
       @Ctx() { em, req }: OrmContext
    ): Promise<NoteResponse> {
 
-      const repo = em.getRepository(NotesList)
+      const notesListRepo = em.getRepository(NotesList)
+      const collectionsRepo = em.getRepository(Collection)
 
-      const notesList = await repo.findOne({ id: listId, owner: req.session.userId }, ['owner'])
+      const collection = await collectionsRepo.findOne({ id: collectionId, owner: req.session.userId }, ['owner'])
+      const notesList = await notesListRepo.findOne({ id: listId, collection })
 
       if (!notesList) {
          return {

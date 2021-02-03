@@ -4,7 +4,6 @@ import { NotesListInput } from "../resolvers/input-types/NotesListInput";
 import { Note } from "../resolvers/object-types/Note";
 import { Field, ID, ObjectType } from "type-graphql";
 import { Collection } from "./Collection";
-import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -17,9 +16,6 @@ export class NotesList {
    @Field()
    @SerializedPrimaryKey()
    id: string
-
-   @Field(() => User)
-   owner: User
 
    @Field()
    @Property()

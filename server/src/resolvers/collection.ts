@@ -47,7 +47,7 @@ export class CollectionResolver {
 
       collection.owner = user
       user.collections.add(collection)
-      await em.populate(collection, ['owner'])
+      await em.populate(collection, ['owner', 'collection'])
 
 
       await em.persistAndFlush(collection)
