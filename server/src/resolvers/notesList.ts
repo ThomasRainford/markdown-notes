@@ -11,6 +11,7 @@ import { Note } from "./object-types/Note";
 import { ListLocationInput } from "./input-types/ListLocationInput";
 import { NoteLocationInput } from "./input-types/NoteLocationInput";
 import { NoteUpdateInput } from "./input-types/NoteUpdateInput";
+import { NotesListUpdateInput } from "./input-types/NotesListUpdateInput";
 
 @Resolver(NotesList)
 export class NotesListResolver {
@@ -144,11 +145,12 @@ export class NotesListResolver {
    @UseMiddleware(isAuth)
    async updateNotesList(
       @Arg('listLocation') listLocation: ListLocationInput,
-      @Arg('title') title: string,
+      @Arg('notesListInput') notesListInput: NotesListUpdateInput,
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesListResponse> {
 
       const { collectionId, listId } = listLocation
+      const { title, visibility } = notesListInput
 
       const repo = em.getRepository(Collection)
 
@@ -178,7 +180,16 @@ export class NotesListResolver {
          }
       }
 
-      notesList.title = title
+      if (title) {
+         notesList.title = title
+      }
+      if (visibility) {
+         const visibilityError = validateVisibility(visibility)
+         if (visibilityError) {
+            return { error: visibilityError }
+         }
+         notesList.visibility = visibility
+      }
 
       await em.persistAndFlush(notesList)
 
