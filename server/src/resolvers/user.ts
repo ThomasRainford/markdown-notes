@@ -227,7 +227,9 @@ export class UserResolver {
          return false
       }
 
-      console.log(me)
+      if (me.following.includes(targetUserId)) {
+         return false
+      }
 
       me.following.push(targetUserId)
       targetUser.followers.push(meId)
@@ -237,7 +239,6 @@ export class UserResolver {
       return true
    }
 
-   // follow other users
    // view other users public notes
    // save other users public notes
    // - save collections
