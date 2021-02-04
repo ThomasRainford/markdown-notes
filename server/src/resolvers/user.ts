@@ -7,8 +7,9 @@ import { UserRegisterInput } from "./input-types/UserRegisterInput"
 import { UserResponse } from './object-types/UserResponse'
 import { validateRegister } from '../utils/validateRegister'
 import { isAuth } from "../middleware/isAuth"
-import { CollectionResponse } from "./object-types/CollectionResponse"
 import { Collection } from "../entities/Collection"
+import { NotesList } from "../entities/NotesList"
+import { Collection as OrmCollection } from '@mikro-orm/core'
 
 @Resolver(User)
 export class UserResolver {
@@ -297,16 +298,46 @@ export class UserResolver {
       return allFollowers
    }
 
-   @Query(() => CollectionResponse)
+   @Query(() => [Collection], { nullable: true })
    @UseMiddleware(isAuth)
    async publicNotes(
-      @Ctx() { em, req }: OrmContext
-   ): Promise<CollectionResponse> {
+      @Arg('targetUserId') targetUserId: string,
+      @Ctx() { em }: OrmContext
+   ): Promise<Collection[] | null> {
 
       const userRepo = em.getRepository(User)
-      const collectionRepo = em.getRepository(Collection)
 
-      return null
+      const targetUser = await userRepo.findOne({ id: targetUserId }, ['collections'])
+
+      if (!targetUser) {
+         return null
+      }
+
+      const collections = targetUser.collections
+
+      // Filter collection by 'public' visibility
+      const publicCollections = collections.getItems().filter((collection: Collection) => {
+         if (collection.visibility === 'public') {
+            return true
+         }
+         return false
+      })
+
+      // Filter public collections lists by 'public' visibility.
+      let publicLists: NotesList[]
+      publicCollections.forEach((collection: Collection) => {
+         const lists = collection.lists.getItems()
+         publicLists = lists.filter((list: NotesList) => {
+            if (list.visibility === 'public') {
+               return true
+            }
+            return false
+         })
+         const pl = new OrmCollection<NotesList>(publicLists)
+         collection.lists = pl
+      })
+
+      return publicCollections
    }
 
    // view other users public notes
