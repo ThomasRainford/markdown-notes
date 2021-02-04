@@ -227,10 +227,12 @@ export class UserResolver {
          return false
       }
 
-      me.following.push(targetUser)
-      targetUser.followers.push(me)
+      console.log(me)
 
-      await em.persistAndFlush([me, targetUser])
+      me.following.push(targetUserId)
+      targetUser.followers.push(meId)
+
+      await em.persistAndFlush(me)
 
       return true
    }
