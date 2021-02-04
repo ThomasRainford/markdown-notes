@@ -205,7 +205,36 @@ export class UserResolver {
       }
    }
 
-   // change visibility of notes
+   @Mutation(() => Boolean)
+   @UseMiddleware(isAuth)
+   async follow(
+      @Arg('targetUserId') targetUserId: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<boolean> {
+
+      const repo = em.getRepository(User)
+
+      if (!req.session.userId) {
+         return false
+      }
+
+      const meId = req.session['userId'].toString()
+
+      const me = await repo.findOne({ id: meId })
+      const targetUser = await repo.findOne({ id: targetUserId })
+
+      if (!targetUser || !me) {
+         return false
+      }
+
+      me.following.push(targetUser)
+      targetUser.followers.push(me)
+
+      await em.persistAndFlush([me, targetUser])
+
+      return true
+   }
+
    // follow other users
    // view other users public notes
    // save other users public notes
