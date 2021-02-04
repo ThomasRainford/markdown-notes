@@ -307,52 +307,11 @@ export class UserResolver {
 
       const publicCollections = await collectionsRepo.find({ owner: targetUserId }, { filters: ['visibility'] })
 
+      if (!publicCollections) {
+         return null
+      }
 
-
-      return null
-
-
-      // const userRepo = em.getRepository(User)
-      // const collectionRepo = em.getRepository(Collection)
-      // const notesListRepo = em.getRepository(NotesList)
-
-      // const targetUser = await userRepo.findOne({ id: targetUserId }, ['collections'])
-
-      // if (!targetUser) {
-      //    return null
-      // }
-
-      // const collections = await collectionRepo.find({ owner: targetUser.id }, ['lists'])
-
-      // // Filter collection by 'public' visibility
-      // const publicCollections = collections.filter((collection: Collection) => {
-      //    if (collection.visibility === 'public') {
-      //       return true
-      //    }
-      //    return false
-      // })
-
-      // console.log('publicCollections: ', publicCollections)
-
-      // // Filter public collections lists by 'public' visibility.
-      // let publicLists: NotesList[]
-      // publicCollections.forEach(async (collection: Collection) => {
-      //    const lists = await notesListRepo.find({ collection: collection.id })
-      //    publicLists = lists.filter((list: NotesList) => {
-      //       if (list.visibility === 'public') {
-      //          return true
-      //       }
-      //       return false
-      //    })
-      //    // const pl = new OrmCollection<NotesList>(User, publicLists)
-      //    // collection.lists = pl
-
-      // })
-
-
-      // console.log(publicCollections[0].lists.getItems())
-
-      // return publicCollections
+      return publicCollections
    }
 
    // view other users public notes

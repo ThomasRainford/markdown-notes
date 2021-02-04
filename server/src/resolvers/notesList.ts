@@ -2,7 +2,6 @@ import { NotesList } from "../entities/NotesList";
 import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { NotesListResponse } from "./object-types/NotesListResponse";
 import { OrmContext } from "../types/types";
-import { validateVisibility } from "../utils/validateVisibility";
 import { Collection } from "../entities/Collection";
 import { NoteResponse } from "./object-types/NoteResponse";
 import { isAuth } from "../middleware/isAuth";
@@ -23,16 +22,8 @@ export class NotesListResolver {
    async createNotesList(
       @Arg('collectionId') collectionId: string,
       @Arg('title') title: string,
-      @Arg('visibility') visibility: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesListResponse> {
-
-      const visibilityError = validateVisibility(visibility)
-      if (visibilityError) {
-         return {
-            error: visibilityError
-         }
-      }
 
       const collectionRepo = em.getRepository(Collection)
 
