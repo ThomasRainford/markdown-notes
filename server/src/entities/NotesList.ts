@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
+import { Entity, Filter, ManyToOne, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
 import { NotesListInput } from "../resolvers/input-types/NotesListInput";
 import { Note } from "../resolvers/object-types/Note";
@@ -7,6 +7,7 @@ import { Collection } from "./Collection";
 
 @ObjectType()
 @Entity()
+@Filter({ name: 'visibility', cond: { visibility: 'public' } })
 export class NotesList {
 
    @Field(() => ID)

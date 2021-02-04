@@ -305,48 +305,61 @@ export class UserResolver {
       @Ctx() { em }: OrmContext
    ): Promise<Collection[] | null> {
 
-      const userRepo = em.getRepository(User)
-      const collectionRepo = em.getRepository(Collection)
+      const collectionsRepo = em.getRepository(Collection)
       const notesListRepo = em.getRepository(NotesList)
 
-      const targetUser = await userRepo.findOne({ id: targetUserId }, ['collections'])
+      const publicCollections = await collectionsRepo.find({ owner: targetUserId }, { filters: ['visibility'] })
 
-      if (!targetUser) {
-         return null
+      if (publicCollections) {
+         publicCollections.forEach(async (collection) => {
+            const publicNotesLists = await notesListRepo.find({ collection: collection._id }, { filters: ['visibility'] })
+         })
       }
 
-      const collections = await collectionRepo.find({ owner: targetUser.id }, ['lists'])
-
-      // Filter collection by 'public' visibility
-      const publicCollections = collections.filter((collection: Collection) => {
-         if (collection.visibility === 'public') {
-            return true
-         }
-         return false
-      })
-
-      console.log('publicCollections: ', publicCollections)
-
-      // Filter public collections lists by 'public' visibility.
-      let publicLists: NotesList[]
-      publicCollections.forEach((collection: Collection) => {
-         const lists = collection.lists.getItems()
-         publicLists = lists.filter((list: NotesList) => {
-            if (list.visibility === 'public') {
-               return true
-            }
-            return false
-         })
-         // const pl = new OrmCollection<NotesList>(User, publicLists)
-         // collection.lists = pl
-         collection.lists = publicLists
-
-      })
+      return null
 
 
-      console.log(publicCollections[0].lists.getItems())
+      // const userRepo = em.getRepository(User)
+      // const collectionRepo = em.getRepository(Collection)
+      // const notesListRepo = em.getRepository(NotesList)
 
-      return publicCollections
+      // const targetUser = await userRepo.findOne({ id: targetUserId }, ['collections'])
+
+      // if (!targetUser) {
+      //    return null
+      // }
+
+      // const collections = await collectionRepo.find({ owner: targetUser.id }, ['lists'])
+
+      // // Filter collection by 'public' visibility
+      // const publicCollections = collections.filter((collection: Collection) => {
+      //    if (collection.visibility === 'public') {
+      //       return true
+      //    }
+      //    return false
+      // })
+
+      // console.log('publicCollections: ', publicCollections)
+
+      // // Filter public collections lists by 'public' visibility.
+      // let publicLists: NotesList[]
+      // publicCollections.forEach(async (collection: Collection) => {
+      //    const lists = await notesListRepo.find({ collection: collection.id })
+      //    publicLists = lists.filter((list: NotesList) => {
+      //       if (list.visibility === 'public') {
+      //          return true
+      //       }
+      //       return false
+      //    })
+      //    // const pl = new OrmCollection<NotesList>(User, publicLists)
+      //    // collection.lists = pl
+
+      // })
+
+
+      // console.log(publicCollections[0].lists.getItems())
+
+      // return publicCollections
    }
 
    // view other users public notes
