@@ -7,6 +7,8 @@ import { UserRegisterInput } from "./input-types/UserRegisterInput"
 import { UserResponse } from './object-types/UserResponse'
 import { validateRegister } from '../utils/validateRegister'
 import { isAuth } from "../middleware/isAuth"
+import { CollectionResponse } from "./object-types/CollectionResponse"
+import { Collection } from "../entities/Collection"
 
 @Resolver(User)
 export class UserResolver {
@@ -293,6 +295,18 @@ export class UserResolver {
       })
 
       return allFollowers
+   }
+
+   @Query(() => CollectionResponse)
+   @UseMiddleware(isAuth)
+   async publicNotes(
+      @Ctx() { em, req }: OrmContext
+   ): Promise<CollectionResponse> {
+
+      const userRepo = em.getRepository(User)
+      const collectionRepo = em.getRepository(Collection)
+
+      return null
    }
 
    // view other users public notes
