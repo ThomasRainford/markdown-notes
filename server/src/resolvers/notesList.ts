@@ -197,6 +197,7 @@ export class NotesListResolver {
    }
 
    @Mutation(() => NoteResponse)
+   @UseMiddleware(isAuth)
    async updateNote(
       @Arg('noteLocaton') noteLocation: NoteLocationInput,
       @Arg('noteInput') noteInput: NoteUpdateInput,
@@ -261,6 +262,7 @@ export class NotesListResolver {
    /* Delete */
 
    @Mutation(() => Boolean)
+   @UseMiddleware(isAuth)
    async deleteNotesList(
       @Arg('listLocation') listLocation: ListLocationInput,
       @Ctx() { em, req }: OrmContext

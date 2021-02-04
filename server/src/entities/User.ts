@@ -27,13 +27,13 @@ export class User {
    @Property()
    password!: string
 
-   @Field(() => [User])
+   @Field(() => [String])
    @Property()
-   following: User[]
+   following = new Array<string>()
 
-   @Field(() => [User])
+   @Field(() => [String])
    @Property()
-   followers: User[]
+   followers = new Array<string>()
 
    @Field(() => [EntityCollection])
    @OneToMany(() => EntityCollection, collection => collection.owner)
