@@ -267,7 +267,35 @@ export class UserResolver {
       return allFollowing
    }
 
-   // read following/followers
+   @Query(() => [User])
+   @UseMiddleware(isAuth)
+   async followers(
+      @Ctx() { em, req }: OrmContext
+   ): Promise<Promise<User | null>[] | null> {
+
+      const repo = em.getRepository(User)
+
+      if (!req.session.userId) {
+         return null
+      }
+
+      const me = await repo.findOne({ id: req.session['userId'].toString() })
+
+      if (!me) {
+         return null
+      }
+
+      const followers = me.followers
+
+      const allFollowers = followers.map(async (userId) => {
+         const user = await repo.findOne({ id: userId })
+         return user
+      })
+
+      return allFollowers
+   }
+
+   // read followers
    // view other users public notes
    // save other users public notes
    // - save collections
