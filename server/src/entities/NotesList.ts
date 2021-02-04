@@ -1,4 +1,4 @@
-import { Entity, Filter, ManyToOne, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
+import { Entity, ManyToOne, PrimaryKey, Property, SerializedPrimaryKey } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
 import { NotesListInput } from "../resolvers/input-types/NotesListInput";
 import { Note } from "../resolvers/object-types/Note";
@@ -7,7 +7,6 @@ import { Collection } from "./Collection";
 
 @ObjectType()
 @Entity()
-@Filter({ name: 'visibility', cond: { visibility: 'public' } })
 export class NotesList {
 
    @Field(() => ID)
@@ -30,10 +29,6 @@ export class NotesList {
    @ManyToOne(() => Collection)
    collection: Collection
 
-   @Field()
-   @Property()
-   visibility: string
-
    @Field(() => Date)
    @Property()
    createdAt = new Date()
@@ -42,10 +37,9 @@ export class NotesList {
    @Property({ onUpdate: () => new Date() })
    updatedAt = new Date()
 
-   constructor({ title, notes, visibility }: NotesListInput) {
+   constructor({ title, notes }: NotesListInput) {
       this.title = title
       this.notes = notes
-      this.visibility = visibility
    }
 
 }

@@ -8,8 +8,6 @@ import { UserResponse } from './object-types/UserResponse'
 import { validateRegister } from '../utils/validateRegister'
 import { isAuth } from "../middleware/isAuth"
 import { Collection } from "../entities/Collection"
-import { NotesList } from "../entities/NotesList"
-import { Collection as OrmCollection } from '@mikro-orm/core'
 
 @Resolver(User)
 export class UserResolver {
@@ -306,15 +304,10 @@ export class UserResolver {
    ): Promise<Collection[] | null> {
 
       const collectionsRepo = em.getRepository(Collection)
-      const notesListRepo = em.getRepository(NotesList)
 
       const publicCollections = await collectionsRepo.find({ owner: targetUserId }, { filters: ['visibility'] })
 
-      if (publicCollections) {
-         publicCollections.forEach(async (collection) => {
-            const publicNotesLists = await notesListRepo.find({ collection: collection._id }, { filters: ['visibility'] })
-         })
-      }
+
 
       return null
 

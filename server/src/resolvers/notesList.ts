@@ -47,7 +47,7 @@ export class NotesListResolver {
          }
       }
 
-      const notesList = new NotesList({ title, notes: [], visibility })
+      const notesList = new NotesList({ title, notes: [] })
       await em.populate(notesList, ['collection'])
 
       notesList.collection = collection
@@ -150,7 +150,7 @@ export class NotesListResolver {
    ): Promise<NotesListResponse> {
 
       const { collectionId, listId } = listLocation
-      const { title, visibility } = notesListInput
+      const { title } = notesListInput
 
       const repo = em.getRepository(Collection)
 
@@ -182,13 +182,6 @@ export class NotesListResolver {
 
       if (title) {
          notesList.title = title
-      }
-      if (visibility) {
-         const visibilityError = validateVisibility(visibility)
-         if (visibilityError) {
-            return { error: visibilityError }
-         }
-         notesList.visibility = visibility
       }
 
       await em.persistAndFlush(notesList)
