@@ -6,6 +6,7 @@ import { CollectionResponse } from "./object-types/CollectionResponse";
 import { validateVisibility } from "../utils/validateVisibility";
 import { validateTitle } from "../utils/validateTitle";
 import { isAuth } from "../middleware/isAuth";
+import { CollectionUpdateInput } from "./input-types/CollectionUpdateInput";
 
 @Resolver(Collection)
 export class CollectionResolver {
@@ -101,9 +102,11 @@ export class CollectionResolver {
    @UseMiddleware(isAuth)
    async updateCollection(
       @Arg('id') id: string,
-      @Arg('title') title: string,
+      @Arg('collectionInput') collectionInput: CollectionUpdateInput,
       @Ctx() { em, req }: OrmContext
    ): Promise<CollectionResponse> {
+
+      const { title, visibility } = collectionInput
 
       const repo = em.getRepository(Collection)
 
@@ -118,7 +121,20 @@ export class CollectionResolver {
          }
       }
 
-      collection.title = title
+      // update the fields
+      if (title) {
+         collection.title = title
+      }
+
+      if (visibility) {
+         const visibilityError = validateVisibility(visibility)
+         if (visibilityError) {
+            return { error: visibilityError }
+         }
+         collection.visibility = visibility
+      }
+
+      await em.persistAndFlush(collection)
 
       return { collection }
    }

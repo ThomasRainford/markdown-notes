@@ -52,7 +52,7 @@ export class NotesListResolver {
       notesList.collection = collection
       collection.lists.add(notesList)
 
-      em.persistAndFlush([notesList, collection])
+      await em.persistAndFlush([notesList, collection])
 
       return { notesList }
    }
@@ -85,7 +85,7 @@ export class NotesListResolver {
       const note = new Note(noteInput)
       notesList.notes.push(note)
 
-      em.persistAndFlush(notesList)
+      await em.persistAndFlush(notesList)
 
       return { note }
    }
@@ -180,7 +180,7 @@ export class NotesListResolver {
 
       notesList.title = title
 
-      em.persistAndFlush(notesList)
+      await em.persistAndFlush(notesList)
 
       return { notesList }
    }
@@ -242,7 +242,7 @@ export class NotesListResolver {
          }
       })
 
-      em.persistAndFlush(notesList)
+      await em.persistAndFlush(notesList)
 
       return { note }
    }
@@ -280,8 +280,7 @@ export class NotesListResolver {
          return false
       }
 
-      await em.persistAndFlush(collection)
-      await em.persistAndFlush(notesListToDelete)
+      await em.persistAndFlush([collection, notesListToDelete])
 
       return true
    }
