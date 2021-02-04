@@ -295,7 +295,6 @@ export class UserResolver {
       return allFollowers
    }
 
-   // read followers
    // view other users public notes
    // save other users public notes
    // - save collections
