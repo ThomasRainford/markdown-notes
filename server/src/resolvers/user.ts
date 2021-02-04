@@ -306,6 +306,8 @@ export class UserResolver {
    ): Promise<Collection[] | null> {
 
       const userRepo = em.getRepository(User)
+      const collectionRepo = em.getRepository(Collection)
+      const notesListRepo = em.getRepository(NotesList)
 
       const targetUser = await userRepo.findOne({ id: targetUserId }, ['collections'])
 
@@ -313,15 +315,17 @@ export class UserResolver {
          return null
       }
 
-      const collections = targetUser.collections
+      const collections = await collectionRepo.find({ owner: targetUser.id }, ['lists'])
 
       // Filter collection by 'public' visibility
-      const publicCollections = collections.getItems().filter((collection: Collection) => {
+      const publicCollections = collections.filter((collection: Collection) => {
          if (collection.visibility === 'public') {
             return true
          }
          return false
       })
+
+      console.log('publicCollections: ', publicCollections)
 
       // Filter public collections lists by 'public' visibility.
       let publicLists: NotesList[]
@@ -333,9 +337,14 @@ export class UserResolver {
             }
             return false
          })
-         const pl = new OrmCollection<NotesList>(publicLists)
-         collection.lists = pl
+         // const pl = new OrmCollection<NotesList>(User, publicLists)
+         // collection.lists = pl
+         collection.lists = publicLists
+
       })
+
+
+      console.log(publicCollections[0].lists.getItems())
 
       return publicCollections
    }
