@@ -320,18 +320,18 @@ export class UserResolver {
    async savePublicCollection(
       @Arg('targetUserId') targetUserId: string,
       @Arg('collectionId') collectionId: string,
-      @Ctx() { em, req }: OrmContext
+      @Ctx() { em }: OrmContext
    ): Promise<CollectionResponse> {
 
       const collectionsRepo = em.getRepository(Collection)
 
       const publicCollections = await collectionsRepo.find({ owner: targetUserId }, { filters: ['visibility'] })
 
-      if (!publicCollections) {
+      if (publicCollections.length === 0) {
          return {
             error: {
                property: 'collection',
-               message: 'Users collection does not exist.'
+               message: 'No public collection'
             }
          }
       }
