@@ -1,16 +1,15 @@
-import { EntityManager, IDatabaseDriver, Connection } from "@mikro-orm/core";
-import { CollectionResponse } from "src/resolvers/object-types/CollectionResponse";
+import { EntityManager, IDatabaseDriver, Connection, EntityName } from "@mikro-orm/core";
+import { NotesList } from "../entities/NotesList";
 import { Collection } from "../entities/Collection";
+import { Error } from '../resolvers/object-types/Error'
 
-export const validateTitle = async (title: string, em: EntityManager<IDatabaseDriver<Connection>>): Promise<CollectionResponse | null> => {
+export const validateTitle = async (title: string, entity: EntityName<Collection | NotesList>, em: EntityManager<IDatabaseDriver<Connection>>): Promise<Error | null> => {
 
-   const existingCollection = await em.getRepository(Collection).findOne({ title })
+   const existingCollection = await em.getRepository(entity).findOne({ title })
    if (existingCollection) {
       return {
-         error: {
-            property: 'titile',
-            message: `Collection with title '${title}' already exisits.`,
-         }
+         property: 'title',
+         message: `Collection with title '${title}' already exisits.`,
       }
    }
 

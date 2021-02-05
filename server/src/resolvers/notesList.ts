@@ -11,6 +11,7 @@ import { ListLocationInput } from "./input-types/ListLocationInput";
 import { NoteLocationInput } from "./input-types/NoteLocationInput";
 import { NoteUpdateInput } from "./input-types/NoteUpdateInput";
 import { NotesListUpdateInput } from "./input-types/NotesListUpdateInput";
+import { validateTitle } from "../utils/validateTitle";
 
 @Resolver(NotesList)
 export class NotesListResolver {
@@ -24,6 +25,11 @@ export class NotesListResolver {
       @Arg('title') title: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesListResponse> {
+
+      const titleError = await validateTitle(title, NotesList, em)
+      if (titleError) {
+         return { error: titleError }
+      }
 
       const collectionRepo = em.getRepository(Collection)
 

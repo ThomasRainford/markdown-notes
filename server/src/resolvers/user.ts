@@ -314,7 +314,6 @@ export class UserResolver {
       return publicCollections
    }
 
-   // view other users public notes
    // save other users public notes
    // - save collections
    // - save lists into a new collection
