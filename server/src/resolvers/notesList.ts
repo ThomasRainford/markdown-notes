@@ -329,12 +329,52 @@ export class NotesListResolver {
    async moveList(
       @Arg('listLocation') listLocation: ListLocationInput,
       @Arg('newCollectionId') newCollectionId: string,
-      @Arg('listId') listId: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesListResponse> {
 
+      const collectionRepo = em.getRepository(Collection)
+      const notesListRepo = em.getRepository(NotesList)
 
-      return null
+      // Get the notelist to be moved.
+      const collection = await collectionRepo.findOne({ id: listLocation.collectionId, owner: req.session.userId }, ['owner', 'lists'])
+
+      if (!collection) {
+         return {
+            error: {
+               property: 'collection',
+               message: 'Collection does not exist'
+            }
+         }
+      }
+
+      const notesList = await notesListRepo.findOne({ collection: collection.id })
+
+      if (!notesList) {
+         return {
+            error: {
+               property: 'notesList',
+               message: 'List does not exist.'
+            }
+         }
+      }
+
+      // Get the new collection and change collection.
+      const newCollection = await collectionRepo.findOne({ id: newCollectionId, owner: req.session.userId }, ['owner', 'lists'])
+
+      if (!newCollection) {
+         return {
+            error: {
+               property: 'newCollection',
+               message: 'newCollection does not exist.'
+            }
+         }
+      }
+
+      notesList.collection = newCollection
+
+      await em.persistAndFlush(notesList)
+
+      return { notesList }
    }
 
 }
