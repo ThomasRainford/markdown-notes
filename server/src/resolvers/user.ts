@@ -8,6 +8,7 @@ import { UserResponse } from './object-types/UserResponse'
 import { validateRegister } from '../utils/validateRegister'
 import { isAuth } from "../middleware/isAuth"
 import { Collection } from "../entities/Collection"
+import { CollectionResponse } from "./object-types/CollectionResponse"
 
 @Resolver(User)
 export class UserResolver {
@@ -312,6 +313,64 @@ export class UserResolver {
       }
 
       return publicCollections
+   }
+
+   @Mutation(() => CollectionResponse)
+   @UseMiddleware(isAuth)
+   async savePublicCollection(
+      @Arg('targetUserId') targetUserId: string,
+      @Arg('collectionId') collectionId: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<CollectionResponse> {
+
+      const collectionsRepo = em.getRepository(Collection)
+      const userRepo = em.getRepository(User)
+
+      const publicCollections = await collectionsRepo.find({ owner: targetUserId }, { filters: ['visibility'] })
+
+      if (publicCollections.length === 0) {
+         return {
+            error: {
+               property: 'visibility',
+               message: 'No public collections'
+            }
+         }
+      }
+
+      // Get the chosen collection
+      const collectionToAdd = publicCollections.find((collection) => (collection.id === collectionId))
+
+      if (!collectionToAdd) {
+         return {
+            error: {
+               property: 'collection',
+               message: 'Collection does not exist.'
+            }
+         }
+      }
+
+      // Save the collection to the currently logged in users collections
+      const me = await userRepo.findOne({ id: req.session['userId']?.toString() })
+
+      if (!me) {
+         return {
+            error: {
+               property: 'user',
+               message: 'User is not logged in.'
+            }
+         }
+      }
+
+      const { title, visibility } = collectionToAdd
+      const collection = new Collection({ title, visibility })
+
+      collection.owner = me
+      me.collections.add(collection)
+      await em.populate(collection, ['owner', 'lists'])
+
+      await em.persistAndFlush(collection)
+
+      return { collection }
    }
 
    // save other users public notes
