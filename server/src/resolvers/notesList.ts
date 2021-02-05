@@ -26,7 +26,7 @@ export class NotesListResolver {
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesListResponse> {
 
-      const titleError = await validateTitle(title, NotesList, em)
+      const titleError = await validateTitle(req.session.userId, title, NotesList, em)
       if (titleError) {
          return { error: titleError }
       }
@@ -323,6 +323,60 @@ export class NotesListResolver {
       await em.persistAndFlush(notesList)
 
       return true
+   }
+
+   @Mutation(() => NotesListResponse)
+   async moveList(
+      @Arg('listLocation') listLocation: ListLocationInput,
+      @Arg('newCollectionId') newCollectionId: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<NotesListResponse> {
+
+      const collectionRepo = em.getRepository(Collection)
+      const notesListRepo = em.getRepository(NotesList)
+
+      // Get the notelist to be moved.
+      const collection = await collectionRepo.findOne({ id: listLocation.collectionId, owner: req.session.userId }, ['owner', 'lists'])
+
+      if (!collection) {
+         return {
+            error: {
+               property: 'collection',
+               message: 'Collection does not exist'
+            }
+         }
+      }
+
+      const notesList = await notesListRepo.findOne({ id: listLocation.listId }, ['collection'])
+
+      if (!notesList) {
+         return {
+            error: {
+               property: 'notesList',
+               message: 'List does not exist.'
+            }
+         }
+      }
+
+      // Get the new collection and change collection.
+      const newCollection = await collectionRepo.findOne({ id: newCollectionId, owner: req.session.userId }, ['owner', 'lists'])
+
+      if (!newCollection) {
+         return {
+            error: {
+               property: 'newCollection',
+               message: 'newCollection does not exist.'
+            }
+         }
+      }
+
+      newCollection.lists.add(notesList)
+      collection.lists.remove(notesList)
+      notesList.collection = newCollection
+
+      await em.persistAndFlush([notesList, newCollection, collection])
+
+      return { notesList }
    }
 
 }

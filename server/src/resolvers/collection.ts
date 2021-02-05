@@ -26,7 +26,7 @@ export class CollectionResolver {
          }
       }
 
-      const titleError = await validateTitle(title, Collection, em)
+      const titleError = await validateTitle(req.session.userId, title, Collection, em)
       if (titleError) {
          return { error: titleError }
       }
