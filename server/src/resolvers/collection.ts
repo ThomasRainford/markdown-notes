@@ -26,9 +26,9 @@ export class CollectionResolver {
          }
       }
 
-      const titleError = await validateTitle(title, em)
+      const titleError = await validateTitle(title, Collection, em)
       if (titleError) {
-         return titleError
+         return { error: titleError }
       }
 
       const repo = em.getRepository(User)

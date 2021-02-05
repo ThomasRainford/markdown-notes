@@ -29,10 +29,6 @@ export class NotesList {
    @ManyToOne(() => Collection)
    collection: Collection
 
-   @Field()
-   @Property()
-   visibility: string
-
    @Field(() => Date)
    @Property()
    createdAt = new Date()
@@ -41,10 +37,9 @@ export class NotesList {
    @Property({ onUpdate: () => new Date() })
    updatedAt = new Date()
 
-   constructor({ title, notes, visibility }: NotesListInput) {
+   constructor({ title, notes }: NotesListInput) {
       this.title = title
       this.notes = notes
-      this.visibility = visibility
    }
 
 }

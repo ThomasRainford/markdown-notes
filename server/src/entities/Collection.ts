@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property, SerializedPrimaryKey, Collection as OrmCollection, ManyToOne, OneToMany } from "@mikro-orm/core";
+import { Entity, PrimaryKey, Property, SerializedPrimaryKey, Collection as OrmCollection, ManyToOne, OneToMany, Filter } from "@mikro-orm/core";
 import { ObjectId } from "@mikro-orm/mongodb";
 import { CollectionInput } from "../resolvers/input-types/CollectionInput";
 import { Field, ID, ObjectType } from "type-graphql";
@@ -7,6 +7,7 @@ import { User } from "./User";
 
 @ObjectType()
 @Entity()
+@Filter({ name: 'visibility', cond: { visibility: 'public' } })
 export class Collection {
 
    @Field(() => ID)

@@ -10,7 +10,4 @@ export class NotesListInput {
    @Field(() => [Note])
    notes: Note[]
 
-   @Field()
-   visibility: string
-
 }

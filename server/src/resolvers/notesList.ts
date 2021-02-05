@@ -2,7 +2,6 @@ import { NotesList } from "../entities/NotesList";
 import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { NotesListResponse } from "./object-types/NotesListResponse";
 import { OrmContext } from "../types/types";
-import { validateVisibility } from "../utils/validateVisibility";
 import { Collection } from "../entities/Collection";
 import { NoteResponse } from "./object-types/NoteResponse";
 import { isAuth } from "../middleware/isAuth";
@@ -12,6 +11,7 @@ import { ListLocationInput } from "./input-types/ListLocationInput";
 import { NoteLocationInput } from "./input-types/NoteLocationInput";
 import { NoteUpdateInput } from "./input-types/NoteUpdateInput";
 import { NotesListUpdateInput } from "./input-types/NotesListUpdateInput";
+import { validateTitle } from "../utils/validateTitle";
 
 @Resolver(NotesList)
 export class NotesListResolver {
@@ -23,15 +23,12 @@ export class NotesListResolver {
    async createNotesList(
       @Arg('collectionId') collectionId: string,
       @Arg('title') title: string,
-      @Arg('visibility') visibility: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesListResponse> {
 
-      const visibilityError = validateVisibility(visibility)
-      if (visibilityError) {
-         return {
-            error: visibilityError
-         }
+      const titleError = await validateTitle(title, NotesList, em)
+      if (titleError) {
+         return { error: titleError }
       }
 
       const collectionRepo = em.getRepository(Collection)
@@ -47,7 +44,7 @@ export class NotesListResolver {
          }
       }
 
-      const notesList = new NotesList({ title, notes: [], visibility })
+      const notesList = new NotesList({ title, notes: [] })
       await em.populate(notesList, ['collection'])
 
       notesList.collection = collection
@@ -150,7 +147,7 @@ export class NotesListResolver {
    ): Promise<NotesListResponse> {
 
       const { collectionId, listId } = listLocation
-      const { title, visibility } = notesListInput
+      const { title } = notesListInput
 
       const repo = em.getRepository(Collection)
 
@@ -182,13 +179,6 @@ export class NotesListResolver {
 
       if (title) {
          notesList.title = title
-      }
-      if (visibility) {
-         const visibilityError = validateVisibility(visibility)
-         if (visibilityError) {
-            return { error: visibilityError }
-         }
-         notesList.visibility = visibility
       }
 
       await em.persistAndFlush(notesList)

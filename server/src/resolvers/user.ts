@@ -7,7 +7,6 @@ import { UserRegisterInput } from "./input-types/UserRegisterInput"
 import { UserResponse } from './object-types/UserResponse'
 import { validateRegister } from '../utils/validateRegister'
 import { isAuth } from "../middleware/isAuth"
-import { CollectionResponse } from "./object-types/CollectionResponse"
 import { Collection } from "../entities/Collection"
 
 @Resolver(User)
@@ -297,19 +296,24 @@ export class UserResolver {
       return allFollowers
    }
 
-   @Query(() => CollectionResponse)
+   @Query(() => [Collection], { nullable: true })
    @UseMiddleware(isAuth)
    async publicNotes(
-      @Ctx() { em, req }: OrmContext
-   ): Promise<CollectionResponse> {
+      @Arg('targetUserId') targetUserId: string,
+      @Ctx() { em }: OrmContext
+   ): Promise<Collection[] | null> {
 
-      const userRepo = em.getRepository(User)
-      const collectionRepo = em.getRepository(Collection)
+      const collectionsRepo = em.getRepository(Collection)
 
-      return null
+      const publicCollections = await collectionsRepo.find({ owner: targetUserId }, { filters: ['visibility'] })
+
+      if (!publicCollections) {
+         return null
+      }
+
+      return publicCollections
    }
 
-   // view other users public notes
    // save other users public notes
    // - save collections
    // - save lists into a new collection
