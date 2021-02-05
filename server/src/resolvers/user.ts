@@ -8,6 +8,7 @@ import { UserResponse } from './object-types/UserResponse'
 import { validateRegister } from '../utils/validateRegister'
 import { isAuth } from "../middleware/isAuth"
 import { Collection } from "../entities/Collection"
+import { CollectionResponse } from "./object-types/CollectionResponse"
 
 @Resolver(User)
 export class UserResolver {
@@ -312,6 +313,18 @@ export class UserResolver {
       }
 
       return publicCollections
+   }
+
+   @Mutation(() => CollectionResponse)
+   @UseMiddleware(isAuth)
+   async savePublicNotes(
+      @Arg('targetUserId') targetUserId: string,
+      @Arg('collectionId') collectionId: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<CollectionResponse> {
+
+
+      return null
    }
 
    // save other users public notes
