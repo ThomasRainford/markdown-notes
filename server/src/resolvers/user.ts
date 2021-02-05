@@ -320,25 +320,57 @@ export class UserResolver {
    async savePublicCollection(
       @Arg('targetUserId') targetUserId: string,
       @Arg('collectionId') collectionId: string,
-      @Ctx() { em }: OrmContext
+      @Ctx() { em, req }: OrmContext
    ): Promise<CollectionResponse> {
 
       const collectionsRepo = em.getRepository(Collection)
+      const userRepo = em.getRepository(User)
 
       const publicCollections = await collectionsRepo.find({ owner: targetUserId }, { filters: ['visibility'] })
 
       if (publicCollections.length === 0) {
          return {
             error: {
-               property: 'collection',
-               message: 'No public collection'
+               property: 'visibility',
+               message: 'No public collections'
             }
          }
       }
 
+      // Get the chosen collection
       const collection = publicCollections.find((collection) => (collection.id === collectionId))
 
-      return { collection }
+      if (!collection) {
+         return {
+            error: {
+               property: 'collection',
+               message: 'Collection does not exist.'
+            }
+         }
+      }
+
+      // Save the collection to the currently logged in users collections
+      const me = await userRepo.findOne({ id: req.session['userId']?.toString() })
+
+      if (!me) {
+         return {
+            error: {
+               property: 'user',
+               message: 'User is not logged in.'
+            }
+         }
+      }
+
+      const { title, visibility } = collection
+      const collectionToAdd = new Collection({ title, visibility })
+
+      collectionToAdd.owner = me
+      me.collections.add(collectionToAdd)
+      await em.populate(collectionToAdd, ['owner', 'lists'])
+
+      await em.persistAndFlush(collectionToAdd)
+
+      return { collectionToAdd }
    }
 
    // save other users public notes
