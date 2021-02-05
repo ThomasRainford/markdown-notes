@@ -370,10 +370,11 @@ export class NotesListResolver {
          }
       }
 
-      notesList.collection = newCollection
+      newCollection.lists.add(notesList)
       collection.lists.remove(notesList)
+      notesList.collection = newCollection
 
-      await em.persistAndFlush([notesList, collection])
+      await em.persistAndFlush([notesList, newCollection, collection])
 
       return { notesList }
    }
