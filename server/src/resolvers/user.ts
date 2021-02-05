@@ -338,9 +338,9 @@ export class UserResolver {
       }
 
       // Get the chosen collection
-      const collection = publicCollections.find((collection) => (collection.id === collectionId))
+      const collectionToAdd = publicCollections.find((collection) => (collection.id === collectionId))
 
-      if (!collection) {
+      if (!collectionToAdd) {
          return {
             error: {
                property: 'collection',
@@ -361,16 +361,16 @@ export class UserResolver {
          }
       }
 
-      const { title, visibility } = collection
-      const collectionToAdd = new Collection({ title, visibility })
+      const { title, visibility } = collectionToAdd
+      const collection = new Collection({ title, visibility })
 
-      collectionToAdd.owner = me
-      me.collections.add(collectionToAdd)
-      await em.populate(collectionToAdd, ['owner', 'lists'])
+      collection.owner = me
+      me.collections.add(collection)
+      await em.populate(collection, ['owner', 'lists'])
 
-      await em.persistAndFlush(collectionToAdd)
+      await em.persistAndFlush(collection)
 
-      return { collectionToAdd }
+      return { collection }
    }
 
    // save other users public notes
