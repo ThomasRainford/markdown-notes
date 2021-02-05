@@ -325,4 +325,16 @@ export class NotesListResolver {
       return true
    }
 
+   @Mutation(() => NotesListResponse)
+   async moveList(
+      @Arg('listLocation') listLocation: ListLocationInput,
+      @Arg('newCollectionId') newCollectionId: string,
+      @Arg('listId') listId: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<NotesListResponse> {
+
+
+      return null
+   }
+
 }
