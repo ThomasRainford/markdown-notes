@@ -317,14 +317,28 @@ export class UserResolver {
 
    @Mutation(() => CollectionResponse)
    @UseMiddleware(isAuth)
-   async savePublicNotes(
+   async savePublicCollection(
       @Arg('targetUserId') targetUserId: string,
       @Arg('collectionId') collectionId: string,
       @Ctx() { em, req }: OrmContext
    ): Promise<CollectionResponse> {
 
+      const collectionsRepo = em.getRepository(Collection)
 
-      return null
+      const publicCollections = await collectionsRepo.find({ owner: targetUserId }, { filters: ['visibility'] })
+
+      if (!publicCollections) {
+         return {
+            error: {
+               property: 'collection',
+               message: 'Users collection does not exist.'
+            }
+         }
+      }
+
+      const collection = publicCollections.find((collection) => (collection.id === collectionId))
+
+      return { collection }
    }
 
    // save other users public notes
