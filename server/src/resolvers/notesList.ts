@@ -26,7 +26,7 @@ export class NotesListResolver {
       @Ctx() { em, req }: OrmContext
    ): Promise<NotesListResponse> {
 
-      const titleError = await validateTitle(title, NotesList, em)
+      const titleError = await validateTitle(req.session.userId, title, NotesList, em)
       if (titleError) {
          return { error: titleError }
       }
@@ -347,7 +347,7 @@ export class NotesListResolver {
          }
       }
 
-      const notesList = await notesListRepo.findOne({ collection: collection.id })
+      const notesList = await notesListRepo.findOne({ id: listLocation.listId }, ['collection'])
 
       if (!notesList) {
          return {
@@ -371,8 +371,9 @@ export class NotesListResolver {
       }
 
       notesList.collection = newCollection
+      collection.lists.remove(notesList)
 
-      await em.persistAndFlush(notesList)
+      await em.persistAndFlush([notesList, collection])
 
       return { notesList }
    }
