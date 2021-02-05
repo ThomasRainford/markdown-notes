@@ -373,4 +373,14 @@ export class UserResolver {
       return { collection }
    }
 
+   @Query(() => [Collection], { nullable: true })
+   async activityFeed(
+      @Ctx() { em, req }: OrmContext
+   ): Promise<Collection[] | null> {
+
+
+
+      return null
+   }
+
 }
