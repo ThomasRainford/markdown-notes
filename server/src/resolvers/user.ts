@@ -374,13 +374,41 @@ export class UserResolver {
    }
 
    @Query(() => [Collection], { nullable: true })
+   @UseMiddleware(isAuth)
    async activityFeed(
       @Ctx() { em, req }: OrmContext
    ): Promise<Collection[] | null> {
 
+      const userRepo = em.getRepository(User)
+      const collectionRepo = em.getRepository(Collection)
 
+      if (!req.session.userId) {
+         return null
+      }
 
-      return null
+      const me = await userRepo.findOne({ id: req.session['userId'].toString() }, ['collections'])
+
+      if (!me) {
+         return null
+      }
+
+      const allFollowing = new Array<User>()
+      for (const userId of me.following) {
+         const user = await userRepo.findOne({ id: userId })
+         if (user) {
+            allFollowing.push(user)
+         }
+      }
+
+      const publicCollections = new Array<Collection>()
+      for (const user of allFollowing) {
+         const collections = await collectionRepo.find({ owner: user.id }, { filters: ['visibility'] })
+         collections.forEach((collection) => {
+            publicCollections.push(collection)
+         })
+      }
+
+      return publicCollections
    }
 
 }
