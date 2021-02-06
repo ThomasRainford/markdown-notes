@@ -9,6 +9,7 @@ import { validateRegister } from '../utils/validateRegister'
 import { isAuth } from "../middleware/isAuth"
 import { Collection } from "../entities/Collection"
 import { CollectionResponse } from "./object-types/CollectionResponse"
+import { ActivityFeedResponse } from "./object-types/ActivityFeedResponse"
 
 @Resolver(User)
 export class UserResolver {
@@ -373,11 +374,11 @@ export class UserResolver {
       return { collection }
    }
 
-   @Query(() => [Collection], { nullable: true })
+   @Query(() => [ActivityFeedResponse], { nullable: true })
    @UseMiddleware(isAuth)
    async activityFeed(
       @Ctx() { em, req }: OrmContext
-   ): Promise<Collection[] | null> {
+   ): Promise<ActivityFeedResponse[] | null> {
 
       const userRepo = em.getRepository(User)
       const collectionRepo = em.getRepository(Collection)
@@ -404,14 +405,23 @@ export class UserResolver {
 
       // Get all following users public collections.
       const limit = 2592000000 // 30 days
-      const publicCollections = new Array<Collection>()
+      const publicCollections = new Array<ActivityFeedResponse>()
       for (const user of allFollowing) {
          const collections = await collectionRepo.find({ owner: user.id }, { filters: ['visibility'] })
          collections.forEach((collection) => {
-            const date = collection.createdAt
+            const createAtDelta = Date.now() - collection.createdAt.getTime()
+            const updatedAtDelta = Date.now() - collection.updatedAt.getTime()
+            const activityCreate: ActivityFeedResponse = { activity: 'create', collection }
+            const activityUpdate: ActivityFeedResponse = { activity: 'update', collection }
+
             // Only push collection created in the last 30 days.
-            if (Date.now() - date.getTime() < limit) {
-               publicCollections.push(collection)
+            if (createAtDelta < limit) {
+               publicCollections.push(activityCreate)
+            }
+
+            // If created before last 30 days, check updatedAt delta
+            if (!publicCollections.includes(activityCreate) && updatedAtDelta < limit) {
+               publicCollections.push(activityUpdate)
             }
          })
       }
