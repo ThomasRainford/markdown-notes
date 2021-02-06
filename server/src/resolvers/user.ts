@@ -403,12 +403,16 @@ export class UserResolver {
       }
 
       // Get all following users public collections.
-      // TODO: Add date limit.
+      const limit = 2592000000 // 30 days
       const publicCollections = new Array<Collection>()
       for (const user of allFollowing) {
          const collections = await collectionRepo.find({ owner: user.id }, { filters: ['visibility'] })
          collections.forEach((collection) => {
-            publicCollections.push(collection)
+            const date = collection.createdAt
+            // Only push collection created in the last 30 days.
+            if (Date.now() - date.getTime() < limit) {
+               publicCollections.push(collection)
+            }
          })
       }
 
