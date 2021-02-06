@@ -9,6 +9,7 @@ import { validateRegister } from '../utils/validateRegister'
 import { isAuth } from "../middleware/isAuth"
 import { Collection } from "../entities/Collection"
 import { CollectionResponse } from "./object-types/CollectionResponse"
+import { ActivityFeedResponse } from "./object-types/ActivityFeedResponse"
 
 @Resolver(User)
 export class UserResolver {
@@ -371,6 +372,61 @@ export class UserResolver {
       await em.persistAndFlush(collection)
 
       return { collection }
+   }
+
+   @Query(() => [ActivityFeedResponse], { nullable: true })
+   @UseMiddleware(isAuth)
+   async activityFeed(
+      @Ctx() { em, req }: OrmContext
+   ): Promise<ActivityFeedResponse[] | null> {
+
+      const userRepo = em.getRepository(User)
+      const collectionRepo = em.getRepository(Collection)
+
+      if (!req.session.userId) {
+         return null
+      }
+
+      // Get currently logged in users.
+      const me = await userRepo.findOne({ id: req.session['userId'].toString() }, ['collections'])
+
+      if (!me) {
+         return null
+      }
+
+      // Get all the following users.
+      const allFollowing = new Array<User>()
+      for (const userId of me.following) {
+         const user = await userRepo.findOne({ id: userId })
+         if (user) {
+            allFollowing.push(user)
+         }
+      }
+
+      // Get all following users public collections.
+      const limit = 2592000000 // 30 days
+      const publicCollections = new Array<ActivityFeedResponse>()
+      for (const user of allFollowing) {
+         const collections = await collectionRepo.find({ owner: user.id }, { filters: ['visibility'] })
+         collections.forEach((collection) => {
+            const createAtDelta = Date.now() - collection.createdAt.getTime()
+            const updatedAtDelta = Date.now() - collection.updatedAt.getTime()
+            const activityCreate: ActivityFeedResponse = { activity: 'create', collection }
+            const activityUpdate: ActivityFeedResponse = { activity: 'update', collection }
+
+            // Only push collection created in the last 30 days.
+            if (createAtDelta < limit) {
+               publicCollections.push(activityCreate)
+            }
+
+            // If created before last 30 days, check updatedAt delta
+            if (!publicCollections.includes(activityCreate) && updatedAtDelta < limit) {
+               publicCollections.push(activityUpdate)
+            }
+         })
+      }
+
+      return publicCollections
    }
 
 }
