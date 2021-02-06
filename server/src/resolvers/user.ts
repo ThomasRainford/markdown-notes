@@ -386,12 +386,14 @@ export class UserResolver {
          return null
       }
 
+      // Get currently logged in users.
       const me = await userRepo.findOne({ id: req.session['userId'].toString() }, ['collections'])
 
       if (!me) {
          return null
       }
 
+      // Get all the following users.
       const allFollowing = new Array<User>()
       for (const userId of me.following) {
          const user = await userRepo.findOne({ id: userId })
@@ -400,6 +402,8 @@ export class UserResolver {
          }
       }
 
+      // Get all following users public collections.
+      // TODO: Add date limit.
       const publicCollections = new Array<Collection>()
       for (const user of allFollowing) {
          const collections = await collectionRepo.find({ owner: user.id }, { filters: ['visibility'] })
