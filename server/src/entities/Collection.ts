@@ -32,6 +32,10 @@ export class Collection {
 
    @Field()
    @Property()
+   upvotes: number
+
+   @Field()
+   @Property()
    visibility: string
 
    @Field(() => Date)
