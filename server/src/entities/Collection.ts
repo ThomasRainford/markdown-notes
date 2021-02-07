@@ -30,6 +30,10 @@ export class Collection {
    @OneToMany(() => NotesList, notesList => notesList.collection)
    lists = new OrmCollection<NotesList>(this)
 
+   @Field(() => Number)
+   @Property()
+   upvotes = 0
+
    @Field()
    @Property()
    visibility: string

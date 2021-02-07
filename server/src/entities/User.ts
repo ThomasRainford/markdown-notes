@@ -39,6 +39,10 @@ export class User {
    @OneToMany(() => EntityCollection, collection => collection.owner)
    collections = new Collection<EntityCollection>(this)
 
+   @Field(() => [String])
+   @Property()
+   upvoted = new Array<string>()
+
    @Field(() => Date)
    @Property()
    createdAt = new Date()
