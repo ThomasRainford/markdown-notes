@@ -30,9 +30,9 @@ export class Collection {
    @OneToMany(() => NotesList, notesList => notesList.collection)
    lists = new OrmCollection<NotesList>(this)
 
-   @Field()
+   @Field(() => Number)
    @Property()
-   upvotes: number
+   upvotes = 0
 
    @Field()
    @Property()
