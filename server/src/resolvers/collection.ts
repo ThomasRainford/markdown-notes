@@ -139,6 +139,33 @@ export class CollectionResolver {
       return { collection }
    }
 
+   @Mutation(() => CollectionResponse)
+   @UseMiddleware(isAuth)
+   async upvote(
+      @Arg('collectionId') collectionId: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<CollectionResponse> {
+
+      const repo = em.getRepository(Collection)
+
+      const collection = await repo.findOne({ id: collectionId, owner: req.session['userId']?.toString() })
+
+      if (!collection) {
+         return {
+            error: {
+               property: 'collection',
+               message: 'Collection does not exist.'
+            }
+         }
+      }
+
+      collection.upvotes++
+
+      await em.persistAndFlush(collection)
+
+      return { collection }
+   }
+
    @Mutation(() => Boolean)
    @UseMiddleware(isAuth)
    async deleteCollection(
