@@ -139,6 +139,8 @@ export class CollectionResolver {
       return { collection }
    }
 
+   // Need to store array of upvoted collections on the User entity.
+   // Check if user has upvoted already. If they have then remove upvote.
    @Mutation(() => CollectionResponse)
    @UseMiddleware(isAuth)
    async upvote(
@@ -146,9 +148,10 @@ export class CollectionResolver {
       @Ctx() { em, req }: OrmContext
    ): Promise<CollectionResponse> {
 
-      const repo = em.getRepository(Collection)
+      const collectionRepo = em.getRepository(Collection)
+      const userRepo = em.getRepository(User)
 
-      const collection = await repo.findOne({ id: collectionId, owner: req.session['userId']?.toString() })
+      const collection = await collectionRepo.findOne({ id: collectionId, owner: req.session['userId']?.toString() })
 
       if (!collection) {
          return {
@@ -159,7 +162,22 @@ export class CollectionResolver {
          }
       }
 
-      collection.upvotes++
+      if (!req.session.userId) {
+         return {
+            error: {
+               property: 'req.session.userId',
+               message: 'Not logged in.'
+            }
+         }
+      }
+
+      const me = await userRepo.findOne({ id: req.session['userId'].toString() })
+
+      if (me?.upvoted.includes(collectionId)) {
+         collection.upvotes--
+      } else {
+         collection.upvotes++
+      }
 
       await em.persistAndFlush(collection)
 
