@@ -1,4 +1,5 @@
 import React from 'react'
+import LoginLayout from '../../components/account/LoginLayout'
 
 interface Props {
 
@@ -6,9 +7,9 @@ interface Props {
 
 const Login = ({ }) => {
    return (
-      <div>
+      <LoginLayout>
 
-      </div>
+      </LoginLayout>
    )
 }
 
