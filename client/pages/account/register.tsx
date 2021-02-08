@@ -25,7 +25,7 @@ const Register = ({ }) => {
 
    return (
       <RegisterLayout>
-         <Flex h="100%">
+         <Flex direction="column" h="100%">
             <form onSubmit={handleSubmit(onSubmit)}>
                <FormControl pb="1em">
                   <Input
@@ -54,15 +54,17 @@ const Register = ({ }) => {
                   />
                </FormControl>
 
-               <Button
-                  variant="outline"
-                  colorScheme="teal"
-                  isLoading={formState.isSubmitting}
-                  type="submit"
-                  mt='10%'
-               >
-                  Create Account
-               </Button>
+               <Flex>
+                  <Button
+                     variant="outline"
+                     colorScheme="teal"
+                     isLoading={formState.isSubmitting}
+                     type="submit"
+                     mt='10%'
+                  >
+                     Create Account
+                  </Button>
+               </Flex>
             </form>
 
          </Flex>

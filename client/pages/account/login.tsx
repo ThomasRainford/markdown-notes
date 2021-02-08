@@ -24,7 +24,7 @@ const Login = ({ }) => {
 
    return (
       <LoginLayout>
-         <Flex h="100%">
+         <Flex direction="column" h="100%">
             <form onSubmit={handleSubmit(onSubmit)}>
                <FormControl pb="1em">
                   <Input
@@ -44,19 +44,23 @@ const Login = ({ }) => {
                   />
                </FormControl>
 
-               <Button variant="solid">
-                  Forgotten Password
-               </Button>
-
-               <Button
-                  variant="outline"
-                  colorScheme="teal"
-                  isLoading={formState.isSubmitting}
-                  type="submit"
-                  mt='10%'
-               >
-                  Login
-               </Button>
+               <Flex direction="column" pt="1em">
+                  <Button
+                     variant="outline"
+                     colorScheme="teal"
+                     mb="2.5em"
+                  >
+                     Forgotten Password
+                  </Button>
+                  <Button
+                     variant="outline"
+                     colorScheme="teal"
+                     isLoading={formState.isSubmitting}
+                     type="submit"
+                  >
+                     Login
+                  </Button>
+               </Flex>
             </form>
 
          </Flex>
