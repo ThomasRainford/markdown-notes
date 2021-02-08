@@ -2,10 +2,10 @@ import { Divider, Flex, Heading, Text } from '@chakra-ui/react'
 import React from 'react'
 
 interface Props {
-   heading: string
+
 }
 
-const RegisterLayout = ({ children, heading }) => {
+const RegisterLayout: React.FC<Props> = ({ children }) => {
    return (
       <Flex h="100vh" w="100vw" justify="center" align="center" bg="#5CDB95">
          <Flex h="30em" w="100vw" justify="center" align="center">
@@ -13,12 +13,12 @@ const RegisterLayout = ({ children, heading }) => {
                <Heading>Welcome!</Heading>
             </Flex>
             <Flex direction="column" bg="#EDF5E1" boxShadow="dark-lg" p="2em" h="100%" w="25.5em">
-               <Text fontSize="2xl" pb="1em">{heading}</Text>
+               <Text fontSize="2xl" pb="1em">Create an Account</Text>
                <Divider orientation="horizontal" colorScheme="blackAlpha" />
                {children}
             </Flex>
          </Flex>
-      </Flex >
+      </Flex>
    )
 }
 

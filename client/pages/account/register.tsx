@@ -24,8 +24,8 @@ const Register = ({ }) => {
    }
 
    return (
-      <RegisterLayout heading="Create An Account">
-         <Flex>
+      <RegisterLayout>
+         < Flex >
             <form onSubmit={handleSubmit(onSubmit)}>
                <FormControl pb="1em">
                   <FormLabel>Email</FormLabel>
@@ -78,8 +78,8 @@ const Register = ({ }) => {
                </Button>
             </Flex>
 
-         </Flex>
-      </RegisterLayout>
+         </Flex >
+      </RegisterLayout >
    )
 }
 
