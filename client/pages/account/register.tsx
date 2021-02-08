@@ -25,10 +25,9 @@ const Register = ({ }) => {
 
    return (
       <RegisterLayout>
-         < Flex >
+         <Flex h="100%">
             <form onSubmit={handleSubmit(onSubmit)}>
                <FormControl pb="1em">
-                  <FormLabel>Email</FormLabel>
                   <Input
                      name="email"
                      placeholder="Email"
@@ -38,7 +37,6 @@ const Register = ({ }) => {
                </FormControl>
 
                <FormControl pb="1em">
-                  <FormLabel>Username</FormLabel>
                   <Input
                      name="username"
                      placeholder="Username"
@@ -48,7 +46,6 @@ const Register = ({ }) => {
                </FormControl>
 
                <FormControl pb="1em">
-                  <FormLabel>Password</FormLabel>
                   <Input
                      name="password"
                      placeholder="Password"
@@ -68,17 +65,7 @@ const Register = ({ }) => {
                </Button>
             </form>
 
-            <Flex justify="center" align="center" pl="1.5em">
-               <Text fontSize="lg" pr="1.5em">or</Text>
-               <Button
-                  variant="solid"
-                  colorScheme="teal"
-               >
-                  Login
-               </Button>
-            </Flex>
-
-         </Flex >
+         </Flex>
       </RegisterLayout >
    )
 }
