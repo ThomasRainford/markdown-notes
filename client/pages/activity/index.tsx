@@ -1,6 +1,7 @@
 import { Flex } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import React from 'react'
+import ActivityLayout from '../../components/activity/ActivityLayout'
 import NavBar from '../../components/NavBar'
 import PageLoadingIndicator from '../../components/PageLoadingIndicator'
 import { useMeQuery } from '../../generated/graphql'
@@ -21,9 +22,9 @@ const Activity = ({ }) => {
       <>
          { !user.fetching && user.data?.me
             ?
-            <Flex direction="column">
-               <NavBar user={user} />
-            </Flex>
+            <ActivityLayout user={user}>
+               Content
+            </ActivityLayout>
             :
             <PageLoadingIndicator />
          }
