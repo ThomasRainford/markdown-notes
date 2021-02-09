@@ -24,7 +24,7 @@ const Login = ({ }) => {
 
    return (
       <LoginLayout>
-         <Flex direction="column" h="100%">
+         <Flex direction="column" h="100%" w="20em">
             <form onSubmit={handleSubmit(onSubmit)}>
                <FormControl pb="1em">
                   <Input
@@ -44,11 +44,11 @@ const Login = ({ }) => {
                   />
                </FormControl>
 
-               <Flex direction="column" pt="1em">
+               <Flex direction="column">
                   <Button
-                     variant="outline"
+                     variant="solid"
                      colorScheme="teal"
-                     mb="2.5em"
+                     mb="2em"
                   >
                      Forgotten Password
                   </Button>
