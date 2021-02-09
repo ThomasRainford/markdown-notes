@@ -11,7 +11,7 @@ interface Props {
 const ActivityLayout = ({ children, user }) => {
    return (
       <div>
-         <Flex direction="column">
+         <Flex direction="column" h="100vh">
             <NavBar user={user} />
             {children}
          </Flex>

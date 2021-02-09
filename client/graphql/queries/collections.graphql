@@ -1,0 +1,9 @@
+query Collections {
+	collections {
+		id
+		title
+		visibility
+		upvotes
+		createdAt
+	}
+}

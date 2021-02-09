@@ -356,6 +356,17 @@ export type ActivityFeedQuery = (
   )>> }
 );
 
+export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CollectionsQuery = (
+  { __typename?: 'Query' }
+  & { collections: Array<(
+    { __typename?: 'Collection' }
+    & Pick<Collection, 'id' | 'title' | 'visibility' | 'upvotes' | 'createdAt'>
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -438,6 +449,21 @@ export const ActivityFeedDocument = gql`
 
 export function useActivityFeedQuery(options: Omit<Urql.UseQueryArgs<ActivityFeedQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ActivityFeedQuery>({ query: ActivityFeedDocument, ...options });
+};
+export const CollectionsDocument = gql`
+    query Collections {
+  collections {
+    id
+    title
+    visibility
+    upvotes
+    createdAt
+  }
+}
+    `;
+
+export function useCollectionsQuery(options: Omit<Urql.UseQueryArgs<CollectionsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<CollectionsQuery>({ query: CollectionsDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {
