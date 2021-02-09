@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, FormControl, FormLabel, Input, Text } from '@chakra-ui/react'
+import { Button, Divider, Flex, FormControl, FormErrorMessage, FormLabel, Input, Text } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -34,6 +34,9 @@ const Register = ({ }) => {
                      autoComplete="off"
                      reg={register({ required: true })}
                   />
+                  <FormErrorMessage>
+                     {errors.email && errors.email.message}
+                  </FormErrorMessage>
                </FormControl>
 
                <FormControl pb="1em">
@@ -43,6 +46,9 @@ const Register = ({ }) => {
                      autoComplete="off"
                      reg={register({ required: true })}
                   />
+                  <FormErrorMessage>
+                     {errors.username && errors.username.message}
+                  </FormErrorMessage>
                </FormControl>
 
                <FormControl pb="1em">
@@ -52,6 +58,9 @@ const Register = ({ }) => {
                      type="password"
                      reg={register({ required: true })}
                   />
+                  <FormErrorMessage>
+                     {errors.password && errors.password.message}
+                  </FormErrorMessage>
                </FormControl>
 
                <Flex direction="column" pt="1em">
