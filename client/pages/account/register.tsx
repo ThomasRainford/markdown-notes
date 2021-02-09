@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import RegisterLayout from '../../components/account/RegisterLayout'
-import { useRegisterMutation } from '../../generated/graphql'
+import { useRegisterMutation, UserRegisterInput } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 
 
@@ -19,7 +19,12 @@ const Register = ({ }) => {
 
    const [result, registerMutation] = useRegisterMutation()
 
-   const onSubmit = () => {
+   const onSubmit = async (registerInput: UserRegisterInput) => {
+
+      const response = await registerMutation({ registerInput })
+      if (response.data?.register.user) {
+         console.log('Success!')
+      }
 
    }
 
@@ -27,36 +32,36 @@ const Register = ({ }) => {
       <RegisterLayout>
          <Flex direction="column" h="100%" w="20em">
             <form onSubmit={handleSubmit(onSubmit)}>
-               <FormControl pb="1em">
+               <FormControl id="email" pb="1em">
                   <Input
                      name="email"
                      placeholder="Email"
                      autoComplete="off"
-                     reg={register({ required: true })}
+                     ref={register({ required: true })}
                   />
                   <FormErrorMessage>
                      {errors.email && errors.email.message}
                   </FormErrorMessage>
                </FormControl>
 
-               <FormControl pb="1em">
+               <FormControl id="username" pb="1em">
                   <Input
                      name="username"
                      placeholder="Username"
                      autoComplete="off"
-                     reg={register({ required: true })}
+                     ref={register({ required: true })}
                   />
                   <FormErrorMessage>
                      {errors.username && errors.username.message}
                   </FormErrorMessage>
                </FormControl>
 
-               <FormControl pb="1em">
+               <FormControl id="password" pb="1em">
                   <Input
                      name="password"
                      placeholder="Password"
                      type="password"
-                     reg={register({ required: true })}
+                     ref={register({ required: true })}
                   />
                   <FormErrorMessage>
                      {errors.password && errors.password.message}
@@ -74,7 +79,6 @@ const Register = ({ }) => {
                   </Button>
                </Flex>
             </form>
-
          </Flex>
       </RegisterLayout >
    )

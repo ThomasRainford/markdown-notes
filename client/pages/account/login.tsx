@@ -1,10 +1,10 @@
-import { Flex, FormControl, FormLabel, Input, Button, Text, FormErrorMessage } from '@chakra-ui/react'
+import { Flex, FormControl, Input, Button, Text, FormErrorMessage, Alert, AlertDescription, AlertIcon, CloseButton } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import LoginLayout from '../../components/account/LoginLayout'
-import { useLoginMutation } from '../../generated/graphql'
+import { LoginMutationVariables, useLoginMutation } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 
 interface Props {
@@ -15,23 +15,46 @@ const Login = ({ }) => {
 
    const router = useRouter()
    const { handleSubmit, errors, register, formState } = useForm()
+   const [invalidLogin, setInvalidLogin] = useState<JSX.Element>(null)
 
    const [result, loginMutation] = useLoginMutation()
 
-   const onSubmit = () => {
+   const onSubmit = async ({ usernameOrEmail, password }: LoginMutationVariables) => {
+
+      const response = await loginMutation({ usernameOrEmail, password })
+      if (response.data?.login.user) {
+         console.log('Success!')
+      }
+
+      if (response.data?.login.errors) {
+         console.log('Invalid login')
+         setInvalidLogin(
+            <Alert status="error" mb="1em">
+               <AlertIcon />
+               <AlertDescription>Incorrect Login</AlertDescription>
+               <CloseButton
+                  position="absolute"
+                  right="8px"
+                  top="8px"
+                  onClick={() => setInvalidLogin(null)}
+               />
+            </Alert>
+         )
+      }
 
    }
 
    return (
       <LoginLayout>
          <Flex direction="column" h="100%" w="20em">
+            {invalidLogin}
             <form onSubmit={handleSubmit(onSubmit)}>
                <FormControl pb="1em">
                   <Input
                      name="usernameOrEmail"
                      placeholder="Username or Email"
                      autoComplete="off"
-                     reg={register({ required: true })}
+                     ref={register({ required: true })}
                   />
                   <FormErrorMessage>
                      {errors.usernameOrEmail && errors.usernameOrEmail.message}
@@ -43,7 +66,7 @@ const Login = ({ }) => {
                      name="password"
                      placeholder="Password"
                      type="password"
-                     reg={register({ required: true })}
+                     ref={register({ required: true })}
                   />
                   <FormErrorMessage>
                      {errors.password && errors.password.message}
@@ -68,7 +91,6 @@ const Login = ({ }) => {
                   </Button>
                </Flex>
             </form>
-
          </Flex>
       </LoginLayout>
    )
