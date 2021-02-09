@@ -426,10 +426,9 @@ export class UserResolver {
                if (updatedAtDelta < limit) {
                   publicCollections.push(activityUpdate)
                }
-
-            })
+            }
+         })
       }
-
       return publicCollections
    }
 

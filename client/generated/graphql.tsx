@@ -337,6 +337,25 @@ export type RegisterMutation = (
   ) }
 );
 
+export type ActivityFeedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ActivityFeedQuery = (
+  { __typename?: 'Query' }
+  & { activityFeed?: Maybe<Array<(
+    { __typename?: 'ActivityFeedResponse' }
+    & Pick<ActivityFeedResponse, 'activity'>
+    & { collection: (
+      { __typename?: 'Collection' }
+      & Pick<Collection, 'id' | 'title' | 'upvotes' | 'createdAt' | 'updatedAt'>
+      & { owner: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      ) }
+    ) }
+  )>> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -397,6 +416,28 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const ActivityFeedDocument = gql`
+    query ActivityFeed {
+  activityFeed {
+    activity
+    collection {
+      id
+      title
+      upvotes
+      createdAt
+      updatedAt
+      owner {
+        id
+        username
+      }
+    }
+  }
+}
+    `;
+
+export function useActivityFeedQuery(options: Omit<Urql.UseQueryArgs<ActivityFeedQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ActivityFeedQuery>({ query: ActivityFeedDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {
