@@ -1,7 +1,6 @@
-import { Flex, List, ListIcon, ListItem, Text, UnorderedList } from '@chakra-ui/react'
+import { List } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import React from 'react'
-import { MdLock, MdLockOpen } from 'react-icons/md'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import ActivityLayout from '../../components/activity/ActivityLayout'
 import CollectionItem from '../../components/activity/CollectionItem'
@@ -41,7 +40,7 @@ const Activity = ({ }) => {
                */}
                <CollectionsDisplayLayout>
                   {!collections.fetching && collections.data?.collections &&
-                     <List spacing={3} p="0.5em">
+                     <List spacing={2} p="0.5em">
                         {
                            collections.data?.collections.map((collection: Collection) => (
                               <CollectionItem key={collection.id} collection={collection} />
