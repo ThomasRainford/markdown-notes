@@ -1,4 +1,4 @@
-import { Flex, FormControl, Input, Button, Text, FormErrorMessage, Alert, AlertDescription, AlertIcon, CloseButton } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Button, CloseButton, Flex, FormControl, FormErrorMessage, Input } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
