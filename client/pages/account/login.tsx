@@ -24,6 +24,7 @@ const Login = ({ }) => {
       const response = await loginMutation({ usernameOrEmail, password })
       if (response.data?.login.user) {
          console.log('Success!')
+         router.push('/activity')
       }
 
       if (response.data?.login.errors) {

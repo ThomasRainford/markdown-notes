@@ -24,6 +24,7 @@ const Register = ({ }) => {
       const response = await registerMutation({ registerInput })
       if (response.data?.register.user) {
          console.log('Success!')
+         router.push('/activity')
       }
 
    }
