@@ -8,15 +8,17 @@ interface Props {
    user: UseQueryState<MeQuery, object>
 }
 
-const ActivityLayout = ({ children, user }) => {
+const ActivityPageLayout = ({ children, user }) => {
    return (
       <div>
          <Flex direction="column" h="100vh">
             <NavBar user={user} />
-            {children}
+            <Flex h="100%">
+               {children}
+            </Flex>
          </Flex>
       </div>
    )
 }
 
-export default ActivityLayout
+export default ActivityPageLayout

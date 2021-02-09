@@ -2,7 +2,8 @@ import { List } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import React from 'react'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
-import ActivityLayout from '../../components/activity/ActivityLayout'
+import ActivityDisplayLayout from '../../components/activity/ActivityDisplayLayout'
+import ActivityPageLayout from '../../components/activity/ActivityPageLayout'
 import CollectionItem from '../../components/activity/CollectionItem'
 import CollectionsDisplayLayout from '../../components/activity/CollectionsDisplayLayout'
 import PageLoadingIndicator from '../../components/PageLoadingIndicator'
@@ -29,7 +30,7 @@ const Activity = ({ }) => {
       <>
          { !user.fetching && user.data?.me
             ?
-            <ActivityLayout user={user}>
+            <ActivityPageLayout user={user}>
                {/* 
                   - Left side: List of collections
                   - - Fixed to the top
@@ -49,7 +50,10 @@ const Activity = ({ }) => {
                      </List>
                   }
                </CollectionsDisplayLayout>
-            </ActivityLayout>
+               <ActivityDisplayLayout>
+                  activity here
+               </ActivityDisplayLayout>
+            </ActivityPageLayout>
             :
             <PageLoadingIndicator />
          }

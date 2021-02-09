@@ -16,11 +16,11 @@ const CollectionItem: React.FC<Props> = ({ collection }) => {
                <Text mr="0.5em">{collection.title}</Text>
             </Flex>
             <Flex>
-               <Text fontStyle="italic">created: {new Date(collection.createdAt).toDateString()}</Text>
-               <Center height="1.5em" mx="0.5em">
-                  <Divider orientation="vertical" colorScheme="red" />
+               <Text fontSize="sm" fontStyle="italic">created: {new Date(collection.createdAt).toDateString()}</Text>
+               <Center mx="1">
+                  <Divider orientation="vertical" />
                </Center>
-               <Text fontStyle="italic">{collection.upvotes} upvotes</Text>
+               <Text fontSize="sm" fontStyle="italic">{collection.upvotes} upvotes</Text>
             </Flex>
          </Flex>
       </ListItem >
