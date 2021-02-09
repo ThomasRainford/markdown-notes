@@ -307,6 +307,17 @@ export type LoginMutation = (
   ) }
 );
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & { logout?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'username'>
+  )> }
+);
+
 export type RegisterMutationVariables = Exact<{
   registerInput: UserRegisterInput;
 }>;
@@ -356,6 +367,17 @@ export const LoginDocument = gql`
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
+};
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout {
+    username
+  }
+}
+    `;
+
+export function useLogoutMutation() {
+  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const RegisterDocument = gql`
     mutation Register($registerInput: UserRegisterInput!) {
