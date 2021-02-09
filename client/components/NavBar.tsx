@@ -41,7 +41,7 @@ const NavBar: React.FC<Props> = ({ user }) => {
                <Heading size="md">Markdown Notes</Heading>
             </Flex>
             <Flex align="center">
-               <Flex border="2px" p="0.4rem" mr="1.5em">
+               <Flex border="2px" borderRadius="md" p="0.4rem" mr="0.5em">
                   <Icon as={MdAccountCircle} h={6} w={6} mr="0.5em" />
                   {!user.fetching && user.data &&
                      <Text fontWeight="bold">{user.data.me.username}</Text>
@@ -49,6 +49,7 @@ const NavBar: React.FC<Props> = ({ user }) => {
                </Flex>
                <Button
                   variant="outline"
+                  colorScheme="teal"
                   size="sm"
                   onClick={() => setIsOpen(true)}
                >
