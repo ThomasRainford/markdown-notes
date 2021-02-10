@@ -1,11 +1,11 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Flex, Heading, Icon, Text } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Divider, Flex, Heading, Icon, Link, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { UseQueryState } from 'urql'
 import { MeQuery, useLogoutMutation } from '../generated/graphql'
 import { MdAccountCircle, MdList } from 'react-icons/md'
-import router from 'next/dist/next-server/lib/router/router'
 import { useRef } from 'react'
 import { useRouter } from 'next/router'
+import NextLink from 'next/link'
 
 interface Props {
    user: UseQueryState<MeQuery, object>
@@ -38,7 +38,15 @@ const NavBar: React.FC<Props> = ({ user }) => {
          >
             <Flex align="center">
                <Icon as={MdList} h={10} w={10} mr="0.25em" />
-               <Heading size="md">Markdown Notes</Heading>
+               <Heading size="md" mr="4.5em">Markdown Notes</Heading>
+               <Flex>
+                  <NextLink href="/activity">
+                     <Link mr="1.5em">Activity</Link>
+                  </NextLink>
+                  <NextLink href={`/my-notes/${user.data?.me?.username}`}>
+                     <Link>My Notes</Link>
+                  </NextLink>
+               </Flex>
             </Flex>
             <Flex align="center">
                <Flex border="2px" borderRadius="md" p="0.4rem" mr="0.5em">
