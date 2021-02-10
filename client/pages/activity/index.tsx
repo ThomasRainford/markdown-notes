@@ -34,14 +34,6 @@ const Activity = ({ }) => {
          { !user.fetching && user.data?.me
             ?
             <ActivityPageLayout user={user}>
-               {/* 
-                  - Left side: List of collections
-                  - - Fixed to the top
-                  - - Green colour
-                  - Right side: Activity feed
-                  - - List of public collections
-                  - - White, possibly darker
-               */}
                <CollectionsDisplayLayout>
                   {!collections.fetching && collections.data?.collections &&
                      <List spacing={2} p="0.5em">
