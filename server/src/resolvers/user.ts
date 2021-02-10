@@ -415,17 +415,20 @@ export class UserResolver {
             const activityUpdate: ActivityFeedResponse = { activity: 'update', collection }
 
             // Only push collection created in the last 30 days.
+            // Push updated collection if updated after created.
             if (createAtDelta < limit) {
-               publicCollections.push(activityCreate)
-            }
-
-            // If created before last 30 days, check updatedAt delta
-            if (!publicCollections.includes(activityCreate) && updatedAtDelta < limit) {
-               publicCollections.push(activityUpdate)
+               if (updatedAtDelta < createAtDelta) {
+                  publicCollections.push(activityUpdate)
+               } else {
+                  publicCollections.push(activityCreate)
+               }
+            } else if (createAtDelta > limit) {
+               if (updatedAtDelta < limit) {
+                  publicCollections.push(activityUpdate)
+               }
             }
          })
       }
-
       return publicCollections
    }
 

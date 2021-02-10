@@ -307,6 +307,17 @@ export type LoginMutation = (
   ) }
 );
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & { logout?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'username'>
+  )> }
+);
+
 export type RegisterMutationVariables = Exact<{
   registerInput: UserRegisterInput;
 }>;
@@ -324,6 +335,36 @@ export type RegisterMutation = (
       & Pick<FieldError, 'field' | 'message'>
     )>> }
   ) }
+);
+
+export type ActivityFeedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ActivityFeedQuery = (
+  { __typename?: 'Query' }
+  & { activityFeed?: Maybe<Array<(
+    { __typename?: 'ActivityFeedResponse' }
+    & Pick<ActivityFeedResponse, 'activity'>
+    & { collection: (
+      { __typename?: 'Collection' }
+      & Pick<Collection, 'id' | 'title' | 'upvotes' | 'createdAt' | 'updatedAt'>
+      & { owner: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      ) }
+    ) }
+  )>> }
+);
+
+export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CollectionsQuery = (
+  { __typename?: 'Query' }
+  & { collections: Array<(
+    { __typename?: 'Collection' }
+    & Pick<Collection, 'id' | 'title' | 'visibility' | 'upvotes' | 'createdAt'>
+  )> }
 );
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
@@ -357,6 +398,17 @@ export const LoginDocument = gql`
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
 };
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout {
+    username
+  }
+}
+    `;
+
+export function useLogoutMutation() {
+  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
+};
 export const RegisterDocument = gql`
     mutation Register($registerInput: UserRegisterInput!) {
   register(registerInput: $registerInput) {
@@ -375,6 +427,43 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const ActivityFeedDocument = gql`
+    query ActivityFeed {
+  activityFeed {
+    activity
+    collection {
+      id
+      title
+      upvotes
+      createdAt
+      updatedAt
+      owner {
+        id
+        username
+      }
+    }
+  }
+}
+    `;
+
+export function useActivityFeedQuery(options: Omit<Urql.UseQueryArgs<ActivityFeedQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ActivityFeedQuery>({ query: ActivityFeedDocument, ...options });
+};
+export const CollectionsDocument = gql`
+    query Collections {
+  collections {
+    id
+    title
+    visibility
+    upvotes
+    createdAt
+  }
+}
+    `;
+
+export function useCollectionsQuery(options: Omit<Urql.UseQueryArgs<CollectionsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<CollectionsQuery>({ query: CollectionsDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {

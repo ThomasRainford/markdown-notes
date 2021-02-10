@@ -1,4 +1,4 @@
-import { Flex, FormControl, Input, Button, Text, FormErrorMessage, Alert, AlertDescription, AlertIcon, CloseButton } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Button, CloseButton, Flex, FormControl, FormErrorMessage, Input } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -24,6 +24,7 @@ const Login = ({ }) => {
       const response = await loginMutation({ usernameOrEmail, password })
       if (response.data?.login.user) {
          console.log('Success!')
+         router.push('/activity')
       }
 
       if (response.data?.login.errors) {
