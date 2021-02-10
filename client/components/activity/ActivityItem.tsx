@@ -1,4 +1,4 @@
-import { Flex, Heading, Icon, ListItem, Text } from '@chakra-ui/react'
+import { Button, Divider, Flex, Heading, Icon, ListItem, Text } from '@chakra-ui/react'
 import React from 'react'
 import { MdAccountCircle, MdThumbUp } from 'react-icons/md'
 import { ActivityFeedResponse } from '../../generated/graphql'
@@ -29,13 +29,32 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
                   <Text fontWeight="bold" mr="1.25em">{collection.title}</Text>
                   <Text fontStyle="oblique">{_activity === 'create' ? toDays(collection.createdAt) : toDays(collection.updatedAt)} days ago</Text>
                </Flex>
-               <Flex direction="column" bg="#5CDB95" p="0.75em" boxShadow="lg" border="1px" borderColor="#379683" borderRadius="md">
-                  <Heading size="md" mb="0.25em">{collection.title}</Heading>
-                  <CollectionInfo collection={collection} />
+               <Flex justify="space-between" bg="#5CDB95" p="0.75em" boxShadow="lg" border="1px" borderColor="#379683" borderRadius="md">
+                  <Flex direction="column" >
+                     <Heading size="md" mb="0.25em">{collection.title}</Heading>
+                     <CollectionInfo collection={collection} />
+                  </Flex>
+                  <Flex align="center">
+                     <Button
+                        size="sm"
+                        colorScheme="teal"
+                        variant="outline"
+                        mr="0.5em"
+                     >
+                        Upvote
+                     </Button>
+                     <Button
+                        size="sm"
+                        colorScheme="teal"
+                        variant="outline"
+                     >
+                        Save
+                     </Button>
+                  </Flex>
                </Flex>
             </Flex>
          </Flex>
-      </ListItem >
+      </ListItem>
    )
 }
 
