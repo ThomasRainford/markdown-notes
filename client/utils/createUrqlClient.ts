@@ -6,7 +6,11 @@ export const createUrqlClient = (ssrExchange: any) => {
       url: 'http://localhost:3000/graphql',
       exchanges: [
          dedupExchange,
-         cacheExchange({}),
+         cacheExchange({
+            keys: {
+               ActivityFeedResponse: () => null
+            }
+         }),
          ssrExchange,
          fetchExchange
       ],

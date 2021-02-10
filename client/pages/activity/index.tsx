@@ -3,12 +3,14 @@ import { initUrqlClient, withUrqlClient } from 'next-urql'
 import React from 'react'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import ActivityDisplayLayout from '../../components/activity/ActivityDisplayLayout'
+import ActivityItem from '../../components/activity/ActivityItem'
 import ActivityPageLayout from '../../components/activity/ActivityPageLayout'
 import CollectionItem from '../../components/activity/CollectionItem'
 import CollectionsDisplayLayout from '../../components/activity/CollectionsDisplayLayout'
 import PageLoadingIndicator from '../../components/PageLoadingIndicator'
-import { Collection, useCollectionsQuery, useMeQuery } from '../../generated/graphql'
+import { ActivityFeedResponse, Collection, useActivityFeedQuery, useCollectionsQuery, useMeQuery } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
+import { ACTIVITY_FEED_QUERY } from '../../utils/ssr-queries/activityFeed'
 import { COLLECTIONS_QUERY } from '../../utils/ssr-queries/collections'
 import { useIsAuth } from '../../utils/useIsAuth'
 
@@ -21,8 +23,9 @@ const Activity = ({ }) => {
    const [user] = useMeQuery()
 
    const [collections] = useCollectionsQuery()
+   const [activityFeed] = useActivityFeedQuery()
 
-   console.log(collections)
+   console.log(activityFeed)
 
    useIsAuth(user)
 
@@ -51,7 +54,15 @@ const Activity = ({ }) => {
                   }
                </CollectionsDisplayLayout>
                <ActivityDisplayLayout>
-                  activity here
+                  {!activityFeed.fetching && activityFeed.data?.activityFeed &&
+                     <List spacing={4}>
+                        {
+                           activityFeed.data?.activityFeed.map((activity: ActivityFeedResponse) => (
+                              <ActivityItem key={activity.collection.id} activity={activity} />
+                           ))
+                        }
+                     </List>
+                  }
                </ActivityDisplayLayout>
             </ActivityPageLayout>
             :
@@ -70,7 +81,8 @@ export async function getServerSideProps() {
 
    // This query is used to populate the cache for the query
    // used on this page.
-   await client.query(COLLECTIONS_QUERY).toPromise();
+   await client.query(COLLECTIONS_QUERY).toPromise()
+   await client.query(ACTIVITY_FEED_QUERY).toPromise()
 
    return {
       props: {
