@@ -55,7 +55,7 @@ const Activity = ({ }) => {
                </CollectionsDisplayLayout>
                <ActivityDisplayLayout>
                   {!activityFeed.fetching && activityFeed.data?.activityFeed &&
-                     <List spacing={4}>
+                     <List spacing={10} w="100%">
                         {
                            activityFeed.data?.activityFeed.map((activity: ActivityFeedResponse) => (
                               <ActivityItem key={activity.collection.id} activity={activity} />
