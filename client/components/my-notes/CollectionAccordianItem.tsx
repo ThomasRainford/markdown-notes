@@ -1,14 +1,13 @@
 import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Accordion } from '@chakra-ui/react'
 import React from 'react'
 import { Collection } from '../../generated/graphql'
+import ListAccordionItem from './ListAccordionItem'
 
 interface Props {
    collection: Collection
 }
 
 const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
-
-   console.log('collection: ', collection)
 
    return (
       <AccordionItem>
@@ -24,16 +23,7 @@ const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
             <Accordion>
 
                {collection.lists.map((list) => (
-                  <AccordionItem>
-                     <h2>
-                        <AccordionButton>
-                           <Box flex="1" textAlign="left">
-                              {list.title}
-                           </Box>
-                           <AccordionIcon />
-                        </AccordionButton>
-                     </h2>
-                  </AccordionItem>
+                  <ListAccordionItem key={list.id} list={list} />
                ))
                }
             </Accordion>

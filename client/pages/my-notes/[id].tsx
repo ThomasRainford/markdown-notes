@@ -38,7 +38,7 @@ const MyNotes = ({ }) => {
                   {!collections.fetching && collections.data?.collections &&
                      <Accordion allowMultiple>
                         {collections.data?.collections.map((collection: Collection) => (
-                           <CollectionAccordianItem collection={collection} />
+                           <CollectionAccordianItem key={collection.id} collection={collection} />
                         ))
                         }
                      </Accordion>
