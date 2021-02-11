@@ -3,10 +3,11 @@ import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { ssrExchange, dedupExchange, fetchExchange, cacheExchange } from 'urql'
+import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
 import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
 import MyNotesPageLayout from '../../components/my-notes/MyNotesPageLayout'
 import PageLoadingIndicator from '../../components/PageLoadingIndicator'
-import { useCollectionsQuery, useMeQuery } from '../../generated/graphql'
+import { Collection, useCollectionsQuery, useMeQuery } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { ACTIVITY_FEED_QUERY } from '../../utils/ssr-queries/activityFeed'
 import { COLLECTIONS_QUERY } from '../../utils/ssr-queries/collections'
@@ -36,20 +37,8 @@ const MyNotes = ({ }) => {
                <FullCollectionsDisplayLayout>
                   {!collections.fetching && collections.data?.collections &&
                      <Accordion allowMultiple>
-                        {collections.data?.collections.map((collection) => (
-                           <AccordionItem>
-                              <h2>
-                                 <AccordionButton>
-                                    <Box flex="1" textAlign="left">
-                                       {collection.title}
-                                    </Box>
-                                    <AccordionIcon />
-                                 </AccordionButton>
-                              </h2>
-                              <AccordionPanel pb={4}>
-                                 lists here
-                              </AccordionPanel>
-                           </AccordionItem>
+                        {collections.data?.collections.map((collection: Collection) => (
+                           <CollectionAccordianItem collection={collection} />
                         ))
                         }
                      </Accordion>
