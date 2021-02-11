@@ -8,7 +8,7 @@ interface Props {
    user: UseQueryState<MeQuery, object>
 }
 
-const ActivityPageLayout: React.FC<Props> = ({ children, user }) => {
+const MyNotesPageLayout: React.FC<Props> = ({ children, user }) => {
    return (
       <Flex direction="column" h="100vh">
          <NavBar user={user} />
@@ -19,4 +19,4 @@ const ActivityPageLayout: React.FC<Props> = ({ children, user }) => {
    )
 }
 
-export default ActivityPageLayout
+export default MyNotesPageLayout
