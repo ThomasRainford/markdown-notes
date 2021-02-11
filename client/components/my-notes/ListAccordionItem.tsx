@@ -1,6 +1,7 @@
-import { AccordionItem, AccordionButton, Box, list, AccordionIcon } from '@chakra-ui/react'
+import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Text } from '@chakra-ui/react'
 import React from 'react'
 import { NotesList } from '../../generated/graphql'
+import NoteDisplayItem from './NoteDisplayItem'
 
 interface Props {
    list: NotesList
@@ -17,6 +18,11 @@ const ListAccordionItem: React.FC<Props> = ({ list }) => {
                <AccordionIcon />
             </AccordionButton>
          </h2>
+         <AccordionPanel pb={4}>
+            {list.notes.map((note) => (
+               <NoteDisplayItem note={note} />
+            ))}
+         </AccordionPanel>
       </AccordionItem>
    )
 }

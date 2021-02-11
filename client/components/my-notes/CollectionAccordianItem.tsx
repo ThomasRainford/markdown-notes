@@ -20,8 +20,7 @@ const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
             </AccordionButton>
          </h2>
          <AccordionPanel pb={4}>
-            <Accordion>
-
+            <Accordion allowMultiple>
                {collection.lists.map((list) => (
                   <ListAccordionItem key={list.id} list={list} />
                ))
