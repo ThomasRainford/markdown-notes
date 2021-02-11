@@ -3,6 +3,7 @@ import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { ssrExchange, dedupExchange, fetchExchange, cacheExchange } from 'urql'
+import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
 import MyNotesPageLayout from '../../components/my-notes/MyNotesPageLayout'
 import PageLoadingIndicator from '../../components/PageLoadingIndicator'
 import { useCollectionsQuery, useMeQuery } from '../../generated/graphql'
@@ -32,8 +33,7 @@ const MyNotes = ({ }) => {
          { !user.fetching && user.data?.me
             ?
             <MyNotesPageLayout user={user}>
-
-               <Flex direction="column" h="100%" w="25em" bg="#5CDB95" textColor="#05386B">
+               <FullCollectionsDisplayLayout>
                   {!collections.fetching && collections.data?.collections &&
                      <Accordion allowMultiple>
                         {collections.data?.collections.map((collection) => (
@@ -54,8 +54,7 @@ const MyNotes = ({ }) => {
                         }
                      </Accordion>
                   }
-               </Flex>
-
+               </FullCollectionsDisplayLayout>
                {/*<Flex>
                - Use one side menu.
                - Collection will be Chakra Accordians.
