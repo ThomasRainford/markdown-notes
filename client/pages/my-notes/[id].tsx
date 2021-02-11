@@ -32,15 +32,38 @@ const MyNotes = ({ }) => {
          { !user.fetching && user.data?.me
             ?
             <MyNotesPageLayout user={user}>
-               <Flex>
-                  {/*
+
+               <Flex direction="column" h="100%" w="25em" bg="#5CDB95" textColor="#05386B">
+                  {!collections.fetching && collections.data?.collections &&
+                     <Accordion allowMultiple>
+                        {collections.data?.collections.map((collection) => (
+                           <AccordionItem>
+                              <h2>
+                                 <AccordionButton>
+                                    <Box flex="1" textAlign="left">
+                                       {collection.title}
+                                    </Box>
+                                    <AccordionIcon />
+                                 </AccordionButton>
+                              </h2>
+                              <AccordionPanel pb={4}>
+                                 lists here
+                              </AccordionPanel>
+                           </AccordionItem>
+                        ))
+                        }
+                     </Accordion>
+                  }
+               </Flex>
+
+               {/*<Flex>
                - Use one side menu.
                - Collection will be Chakra Accordians.
                - Inside the collections are the lists which will also be Accordians (hopefully).
                - Inside the list Accordians are the notes.
                - Need to hightlight currently selected collection and list Accordian.
                - Below is a successful test of implementing Accordian components inside an Accordian component.
-               */}
+               
                   <Accordion allowMultiple>
                      <AccordionItem>
                         <h2>
@@ -107,7 +130,7 @@ const MyNotes = ({ }) => {
                         </AccordionPanel>
                      </AccordionItem>
                   </Accordion>
-               </Flex>
+               </Flex> */}
             </MyNotesPageLayout>
             :
             <PageLoadingIndicator />
