@@ -4,6 +4,15 @@ query Collections {
 		title
 		visibility
 		upvotes
+		lists {
+			id
+			title
+			notes {
+				id
+				title
+				body
+			}
+		}
 		createdAt
 	}
 }

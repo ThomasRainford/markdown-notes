@@ -364,6 +364,14 @@ export type CollectionsQuery = (
   & { collections: Array<(
     { __typename?: 'Collection' }
     & Pick<Collection, 'id' | 'title' | 'visibility' | 'upvotes' | 'createdAt'>
+    & { lists: Array<(
+      { __typename?: 'NotesList' }
+      & Pick<NotesList, 'id' | 'title'>
+      & { notes: Array<(
+        { __typename?: 'Note' }
+        & Pick<Note, 'id' | 'title' | 'body'>
+      )> }
+    )> }
   )> }
 );
 
@@ -457,6 +465,15 @@ export const CollectionsDocument = gql`
     title
     visibility
     upvotes
+    lists {
+      id
+      title
+      notes {
+        id
+        title
+        body
+      }
+    }
     createdAt
   }
 }
