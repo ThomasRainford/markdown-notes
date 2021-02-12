@@ -1,13 +1,14 @@
 import { Accordion, Flex, Heading } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
 import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
 import MyNotesPageLayout from '../../components/my-notes/MyNotesPageLayout'
 import NoteDisplayLayout from '../../components/my-notes/NoteDisplayLayout'
 import PageLoadingIndicator from '../../components/PageLoadingIndicator'
+import NoteProvider, { NoteContext } from '../../context/NoteContext'
 import { Collection, Note, useCollectionsQuery, useMeQuery } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { COLLECTIONS_QUERY } from '../../utils/ssr-queries/collections'
@@ -20,7 +21,8 @@ interface Props {
 const MyNotes = ({ }) => {
 
    const router = useRouter()
-   const [selectedNote, setSelectedNote] = useState<Note>()
+   const { getSelectedNote } = useContext(NoteContext)
+   const selectedNote = getSelectedNote()
 
    const [user] = useMeQuery()
    const [collections] = useCollectionsQuery()
@@ -45,7 +47,7 @@ const MyNotes = ({ }) => {
                <NoteDisplayLayout>
                   <Flex w="100%">
                      <Heading>
-
+                        {selectedNote ? selectedNote.title : "Select a Note"}
                      </Heading>
                   </Flex>
                </NoteDisplayLayout>
@@ -76,4 +78,8 @@ export async function getServerSideProps() {
    }
 }
 
-export default withUrqlClient(createUrqlClient, { neverSuspend: true, ssr: false })(MyNotes)
+export default withUrqlClient(createUrqlClient, { neverSuspend: true, ssr: false })(() =>
+   <NoteProvider>
+      <MyNotes />
+   </NoteProvider>
+)
