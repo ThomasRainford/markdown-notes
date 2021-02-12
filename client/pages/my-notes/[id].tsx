@@ -1,15 +1,15 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Flex } from '@chakra-ui/react'
+import { Accordion, Flex, Heading } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
-import React from 'react'
-import { ssrExchange, dedupExchange, fetchExchange, cacheExchange } from 'urql'
+import React, { useState } from 'react'
+import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
 import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
 import MyNotesPageLayout from '../../components/my-notes/MyNotesPageLayout'
+import NoteDisplayLayout from '../../components/my-notes/NoteDisplayLayout'
 import PageLoadingIndicator from '../../components/PageLoadingIndicator'
-import { Collection, useCollectionsQuery, useMeQuery } from '../../generated/graphql'
+import { Collection, Note, useCollectionsQuery, useMeQuery } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
-import { ACTIVITY_FEED_QUERY } from '../../utils/ssr-queries/activityFeed'
 import { COLLECTIONS_QUERY } from '../../utils/ssr-queries/collections'
 import { useIsAuth } from '../../utils/useIsAuth'
 
@@ -20,12 +20,10 @@ interface Props {
 const MyNotes = ({ }) => {
 
    const router = useRouter()
+   const [selectedNote, setSelectedNote] = useState<Note>()
 
    const [user] = useMeQuery()
-
    const [collections] = useCollectionsQuery()
-
-   console.log(collections)
 
    useIsAuth(user)
 
@@ -36,7 +34,7 @@ const MyNotes = ({ }) => {
             <MyNotesPageLayout user={user}>
                <FullCollectionsDisplayLayout>
                   {!collections.fetching && collections.data?.collections &&
-                     <Accordion allowMultiple>
+                     <Accordion allowMultiple px="1em" textColor="#05368B">
                         {collections.data?.collections.map((collection: Collection) => (
                            <CollectionAccordianItem key={collection.id} collection={collection} />
                         ))
@@ -44,6 +42,13 @@ const MyNotes = ({ }) => {
                      </Accordion>
                   }
                </FullCollectionsDisplayLayout>
+               <NoteDisplayLayout>
+                  <Flex w="100%">
+                     <Heading>
+
+                     </Heading>
+                  </Flex>
+               </NoteDisplayLayout>
             </MyNotesPageLayout>
             :
             <PageLoadingIndicator />

@@ -13,7 +13,7 @@ const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
       <AccordionItem>
          <h2>
             <AccordionButton>
-               <Box flex="1" textAlign="left">
+               <Box flex="1" textAlign="left" fontWeight="bold">
                   {collection.title}
                </Box>
                <AccordionIcon />

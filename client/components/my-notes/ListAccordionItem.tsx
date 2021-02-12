@@ -12,7 +12,7 @@ const ListAccordionItem: React.FC<Props> = ({ list }) => {
       <AccordionItem>
          <h2>
             <AccordionButton>
-               <Box flex="1" textAlign="left">
+               <Box flex="1" textAlign="left" fontWeight="bold">
                   {list.title}
                </Box>
                <AccordionIcon />
@@ -20,7 +20,7 @@ const ListAccordionItem: React.FC<Props> = ({ list }) => {
          </h2>
          <AccordionPanel pb={4}>
             {list.notes.map((note) => (
-               <NoteDisplayItem note={note} />
+               <NoteDisplayItem key={note.id} note={note} />
             ))}
          </AccordionPanel>
       </AccordionItem>
