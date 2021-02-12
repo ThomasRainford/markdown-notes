@@ -13,7 +13,7 @@ const ListAccordionItem: React.FC<Props> = ({ list }) => {
          <h2>
             <AccordionButton>
                <Box flex="1" textAlign="left" fontWeight="bold">
-                  {list.title}
+                  <Text>{list.title}</Text>
                </Box>
                <AccordionIcon />
             </AccordionButton>

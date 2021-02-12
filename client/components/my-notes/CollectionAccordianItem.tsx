@@ -1,4 +1,4 @@
-import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Accordion } from '@chakra-ui/react'
+import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Accordion, Text } from '@chakra-ui/react'
 import React from 'react'
 import { Collection } from '../../generated/graphql'
 import ListAccordionItem from './ListAccordionItem'
@@ -14,7 +14,7 @@ const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
          <h2>
             <AccordionButton>
                <Box flex="1" textAlign="left" fontWeight="bold">
-                  {collection.title}
+                  <Text fontSize="lg">{collection.title}</Text>
                </Box>
                <AccordionIcon />
             </AccordionButton>

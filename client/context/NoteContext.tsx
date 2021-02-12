@@ -12,7 +12,9 @@ const NoteProvider: React.FC = ({ children }) => {
 
    const [selectedNote, setSelectedNote] = React.useState<Note>()
 
-   const selectNote = (note: Note) => setSelectedNote(note)
+   const selectNote = (note: Note) => {
+      setSelectedNote(note)
+   }
 
    const getSelectedNote = (): Note => selectedNote
 

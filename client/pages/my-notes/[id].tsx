@@ -1,4 +1,4 @@
-import { Accordion, Flex, Heading } from '@chakra-ui/react'
+import { Accordion, Flex, Heading, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useState } from 'react'
@@ -45,10 +45,15 @@ const MyNotes = ({ }) => {
                   }
                </FullCollectionsDisplayLayout>
                <NoteDisplayLayout>
-                  <Flex w="100%">
-                     <Heading>
+                  <Flex w="100%" p="1em">
+                     <Heading textColor="#05386B">
                         {selectedNote ? selectedNote.title : "Select a Note"}
                      </Heading>
+                  </Flex>
+                  <Flex w="100%" p="1em">
+                     <Text>
+                        {selectedNote && selectedNote.body}
+                     </Text>
                   </Flex>
                </NoteDisplayLayout>
             </MyNotesPageLayout>
