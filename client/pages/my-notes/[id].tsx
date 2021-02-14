@@ -39,6 +39,7 @@ const MyNotes = ({ }) => {
                      <Accordion
                         px="1em"
                         textColor="#05368B"
+                        defaultIndex={parseInt(localStorage.getItem('collectionIndex'))}
                         onChange={(expandedIndex: ExpandedIndex) => {
                            localStorage.setItem('collectionIndex', expandedIndex.toString())
                            localStorage.removeItem('listIndex')
