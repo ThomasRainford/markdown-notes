@@ -1,14 +1,16 @@
-import { Button, Divider, Flex, Heading, Icon, ListItem, Text } from '@chakra-ui/react'
+import { Button, Flex, Heading, Icon, ListItem, Text } from '@chakra-ui/react'
 import React from 'react'
-import { MdAccountCircle, MdThumbUp } from 'react-icons/md'
-import { ActivityFeedResponse, useVoteMutation } from '../../generated/graphql'
+import { MdAccountCircle } from 'react-icons/md'
+import { UseQueryState } from 'urql'
+import { ActivityFeedResponse, MeQuery, useVoteMutation } from '../../generated/graphql'
 import CollectionInfo from './CollectionInfo'
 
 interface Props {
    activity: ActivityFeedResponse
+   user: UseQueryState<MeQuery, object>
 }
 
-const ActivityItem: React.FC<Props> = ({ activity }) => {
+const ActivityItem: React.FC<Props> = ({ activity, user }) => {
 
    const owner = activity.collection.owner
    const _activity = activity.activity
@@ -17,7 +19,7 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
    const [result, voteMutation] = useVoteMutation()
 
    const toDays = (time: string): number => {
-      return new Date(collection.createdAt).getDay()
+      return new Date(time).getDay()
    }
 
    return (
@@ -44,10 +46,9 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
                         mr="0.5em"
                         onClick={async () => {
                            const response = await voteMutation({ collectionId: collection.id })
-                           console.log(response)
                         }}
                      >
-                        Upvote
+                        {user.data?.me?.upvoted.includes(collection.id) ? 'DownVote' : 'Upvote'}
                      </Button>
                      <Button
                         size="sm"
