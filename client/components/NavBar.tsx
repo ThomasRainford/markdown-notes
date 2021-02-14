@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Divider, Flex, Heading, Icon, Link, Text } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Divider, Flex, Heading, Icon, Link, localStorageManager, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { UseQueryState } from 'urql'
 import { MeQuery, useLogoutMutation } from '../generated/graphql'
@@ -23,6 +23,9 @@ const NavBar: React.FC<Props> = ({ user }) => {
       console.log('logout!')
       const response = await logoutMutation()
       console.log(response)
+
+      localStorage.removeItem('listIndex')
+      localStorage.removeItem('collectionIndex')
       router.replace('/')
    }
 
