@@ -347,6 +347,30 @@ export type RegisterMutation = (
   }
 );
 
+export type SavePublicCollectionMutationVariables = Exact<{
+  targetUserId: Scalars['String'];
+  collectionId: Scalars['String'];
+}>;
+
+
+export type SavePublicCollectionMutation = (
+  { __typename?: 'Mutation' }
+  & {
+    savePublicCollection: (
+      { __typename?: 'CollectionResponse' }
+      & {
+        collection?: Maybe<(
+          { __typename?: 'Collection' }
+          & Pick<Collection, 'id' | 'title' | 'visibility'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
+);
+
 export type VoteMutationVariables = Exact<{
   collectionId: Scalars['String'];
 }>;
@@ -482,6 +506,25 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const SavePublicCollectionDocument = gql`
+    mutation SavePublicCollection($targetUserId: String!, $collectionId: String!) {
+  savePublicCollection(targetUserId: $targetUserId, collectionId: $collectionId) {
+    collection {
+      id
+      title
+      visibility
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useSavePublicCollectionMutation() {
+  return Urql.useMutation<SavePublicCollectionMutation, SavePublicCollectionMutationVariables>(SavePublicCollectionDocument);
 };
 export const VoteDocument = gql`
     mutation Vote($collectionId: String!) {

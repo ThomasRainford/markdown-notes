@@ -1,8 +1,8 @@
-import { Button, Flex, Heading, Icon, ListItem, Text } from '@chakra-ui/react'
+import { Button, Flex, Heading, Icon, ListItem, Text, useToast } from '@chakra-ui/react'
 import React from 'react'
 import { MdAccountCircle } from 'react-icons/md'
-import { UseQueryState } from 'urql'
-import { ActivityFeedResponse, MeQuery, useVoteMutation } from '../../generated/graphql'
+import { OperationResult, UseQueryState } from 'urql'
+import { ActivityFeedResponse, Exact, MeQuery, SavePublicCollectionMutation, useSavePublicCollectionMutation, useVoteMutation } from '../../generated/graphql'
 import CollectionInfo from './CollectionInfo'
 
 interface Props {
@@ -16,7 +16,36 @@ const ActivityItem: React.FC<Props> = ({ activity, user }) => {
    const _activity = activity.activity
    const collection = activity.collection
 
-   const [result, voteMutation] = useVoteMutation()
+   const [voteResult, voteMutation] = useVoteMutation()
+   const [saveResult, saveMutation] = useSavePublicCollectionMutation()
+
+   const toast = useToast()
+
+   // Display success or error toast for saving a collection.
+   const displayToast = (response: OperationResult<SavePublicCollectionMutation, Exact<{
+      targetUserId: string;
+      collectionId: string;
+   }>>) => {
+
+      if (response.data?.savePublicCollection.error || response.error) {
+         toast({
+            title: "Save Failed",
+            description: "We were unable to save this collection.",
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+         })
+      } else if (response.data?.savePublicCollection.collection) {
+         toast({
+            title: "Collection Saved",
+            description: "Collection saved successfully!",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+         })
+      }
+
+   }
 
    const toDays = (time: string): number => {
       return new Date(time).getDay()
@@ -54,6 +83,14 @@ const ActivityItem: React.FC<Props> = ({ activity, user }) => {
                         size="sm"
                         colorScheme="teal"
                         variant="outline"
+                        onClick={async () => {
+                           const response = await saveMutation({
+                              targetUserId: owner.id,
+                              collectionId: collection.id
+                           })
+
+                           displayToast(response)
+                        }}
                      >
                         Save
                      </Button>
