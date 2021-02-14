@@ -39,7 +39,12 @@ const Activity = ({ }) => {
                      <List spacing={2} p="0.5em">
                         {
                            collections.data?.collections.map((collection: Collection) => (
-                              <CollectionItem key={collection.id} collection={collection} />
+                              <CollectionItem
+                                 key={collection.id}
+                                 collection={collection}
+                                 user={user}
+                                 index={collections.data?.collections.indexOf(collection) as number}
+                              />
                            ))
                         }
                      </List>
