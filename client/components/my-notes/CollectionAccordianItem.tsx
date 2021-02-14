@@ -1,5 +1,6 @@
-import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Accordion, Text } from '@chakra-ui/react'
+import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Accordion, Text, Flex, ListIcon } from '@chakra-ui/react'
 import React from 'react'
+import { MdLockOpen, MdLock } from 'react-icons/md'
 import { Collection } from '../../generated/graphql'
 import CollectionInfo from '../activity/CollectionInfo'
 import ListAccordionItem from './ListAccordionItem'
@@ -15,7 +16,10 @@ const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
          <h2>
             <AccordionButton>
                <Box flex="1" textAlign="left">
-                  <Text fontSize="lg" fontWeight="bold" mb="0.25em">{collection.title}</Text>
+                  <Flex align="center">
+                     <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} />
+                     <Text fontSize="lg" fontWeight="bold" mb="0.25em" ml="0.5em">{collection.title}</Text>
+                  </Flex>
                   <CollectionInfo collection={collection} />
                </Box>
                <AccordionIcon />

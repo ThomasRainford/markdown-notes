@@ -14,7 +14,7 @@ const CollectionItem: React.FC<Props> = ({ collection }) => {
          <Flex direction="column" bg="#8EE4AF" p="0.5em" border="1px" borderColor="#EDF5E1" borderRadius="md">
             <Flex align="center">
                <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} />
-               <Text mr="0.5em">{collection.title}</Text>
+               <Text fontSize="lg" fontWeight="bold" mb="0.25em" ml="0.5em">{collection.title}</Text>
             </Flex>
             <CollectionInfo collection={collection} />
          </Flex>
