@@ -1,5 +1,22 @@
-import { cacheExchange } from '@urql/exchange-graphcache'
+import { Cache, cacheExchange } from '@urql/exchange-graphcache'
 import { dedupExchange, fetchExchange } from 'urql'
+
+const invalidateActivityFeed = (cache: Cache) => {
+   const allFields = cache.inspectFields('Query')
+   const fieldInfos = allFields.filter((info) => info.fieldName === 'activityFeed')
+   fieldInfos.forEach((fi) => {
+      cache.invalidate('Query', 'activityFeed', fi.arguments || null)
+   })
+}
+
+const invalidateMe = (cache: Cache) => {
+   const allFields = cache.inspectFields('Query')
+   const fieldInfos = allFields.filter((info) => info.fieldName === 'me')
+   fieldInfos.forEach((fi) => {
+      cache.invalidate('Query', 'me', fi.arguments || null)
+   })
+}
+
 
 export const createUrqlClient = (ssrExchange: any) => {
    return {
@@ -7,6 +24,14 @@ export const createUrqlClient = (ssrExchange: any) => {
       exchanges: [
          dedupExchange,
          cacheExchange({
+            updates: {
+               Mutation: {
+                  vote: (_result, _args, cache, _info) => {
+                     invalidateActivityFeed(cache)
+                     invalidateMe(cache)
+                  }
+               }
+            },
             keys: {
                ActivityFeedResponse: () => null
             }

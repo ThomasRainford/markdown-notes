@@ -25,8 +25,6 @@ const Activity = ({ }) => {
    const [collections] = useCollectionsQuery()
    const [activityFeed] = useActivityFeedQuery()
 
-   console.log(activityFeed)
-
    useIsAuth(user)
 
    return (
@@ -55,7 +53,7 @@ const Activity = ({ }) => {
                      <List spacing={10} w="100%">
                         {
                            activityFeed.data?.activityFeed.map((activity: ActivityFeedResponse) => (
-                              <ActivityItem key={activity.collection.id} activity={activity} />
+                              <ActivityItem key={activity.collection.id} activity={activity} user={user} />
                            ))
                         }
                      </List>

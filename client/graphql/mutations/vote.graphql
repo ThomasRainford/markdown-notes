@@ -1,0 +1,13 @@
+mutation Vote($collectionId: String!) {
+	vote(collectionId: $collectionId) {
+		collection {
+			id
+			title
+			upvotes
+		}
+		error {
+			property
+			message
+		}
+	}
+}
