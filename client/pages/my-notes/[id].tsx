@@ -1,4 +1,4 @@
-import { Accordion, Flex, Heading, Text } from '@chakra-ui/react'
+import { Accordion, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useState } from 'react'
@@ -36,7 +36,14 @@ const MyNotes = ({ }) => {
             <MyNotesPageLayout user={user}>
                <FullCollectionsDisplayLayout>
                   {!collections.fetching && collections.data?.collections &&
-                     <Accordion allowMultiple px="1em" textColor="#05368B">
+                     <Accordion
+                        px="1em"
+                        textColor="#05368B"
+                        onChange={(expandedIndex: ExpandedIndex) => {
+                           localStorage.setItem('collectionIndex', expandedIndex.toString())
+                           localStorage.removeItem('listIndex')
+                        }}
+                     >
                         {collections.data?.collections.map((collection: Collection) => (
                            <CollectionAccordianItem key={collection.id} collection={collection} />
                         ))

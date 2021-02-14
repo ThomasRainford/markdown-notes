@@ -1,4 +1,5 @@
-import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Accordion, Text, Flex, ListIcon } from '@chakra-ui/react'
+import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Accordion, Text, Flex, ListIcon, ExpandedIndex } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { MdLockOpen, MdLock } from 'react-icons/md'
 import { Collection } from '../../generated/graphql'
@@ -10,6 +11,8 @@ interface Props {
 }
 
 const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
+
+   const router = useRouter()
 
    return (
       <AccordionItem>
@@ -26,7 +29,11 @@ const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
             </AccordionButton>
          </h2>
          <AccordionPanel pb={4}>
-            <Accordion allowMultiple>
+            <Accordion
+               onChange={(expandedIndex: ExpandedIndex) => {
+                  localStorage.setItem('listIndex', expandedIndex.toString())
+               }}
+            >
                {collection.lists.map((list) => (
                   <ListAccordionItem key={list.id} list={list} />
                ))
