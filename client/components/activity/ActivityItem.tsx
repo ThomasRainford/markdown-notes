@@ -1,7 +1,7 @@
 import { Button, Divider, Flex, Heading, Icon, ListItem, Text } from '@chakra-ui/react'
 import React from 'react'
 import { MdAccountCircle, MdThumbUp } from 'react-icons/md'
-import { ActivityFeedResponse } from '../../generated/graphql'
+import { ActivityFeedResponse, useVoteMutation } from '../../generated/graphql'
 import CollectionInfo from './CollectionInfo'
 
 interface Props {
@@ -13,6 +13,8 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
    const owner = activity.collection.owner
    const _activity = activity.activity
    const collection = activity.collection
+
+   const [result, voteMutation] = useVoteMutation()
 
    const toDays = (time: string): number => {
       return new Date(collection.createdAt).getDay()
@@ -40,6 +42,10 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
                         colorScheme="teal"
                         variant="outline"
                         mr="0.5em"
+                        onClick={async () => {
+                           const response = await voteMutation({ collectionId: collection.id })
+                           console.log(response)
+                        }}
                      >
                         Upvote
                      </Button>
