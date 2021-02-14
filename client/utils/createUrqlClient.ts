@@ -1,4 +1,5 @@
 import { Cache, cacheExchange } from '@urql/exchange-graphcache'
+import { SSRExchange } from 'next-urql'
 import { dedupExchange, fetchExchange } from 'urql'
 
 const invalidateActivityFeed = (cache: Cache) => {
@@ -25,7 +26,7 @@ const invalidateCollections = (cache: Cache) => {
    })
 }
 
-export const createUrqlClient = (ssrExchange: any) => {
+export const createUrqlClient = (ssrExchange: SSRExchange) => {
    return {
       url: 'http://localhost:3000/graphql',
       exchanges: [
