@@ -1,4 +1,5 @@
-import { Accordion, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
+import { AddIcon } from '@chakra-ui/icons'
+import { Accordion, Button, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
@@ -36,7 +37,7 @@ const MyNotes = ({ }) => {
 
    return (
       <>
-         { !user.fetching && user.data?.me
+         {!user.fetching && user.data?.me
             ?
             <MyNotesPageLayout user={user}>
                <FullCollectionsDisplayLayout>
@@ -57,6 +58,14 @@ const MyNotes = ({ }) => {
                         }
                      </Accordion>
                   }
+                  <Flex justify="center" mt="1.5em">
+                     <Button
+                        leftIcon={<AddIcon />}
+                        colorScheme="teal"
+                     >
+                        New Collection
+                     </Button>
+                  </Flex>
                </FullCollectionsDisplayLayout>
                <NoteDisplayLayout>
                   <Flex w="100%" p="1em">
