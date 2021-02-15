@@ -18,7 +18,7 @@ const CollectionItem: React.FC<Props> = ({ collection, user, index }) => {
 
    return (
       <ListItem key={collection.id}>
-         <Tooltip hasArrow label="Open Collection" bg="#379683">
+         <Tooltip hasArrow label="Click to Open" placement="top" bg="#379683">
             <Flex direction="column" bg="#8EE4AF" p="0.5em" border="1px" borderColor="#EDF5E1" borderRadius="md"
                _hover={{ borderColor: "#05386B" }}
                onClick={() => {
