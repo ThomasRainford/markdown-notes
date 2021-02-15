@@ -3,7 +3,6 @@ import { Accordion, Button, ExpandedIndex, Flex, Heading, IconButton, Text, Tool
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
-import { MdAdd } from 'react-icons/md'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
 import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
@@ -38,7 +37,7 @@ const MyNotes = ({ }) => {
 
    return (
       <>
-         { !user.fetching && user.data?.me
+         {!user.fetching && user.data?.me
             ?
             <MyNotesPageLayout user={user}>
                <FullCollectionsDisplayLayout>
@@ -62,7 +61,7 @@ const MyNotes = ({ }) => {
                   <Flex justify="center" mt="1.5em">
                      <Button
                         leftIcon={<AddIcon />}
-                        variant="outline"
+                        colorScheme="teal"
                      >
                         New Collection
                      </Button>

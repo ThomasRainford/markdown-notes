@@ -1,4 +1,5 @@
-import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Accordion, Text, Flex, ListIcon, ExpandedIndex, IconButton, Tooltip } from '@chakra-ui/react'
+import { AddIcon } from '@chakra-ui/icons'
+import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Accordion, Text, Flex, ListIcon, ExpandedIndex, IconButton, Tooltip, Button } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { MdLockOpen, MdLock, MdAddBox, MdAdd } from 'react-icons/md'
@@ -10,7 +11,7 @@ interface Props {
    collection: Collection
 }
 
-const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
+const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
 
    const router = useRouter()
 
@@ -40,6 +41,15 @@ const CollectionAccordianItem: React.FC<Props> = ({ children, collection }) => {
                ))
                }
             </Accordion>
+            <Flex justify="center" mt="1em">
+               <Button
+                  leftIcon={<AddIcon />}
+                  variant="outline"
+                  colorScheme="teal"
+               >
+                  New List
+               </Button>
+            </Flex>
          </AccordionPanel>
       </AccordionItem>
    )
