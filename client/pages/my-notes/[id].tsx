@@ -1,7 +1,9 @@
-import { Accordion, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
+import { Icon } from '@chakra-ui/icons'
+import { Accordion, ExpandedIndex, Flex, Heading, IconButton, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useState } from 'react'
+import { MdAdd, MdAddBox, MdDelete, MdEdit } from 'react-icons/md'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
 import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
@@ -35,6 +37,7 @@ const MyNotes = ({ }) => {
             ?
             <MyNotesPageLayout user={user}>
                <FullCollectionsDisplayLayout>
+                  <Text fontStyle="italic" pb="1em" pl="1em">Your Collections</Text>
                   {!collections.fetching && collections.data?.collections &&
                      <Accordion
                         px="1em"
@@ -64,6 +67,34 @@ const MyNotes = ({ }) => {
                      </Text>
                   </Flex>
                </NoteDisplayLayout>
+               <Flex direction="column" align="center" h="100%" w="6em" bg="#5CDB95">
+                  <Flex direction="column" align="center" pt="1em">
+                     <IconButton
+                        aria-label="New Note"
+                        icon={<MdAdd />}
+                        variant="outline"
+                        colorScheme="black"
+                        fontSize="3xl"
+                        mb="0.75em"
+                     />
+                     <IconButton
+                        aria-label="Edit Note"
+                        icon={<MdEdit />}
+                        variant="outline"
+                        colorScheme="black"
+                        fontSize="3xl"
+                        mb="0.75em"
+                     />
+                     <IconButton
+                        aria-label="Delete Note"
+                        icon={<MdDelete />}
+                        variant="outline"
+                        colorScheme="black"
+                        fontSize="3xl"
+                        mb="0.75em"
+                     />
+                  </Flex>
+               </Flex>
             </MyNotesPageLayout>
             :
             <PageLoadingIndicator />
