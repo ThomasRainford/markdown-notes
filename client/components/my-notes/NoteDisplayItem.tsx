@@ -1,4 +1,5 @@
 import { Flex, Icon, Text } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import React, { useContext } from 'react'
 import { MdArrowForward, MdNote } from 'react-icons/md'
 import { NoteContext } from '../../context/NoteContext'
@@ -10,6 +11,7 @@ interface Props {
 
 const NoteDisplayItem: React.FC<Props> = ({ note }) => {
 
+   const router = useRouter()
    const { selectNote } = useContext(NoteContext)
 
    return (
@@ -19,6 +21,7 @@ const NoteDisplayItem: React.FC<Props> = ({ note }) => {
          p="0.5em"
          _hover={{ backgroundColor: "#8EE4AF" }}
          onClick={() => {
+            localStorage.setItem('selectedNote', JSON.stringify(note))
             selectNote(note)
          }}
       >

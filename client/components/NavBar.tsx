@@ -26,6 +26,7 @@ const NavBar: React.FC<Props> = ({ user }) => {
 
       localStorage.removeItem('listIndex')
       localStorage.removeItem('collectionIndex')
+      localStorage.removeItem('selectedNote')
       router.replace('/')
    }
 

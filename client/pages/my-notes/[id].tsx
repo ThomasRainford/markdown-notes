@@ -1,8 +1,8 @@
 import { Icon } from '@chakra-ui/icons'
-import { Accordion, ExpandedIndex, Flex, Heading, IconButton, Text } from '@chakra-ui/react'
+import { Accordion, ExpandedIndex, Flex, Heading, IconButton, Text, Tooltip } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { MdAdd, MdAddBox, MdDelete, MdEdit } from 'react-icons/md'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
@@ -23,13 +23,17 @@ interface Props {
 const MyNotes = ({ }) => {
 
    const router = useRouter()
-   const { getSelectedNote } = useContext(NoteContext)
+   const { getSelectedNote, selectNote } = useContext(NoteContext)
    const selectedNote = getSelectedNote()
 
    const [user] = useMeQuery()
    const [collections] = useCollectionsQuery()
 
    useIsAuth(user)
+
+   useEffect(() => {
+      selectNote(JSON.parse(localStorage.getItem('selectedNote')))
+   }, [])
 
    return (
       <>
@@ -67,34 +71,42 @@ const MyNotes = ({ }) => {
                      </Text>
                   </Flex>
                </NoteDisplayLayout>
-               <Flex direction="column" align="center" h="100%" w="6em" bg="#5CDB95">
-                  <Flex direction="column" align="center" pt="1em">
-                     <IconButton
-                        aria-label="New Note"
-                        icon={<MdAdd />}
-                        variant="outline"
-                        colorScheme="black"
-                        fontSize="3xl"
-                        mb="0.75em"
-                     />
-                     <IconButton
-                        aria-label="Edit Note"
-                        icon={<MdEdit />}
-                        variant="outline"
-                        colorScheme="black"
-                        fontSize="3xl"
-                        mb="0.75em"
-                     />
-                     <IconButton
-                        aria-label="Delete Note"
-                        icon={<MdDelete />}
-                        variant="outline"
-                        colorScheme="black"
-                        fontSize="3xl"
-                        mb="0.75em"
-                     />
+               {selectedNote &&
+                  <Flex direction="column" align="center" h="100%" w="6em" bg="#5CDB95">
+                     <Flex direction="column" align="center" pt="1em">
+                        <Tooltip label="Add New Note" placement="left">
+                           <IconButton
+                              aria-label="New Note"
+                              icon={<MdAdd />}
+                              variant="outline"
+                              colorScheme="black"
+                              fontSize="3xl"
+                              mb="0.75em"
+                           />
+                        </Tooltip>
+                        <Tooltip label="Edit Note" placement="left">
+                           <IconButton
+                              aria-label="Edit Note"
+                              icon={<MdEdit />}
+                              variant="outline"
+                              colorScheme="black"
+                              fontSize="3xl"
+                              mb="0.75em"
+                           />
+                        </Tooltip>
+                        <Tooltip label="Delete Note" placement="left">
+                           <IconButton
+                              aria-label="Delete Note"
+                              icon={<MdDelete />}
+                              variant="outline"
+                              colorScheme="black"
+                              fontSize="3xl"
+                              mb="0.75em"
+                           />
+                        </Tooltip>
+                     </Flex>
                   </Flex>
-               </Flex>
+               }
             </MyNotesPageLayout>
             :
             <PageLoadingIndicator />
