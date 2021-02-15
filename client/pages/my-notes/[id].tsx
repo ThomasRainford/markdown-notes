@@ -1,8 +1,7 @@
-import { Accordion, ExpandedIndex, Flex, Heading, IconButton, Text, Tooltip } from '@chakra-ui/react'
+import { Accordion, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
-import { MdAdd, MdDelete, MdEdit } from 'react-icons/md'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
 import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
@@ -72,7 +71,7 @@ const MyNotes = ({ }) => {
                   </Flex>
                </NoteDisplayLayout>
                {selectedNote &&
-                  <NoteEditorPanel />
+                  <NoteEditorPanel selectedNote={selectedNote} />
                }
             </MyNotesPageLayout>
             :
