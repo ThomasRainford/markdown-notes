@@ -23,6 +23,7 @@ const CollectionItem: React.FC<Props> = ({ collection, user, index }) => {
                _hover={{ borderColor: "#05386B" }}
                onClick={() => {
                   localStorage.setItem('collectionIndex', index.toString())
+                  localStorage.removeItem('selectedNote')
                   router.push(`/my-notes/${user.data?.me?.username}`)
                }}
             >
