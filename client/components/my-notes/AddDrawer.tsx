@@ -1,6 +1,6 @@
 import { AddIcon } from '@chakra-ui/icons'
-import { useDisclosure, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Input, DrawerFooter, Button, Flex } from '@chakra-ui/react'
-import React from 'react'
+import { useDisclosure, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Input, DrawerFooter, Button, Flex, Radio, RadioGroup, Stack } from '@chakra-ui/react'
+import React, { useState } from 'react'
 
 interface Props {
    openButtonText: string
@@ -12,6 +12,10 @@ const AddDrawer: React.FC<Props> = ({ openButtonText, header }) => {
    const { isOpen, onOpen, onClose } = useDisclosure()
    const btnRef = React.useRef()
    const inputRef = React.useRef()
+
+   const [title, setTitle] = useState<string>('')
+   const [visibility, setVisibility] = useState<string>('private')
+   const handleInput = (event) => setTitle(event.target.value)
 
    return (
       <Flex justify="center" mt="1.5em">
@@ -36,7 +40,20 @@ const AddDrawer: React.FC<Props> = ({ openButtonText, header }) => {
                   <DrawerHeader>{header}</DrawerHeader>
 
                   <DrawerBody>
-                     <Input ref={inputRef} placeholder="Title" />
+                     <Input
+                        ref={inputRef}
+                        placeholder="Title"
+                        value={title}
+                        onChange={handleInput}
+                     />
+                     {header.includes("Collection") &&
+                        <RadioGroup defaultValue={visibility} onChange={(next) => { setVisibility(next.toString()) }}>
+                           <Stack direction="row" mt="1em">
+                              <Radio value="public">Public</Radio>
+                              <Radio value="private">Private</Radio>
+                           </Stack>
+                        </RadioGroup>
+                     }
                      <Button
                         colorScheme="teal"
                         mt="2em"
@@ -57,7 +74,7 @@ const AddDrawer: React.FC<Props> = ({ openButtonText, header }) => {
                </DrawerContent>
             </DrawerOverlay>
          </Drawer>
-      </Flex>
+      </Flex >
    )
 }
 

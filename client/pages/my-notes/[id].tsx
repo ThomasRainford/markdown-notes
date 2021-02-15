@@ -30,10 +30,6 @@ const MyNotes = ({ }) => {
    const [user] = useMeQuery()
    const [collections] = useCollectionsQuery()
 
-   // Add drawer
-   const { isOpen, onOpen, onClose } = useDisclosure()
-   const btnRef = React.useRef()
-
    useIsAuth(user)
 
    useEffect(() => {
