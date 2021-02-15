@@ -71,7 +71,7 @@ const MyNotes = ({ }) => {
                   </Flex>
                </NoteDisplayLayout>
                {selectedNote &&
-                  <Flex direction="column" align="center" h="100%" w="6em" bg="#5CDB95">
+                  <Flex direction="column" align="center" h="100%" w="6em" bg="#5CDB95" borderTop="2px" borderColor="#379683">
                      <Flex direction="column" align="center" pt="1em">
                         <Tooltip label="Add New Note" placement="left">
                            <IconButton
