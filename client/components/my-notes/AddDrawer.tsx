@@ -58,6 +58,9 @@ const AddDrawer: React.FC<Props> = ({ openButtonText, header }) => {
                         colorScheme="teal"
                         mt="2em"
                         mr="1em"
+                        onClick={() => {
+
+                        }}
                      >Create</Button>
                      <Button
                         mt="2em"
