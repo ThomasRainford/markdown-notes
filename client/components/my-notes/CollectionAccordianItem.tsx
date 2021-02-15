@@ -43,6 +43,7 @@ const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
                }
             </Accordion>
             <AddDrawer
+               collection={collection}
                openButtonText="New List"
                header="Create New List"
             />
