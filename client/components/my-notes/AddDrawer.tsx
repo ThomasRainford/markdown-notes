@@ -3,10 +3,11 @@ import { useDisclosure, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton,
 import React from 'react'
 
 interface Props {
+   openButtonText: string
    header: string
 }
 
-const AddDrawer: React.FC<Props> = ({ header }) => {
+const AddDrawer: React.FC<Props> = ({ openButtonText, header }) => {
 
    const { isOpen, onOpen, onClose } = useDisclosure()
    const btnRef = React.useRef()
@@ -20,7 +21,7 @@ const AddDrawer: React.FC<Props> = ({ header }) => {
             leftIcon={<AddIcon />}
             colorScheme="teal"
          >
-            New Collection
+            {openButtonText}
          </Button>
          <Drawer
             isOpen={isOpen}
@@ -35,7 +36,7 @@ const AddDrawer: React.FC<Props> = ({ header }) => {
                   <DrawerHeader>{header}</DrawerHeader>
 
                   <DrawerBody>
-                     <Input ref={inputRef} placeholder="Collection Title" />
+                     <Input ref={inputRef} placeholder="Title" />
                      <Button
                         colorScheme="teal"
                         mt="2em"

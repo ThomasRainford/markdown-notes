@@ -5,6 +5,7 @@ import React from 'react'
 import { MdLock, MdLockOpen } from 'react-icons/md'
 import { Collection } from '../../generated/graphql'
 import CollectionInfo from '../activity/CollectionInfo'
+import AddDrawer from './AddDrawer'
 import ListAccordionItem from './ListAccordionItem'
 
 interface Props {
@@ -41,15 +42,10 @@ const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
                ))
                }
             </Accordion>
-            <Flex justify="center" mt="1em">
-               <Button
-                  leftIcon={<AddIcon />}
-                  variant="outline"
-                  colorScheme="teal"
-               >
-                  New List
-               </Button>
-            </Flex>
+            <AddDrawer
+               openButtonText="New List"
+               header="Create New List"
+            />
          </AccordionPanel>
       </AccordionItem>
    )

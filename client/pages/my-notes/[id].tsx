@@ -64,6 +64,7 @@ const MyNotes = ({ }) => {
                      </Accordion>
                   }
                   <AddDrawer
+                     openButtonText="New Collection"
                      header="Create New Collection"
                   />
                </FullCollectionsDisplayLayout>
