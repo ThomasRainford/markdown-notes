@@ -52,6 +52,7 @@ const Login = ({ }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                <FormControl pb="1em">
                   <Input
+                     id="usernameOrEmail"
                      name="usernameOrEmail"
                      placeholder="Username or Email"
                      autoComplete="off"
@@ -64,6 +65,7 @@ const Login = ({ }) => {
 
                <FormControl pb="1em">
                   <Input
+                     id="password"
                      name="password"
                      placeholder="Password"
                      type="password"
