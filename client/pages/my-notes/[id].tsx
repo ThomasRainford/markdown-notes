@@ -1,15 +1,16 @@
 import { Accordion, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
 import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
 import MyNotesPageLayout from '../../components/my-notes/MyNotesPageLayout'
 import NoteDisplayLayout from '../../components/my-notes/NoteDisplayLayout'
+import NoteEditorPanel from '../../components/my-notes/NoteEditorPanel'
 import PageLoadingIndicator from '../../components/PageLoadingIndicator'
 import NoteProvider, { NoteContext } from '../../context/NoteContext'
-import { Collection, Note, useCollectionsQuery, useMeQuery } from '../../generated/graphql'
+import { Collection, useCollectionsQuery, useMeQuery } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { COLLECTIONS_QUERY } from '../../utils/ssr-queries/collections'
 import { useIsAuth } from '../../utils/useIsAuth'
@@ -21,7 +22,7 @@ interface Props {
 const MyNotes = ({ }) => {
 
    const router = useRouter()
-   const { getSelectedNote } = useContext(NoteContext)
+   const { getSelectedNote, selectNote } = useContext(NoteContext)
    const selectedNote = getSelectedNote()
 
    const [user] = useMeQuery()
@@ -29,12 +30,17 @@ const MyNotes = ({ }) => {
 
    useIsAuth(user)
 
+   useEffect(() => {
+      selectNote(JSON.parse(localStorage.getItem('selectedNote')))
+   }, [])
+
    return (
       <>
          { !user.fetching && user.data?.me
             ?
             <MyNotesPageLayout user={user}>
                <FullCollectionsDisplayLayout>
+                  <Text fontStyle="italic" pb="1em" pl="1em">Your Collections</Text>
                   {!collections.fetching && collections.data?.collections &&
                      <Accordion
                         px="1em"
@@ -64,6 +70,9 @@ const MyNotes = ({ }) => {
                      </Text>
                   </Flex>
                </NoteDisplayLayout>
+               {selectedNote &&
+                  <NoteEditorPanel selectedNote={selectedNote} />
+               }
             </MyNotesPageLayout>
             :
             <PageLoadingIndicator />
