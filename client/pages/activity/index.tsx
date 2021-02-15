@@ -35,7 +35,7 @@ const Activity = ({ }) => {
                <CollectionsDisplayLayout>
                   <Text fontStyle="italic" pb="0.75em" pl="1em">Your Collections</Text>
                   {!collections.fetching && collections.data?.collections &&
-                     <List spacing={2} p="0.5em">
+                     <List spacing={2} py="0.5em" px="1.5em">
                         {
                            collections.data?.collections.map((collection: Collection) => (
                               <CollectionItem

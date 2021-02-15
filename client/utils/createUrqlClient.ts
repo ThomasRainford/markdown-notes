@@ -41,6 +41,12 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
                   savePublicCollection: (_result, _args, cache, _info) => {
                      invalidateCollections(cache)
                   },
+                  createCollection: (_result, _args, cache, _info) => {
+                     invalidateCollections(cache)
+                  },
+                  createNotesList: (_result, _args, cache, _info) => {
+                     invalidateCollections(cache)
+                  },
                },
             },
             keys: {

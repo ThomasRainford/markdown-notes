@@ -1,0 +1,13 @@
+mutation CreateCollection($title: String!, $visibility: String!) {
+	createCollection(title: $title, visibility: $visibility) {
+		collection {
+			id
+			title
+			visibility
+		}
+		error {
+			property
+			message
+		}
+	}
+}

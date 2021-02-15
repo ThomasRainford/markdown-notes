@@ -1,9 +1,10 @@
 import { AddIcon } from '@chakra-ui/icons'
-import { Accordion, Button, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
+import { Accordion, Button, ExpandedIndex, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
+import AddDrawer from '../../components/my-notes/AddDrawer'
 import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
 import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
 import MyNotesPageLayout from '../../components/my-notes/MyNotesPageLayout'
@@ -58,14 +59,10 @@ const MyNotes = ({ }) => {
                         }
                      </Accordion>
                   }
-                  <Flex justify="center" mt="1.5em">
-                     <Button
-                        leftIcon={<AddIcon />}
-                        colorScheme="teal"
-                     >
-                        New Collection
-                     </Button>
-                  </Flex>
+                  <AddDrawer
+                     openButtonText="New Collection"
+                     header="Create New Collection"
+                  />
                </FullCollectionsDisplayLayout>
                <NoteDisplayLayout>
                   <Flex w="100%" p="1em">

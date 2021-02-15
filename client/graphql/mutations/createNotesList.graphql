@@ -1,0 +1,12 @@
+mutation CreateNotesList($collectionId: String!, $title: String!) {
+	createNotesList(collectionId: $collectionId, title: $title) {
+		notesList {
+			id
+			title
+		}
+		error {
+			property
+			message
+		}
+	}
+}
