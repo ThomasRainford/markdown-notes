@@ -1,10 +1,11 @@
 import { AddIcon } from '@chakra-ui/icons'
 import { useDisclosure, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Input, DrawerFooter, Button, Flex, Radio, RadioGroup, Stack, useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { Collection, useCreateCollectionMutation, useCreateNotesListMutation } from '../../generated/graphql'
+import { OperationResult } from 'urql'
+import { Collection, CreateCollectionMutation, CreateNotesListMutation, Exact, useCreateCollectionMutation, useCreateNotesListMutation } from '../../generated/graphql'
 
 interface Props {
-   collection: Collection
+   collection?: Collection
    openButtonText: string
    header: string
 }
@@ -25,6 +26,52 @@ const AddDrawer: React.FC<Props> = ({ collection, openButtonText, header }) => {
 
    const handleInput = (event: React.FormEvent<EventTarget>) => setTitle((event.target as HTMLInputElement).value)
    const isCollection = (): boolean => header.includes('Collection')
+
+   const displayCollectionToast = (response: OperationResult<CreateCollectionMutation, Exact<{
+      title: string;
+      visibility: string;
+   }>>): void => {
+      if (response.data?.createCollection.error || response.error) {
+         toast({
+            title: "Unable to Create Collection.",
+            description: "There was a problem when creating the collection.",
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+         })
+      } else {
+         toast({
+            title: "Collection Created",
+            description: "Collection was created successfully.",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+         })
+      }
+   }
+
+   const displayListToast = (response: OperationResult<CreateNotesListMutation, Exact<{
+      collectionId: string;
+      title: string;
+   }>>): void => {
+      if (response.data?.createNotesList.error || response.error) {
+         toast({
+            title: "Unable to Create List.",
+            description: "There was a problem when creating the list.",
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+         })
+      } else {
+         toast({
+            title: "List Created",
+            description: "List was created successfully.",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+         })
+      }
+   }
 
    return (
       <Flex justify="center" mt="1.5em">
@@ -68,13 +115,14 @@ const AddDrawer: React.FC<Props> = ({ collection, openButtonText, header }) => {
                         mt="2em"
                         mr="1em"
                         onClick={async () => {
-                           console.log(isCollection())
                            if (isCollection()) {
                               const response = await collectionMutation({ title, visibility })
                               console.log(response)
+                              displayCollectionToast(response)
                            } else {
                               const response = await listMutation({ collectionId: collection.id, title })
                               console.log(response)
+                              displayListToast(response)
                            }
                            onClose()
                         }}
