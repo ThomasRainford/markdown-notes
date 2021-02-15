@@ -1,4 +1,4 @@
-import { List } from '@chakra-ui/react'
+import { List, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import React from 'react'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
@@ -33,6 +33,7 @@ const Activity = ({ }) => {
             ?
             <ActivityPageLayout user={user}>
                <CollectionsDisplayLayout>
+                  <Text fontStyle="italic" pb="0.75em" pl="1em">Your Collections</Text>
                   {!collections.fetching && collections.data?.collections &&
                      <List spacing={2} p="0.5em">
                         {
