@@ -1,10 +1,10 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { OperationResult, UseQueryState } from 'urql'
+import { UseQueryState } from 'urql'
 import { NoteContext } from '../../context/NoteContext'
-import { AddNoteMutation, Exact, MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, UpdateNoteMutation, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
+import { MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
 import { ExactNoteLocation, NoteLocation } from '../../types/types'
 import AutoResizeTextarea from '../AutoResizeTextArea'
 import GoBackAlertDialog from './GoBackAlertDialog'
@@ -44,7 +44,6 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
          }
       })
    }
-
 
    const onSubmit = async (noteInput: NoteUpdateInput) => {
       const { title, body } = noteInput

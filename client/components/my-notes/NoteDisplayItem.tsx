@@ -3,8 +3,7 @@ import { useRouter } from 'next/router'
 import React, { useContext } from 'react'
 import { MdArrowForward, MdNote } from 'react-icons/md'
 import { NoteContext } from '../../context/NoteContext'
-import { Note } from '../../generated/graphql'
-import { ExactNoteLocation, NoteLocation } from '../../types/types'
+import { ExactNoteLocation } from '../../types/types'
 
 interface Props {
    noteLocation: ExactNoteLocation
