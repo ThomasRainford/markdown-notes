@@ -6,7 +6,7 @@ import AutoResizeTextarea from '../../../components/AutoResizeTextArea'
 import NewNotePageLayout from '../../../components/new-note/NewNotePageLayout'
 import NoteLocationBreadcrumb from '../../../components/new-note/NoteLocationBreadcrumb'
 import PageLoadingIndicator from '../../../components/PageLoadingIndicator'
-import { Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useMeQuery } from '../../../generated/graphql'
+import { Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useMeQuery, useUpdateNoteMutation } from '../../../generated/graphql'
 import { NoteLocation } from '../../../types/types'
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { useIsAuth } from '../../../utils/useIsAuth'
@@ -23,6 +23,7 @@ const NewNote = ({ }) => {
 
    const [user] = useMeQuery()
    const [addNoteResult, addNoteMutation] = useAddNoteMutation()
+   const [updateNoteResult, updateNoteMutation] = useUpdateNoteMutation()
 
    const { handleSubmit, errors, register, formState } = useForm()
 
@@ -31,7 +32,9 @@ const NewNote = ({ }) => {
    const onSubmit = async (noteInput: NoteUpdateInput) => {
       const { title, body } = noteInput
 
-      if (title.length > 0 && text.length > 0) {
+      console.log(noteInput)
+
+      if (currentNote && title.length > 0 && body.length > 0) {
          const listId = location.list.id
          const collectionId = location.collection.id
 
@@ -41,7 +44,7 @@ const NewNote = ({ }) => {
             noteId: currentNote.id
          }
 
-         //const response = await executeUpdateNote({ noteLocation, updatedNoteFields })
+         //const response = await updateNoteMutation({ noteLocation, noteInput })
 
       } else {
          //setIsSaveOpen(true)

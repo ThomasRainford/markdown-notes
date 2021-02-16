@@ -10,7 +10,7 @@ interface Props {
 const AutoResizeTextarea: any = React.forwardRef<HTMLTextAreaElement>((props: Props, ref) => {
    return (
       <Textarea
-         name="text"
+         name="body"
          variant="flushed"
          placeholder="Text"
          minH="unset"

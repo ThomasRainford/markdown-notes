@@ -33,19 +33,16 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
             {list.notes.map((note) => (
                <NoteDisplayItem key={note.id} note={note} />
             ))}
-            {
-               list.notes.length === 0 &&
-               <Flex justify="center" mt="0.5em">
-                  <Button
-                     leftIcon={<AddIcon />}
-                     variant="outline"
-                     size="sm"
-                     onClick={handleAddNote}
-                  >
-                     Add Note
+            <Flex justify="center" mt="0.5em">
+               <Button
+                  leftIcon={<AddIcon />}
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAddNote}
+               >
+                  Add Note
                      </Button>
-               </Flex>
-            }
+            </Flex>
          </AccordionPanel >
       </AccordionItem >
    )
