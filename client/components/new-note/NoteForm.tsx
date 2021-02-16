@@ -1,4 +1,4 @@
-import { Button, FormControl, FormErrorMessage, FormLabel, Input, Link } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -96,51 +96,55 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
 
    return (
       <>
-         <form onSubmit={handleSubmit(onSubmit)}>
+         <Flex direction="column" justify="center" align="center" w="60em" mx="auto" mt="3em" border="2px" borderColor="#5CDB95" boxShadow="lg">
+            <Heading textColor="#05386B" mt="0.5em">Create a New Note</Heading>
+            <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%", padding: "2em" }}>
 
-            <FormControl mb="5%" mt="2%">
-               <FormLabel>Title</FormLabel>
-               <Input
-                  name="title"
-                  placeholder="Title"
-                  autoComplete="off"
-                  ref={register({ required: true })}
-                  size="lg"
-               />
-               <FormErrorMessage>
-                  {errors.title && errors.title.message}
-               </FormErrorMessage>
-            </FormControl>
+               <FormControl mb="5%" mt="2%">
+                  <FormLabel>Title</FormLabel>
+                  <Input
+                     name="title"
+                     autoComplete="off"
+                     ref={register({ required: true })}
+                     size="lg"
+                     border="1px"
+                     borderColor="#5CDB95"
+                  />
+                  <FormErrorMessage>
+                     {errors.title && errors.title.message}
+                  </FormErrorMessage>
+               </FormControl>
 
-            <FormControl mb="5%">
-               <FormLabel>Body</FormLabel>
-               <AutoResizeTextarea ref={register({ required: true })} />
-               <FormErrorMessage>
-                  {errors.body && errors.body.message}
-               </FormErrorMessage>
-            </FormControl>
+               <FormControl mb="5%">
+                  <FormLabel>Body</FormLabel>
+                  <AutoResizeTextarea ref={register({ required: true })} border="1px" borderColor="#5CDB95" p="0.5em" />
+                  <FormErrorMessage>
+                     {errors.body && errors.body.message}
+                  </FormErrorMessage>
+               </FormControl>
 
-            <Button
-               colorScheme="teal"
-               mr="1%"
-               as={Link}
-               onClick={() => handleGoBack()}
-            >
-               Go Back
-            </Button>
-            <Button
-               colorScheme="blue"
-               isLoading={formState.isSubmitting}
-               type="submit"
-               onClick={() => setSaved(true)}
-            >
-               Save
-            </Button>
+               <Button
+                  colorScheme="teal"
+                  mr="1%"
+                  as={Link}
+                  onClick={() => handleGoBack()}
+               >
+                  Go Back
+               </Button>
+               <Button
+                  colorScheme="blue"
+                  isLoading={formState.isSubmitting}
+                  type="submit"
+                  onClick={() => setSaved(true)}
+               >
+                  Save
+               </Button>
 
-         </form>
-
+            </form>
+         </Flex>
          <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
          <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />
+
       </>
    )
 }

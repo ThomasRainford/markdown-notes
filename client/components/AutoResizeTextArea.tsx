@@ -12,13 +12,12 @@ const AutoResizeTextarea: any = React.forwardRef<HTMLTextAreaElement>((props: Pr
       <Textarea
          name="body"
          variant="flushed"
-         placeholder="Text"
          minH="unset"
          overflow="hidden"
          w="100%"
          resize="none"
          ref={ref}
-         minRows={4}
+         minRows={20}
          as={ResizeTextarea}
          {...props}
       />
