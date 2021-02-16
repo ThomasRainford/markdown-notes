@@ -1,5 +1,6 @@
 import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import AutoResizeTextarea from '../../../components/AutoResizeTextArea'
@@ -18,6 +19,8 @@ interface Props {
 }
 
 const NewNote = ({ }) => {
+
+   const router = useRouter()
 
    const [location, setLocation] = useState<NoteLocation>()
    const [currentNote, setCurrentNote] = useState<Note>()
@@ -40,20 +43,21 @@ const NewNote = ({ }) => {
    const onSubmit = async (noteInput: NoteUpdateInput) => {
       const { title, body } = noteInput
 
-      if (currentNote && title.length > 0 && body.length > 0) {
+      if (localStorage.getItem('noteId') && title.length > 0 && body.length > 0) {
          const listId = location.list.id
          const collectionId = location.collection.id
 
          const noteLocation: NoteLocationInput = {
             collectionId,
             listId,
-            noteId: currentNote.id
+            noteId: localStorage.getItem('noteId')
          }
 
-         //const response = await updateNoteMutation({ noteLocation, noteInput })
+         const response = await updateNoteMutation({ noteLocation, noteInput })
+         console.log(response)
 
       } else {
-         //setIsSaveOpen(true)
+         setIsSaveOpen(true)
       }
    }
 
@@ -62,7 +66,7 @@ const NewNote = ({ }) => {
          setIsGoBackOpen(true)
       } else {
          localStorage.removeItem('noteId')
-         //router.replace(`/notes/my-notes?listId=${router.query.listId}`)
+         router.replace(`/my-notes/${user.data?.me?.username}`)
       }
    }
 
@@ -73,7 +77,7 @@ const NewNote = ({ }) => {
       const noteLocationInput: NoteLocationInput = {
          collectionId,
          listId,
-         noteId: currentNote.id
+         noteId: localStorage.getItem('noteId')
       }
 
       if (location) {
@@ -87,16 +91,17 @@ const NewNote = ({ }) => {
       const addNote = async () => {
          const noteInput: NoteInput = { title: '', body: '' }
          const response = await addNoteMutation({ listLocation: { collectionId: location.collection.id, listId: location.list.id }, noteInput })
-         if (!response.data?.addNote.note) {
-            setCurrentNote(response.data?.addNote.note as Note)
+         console.log(response)
+         if (!localStorage.getItem('noteId')) {
+            localStorage.setItem('noteId', response.data?.addNote.note.id)
          }
       }
 
       if (location) {
-         //addNote()
+         addNote()
       }
 
-   }, [setLocation])
+   }, [setLocation, setCurrentNote])
 
    return (
       <>
@@ -136,7 +141,7 @@ const NewNote = ({ }) => {
                         colorScheme="teal"
                         mr="1%"
                         as={Link}
-                     //onClick={() => handleGoBack()}
+                        onClick={() => handleGoBack()}
                      >
                         Go Back
                      </Button>
