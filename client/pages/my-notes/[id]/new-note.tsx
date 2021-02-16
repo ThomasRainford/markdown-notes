@@ -4,8 +4,10 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import AutoResizeTextarea from '../../../components/AutoResizeTextArea'
+import EditPanel from '../../../components/new-note/EditPanel'
 import GoBackAlertDialog from '../../../components/new-note/GoBackAlertDialog'
 import NewNotePageLayout from '../../../components/new-note/NewNotePageLayout'
+import NoteEditorLayout from '../../../components/new-note/NoteEditorLayout'
 import NoteLocationBreadcrumb from '../../../components/new-note/NoteLocationBreadcrumb'
 import SaveAlertDialog from '../../../components/new-note/SaveAlertDialog'
 import PageLoadingIndicator from '../../../components/PageLoadingIndicator'
@@ -66,27 +68,16 @@ const NewNote = ({ }) => {
       } else {
          const noteInputAdd: NoteInput = { title: noteInput.title, body: noteInput.body }
          if (!localStorage.getItem('noteId')) {
-            const response = await addNoteMutation({ listLocation: { collectionId: location.collection.id, listId: location.list.id }, noteInput: noteInputAdd })
+            const response = await addNoteMutation({
+               listLocation: {
+                  collectionId: location.collection.id,
+                  listId: location.list.id
+               },
+               noteInput: noteInputAdd
+            })
             localStorage.setItem('noteId', response.data?.addNote.note.id)
          }
       }
-
-      // if (localStorage.getItem('noteId') && title.length > 0 && body.length > 0) {
-      //    const listId = location.list.id
-      //    const collectionId = location.collection.id
-
-      //    const noteLocation: NoteLocationInput = {
-      //       collectionId,
-      //       listId,
-      //       noteId: localStorage.getItem('noteId')
-      //    }
-
-      //    const response = await updateNoteMutation({ noteLocation, noteInput })
-      //    console.log(response)
-
-      // } else {
-      //    setIsSaveOpen(true)
-      // }
    }
 
    const handleGoBack = async () => {
@@ -123,10 +114,8 @@ const NewNote = ({ }) => {
          { !user.fetching && user.data?.me && location
             ?
             <NewNotePageLayout user={user}>
-               <Flex direction="column" h="100%" w="5em" bg="#5CDB95">
-
-               </Flex>
-               <Flex direction="column" h="100%" w="100%" bg="#EDF5E1">
+               <EditPanel />
+               <NoteEditorLayout>
                   <NoteLocationBreadcrumb location={location} />
                   <form onSubmit={handleSubmit(onSubmit)}>
 
@@ -170,7 +159,7 @@ const NewNote = ({ }) => {
                      </Button>
 
                   </form>
-               </Flex>
+               </NoteEditorLayout>
             </NewNotePageLayout>
             :
             <PageLoadingIndicator />
