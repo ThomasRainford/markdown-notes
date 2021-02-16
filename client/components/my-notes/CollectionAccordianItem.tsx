@@ -38,7 +38,7 @@ const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
                }}
             >
                {collection.lists.map((list) => (
-                  <ListAccordionItem key={list.id} list={list} />
+                  <ListAccordionItem key={list.id} collection={collection} list={list} />
                ))
                }
             </Accordion>

@@ -1,14 +1,25 @@
 import { AddIcon } from '@chakra-ui/icons'
 import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Text, Button, Flex } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import React from 'react'
-import { NotesList } from '../../generated/graphql'
+import { Collection, NotesList } from '../../generated/graphql'
 import NoteDisplayItem from './NoteDisplayItem'
 
 interface Props {
+   collection: Collection
    list: NotesList
 }
 
-const ListAccordionItem: React.FC<Props> = ({ list }) => {
+const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
+
+   const router = useRouter()
+
+   const handleAddNote = (): void => {
+      localStorage.setItem('noteLocation', JSON.stringify({ collectionId: collection.id, listId: list.id }))
+
+      router.push(router.asPath + '/new-note')
+   }
+
    return (
       <AccordionItem>
          <h2>
@@ -30,6 +41,7 @@ const ListAccordionItem: React.FC<Props> = ({ list }) => {
                      leftIcon={<AddIcon />}
                      variant="outline"
                      size="sm"
+                     onClick={handleAddNote}
                   >
                      Add Note
                      </Button>
