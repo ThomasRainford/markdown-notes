@@ -53,12 +53,10 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
       // Update note if already saved.
       if (localStorage.getItem('noteId')) {
          if (title.length > 0 && body.length > 0) {
-            const listId = location.list.id
-            const collectionId = location.collection.id
 
             const noteLocation: NoteLocationInput = {
-               collectionId,
-               listId,
+               collectionId: selectedNoteLocation.noteLocation.collection.id,
+               listId: selectedNoteLocation.noteLocation.list.id,
                noteId: selectedNoteLocation.noteLocation.note.id
             }
 
