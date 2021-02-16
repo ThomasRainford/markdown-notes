@@ -23,8 +23,8 @@ const Editor = ({ }) => {
 
    const [location, setLocation] = useState<NoteLocation>()
 
-   const { getSelectedNote } = useContext(NoteContext)
-   const selectedNote = getSelectedNote()
+   const { getSelectedNoteLocation } = useContext(NoteContext)
+   const selectedNote = getSelectedNoteLocation()
 
    const [user] = useMeQuery()
 
@@ -42,7 +42,7 @@ const Editor = ({ }) => {
                <EditPanel />
                <NoteEditorLayout>
                   <NoteLocationBreadcrumb location={location} />
-                  <NoteForm user={user} location={location} setLocation={setLocation} selectedNote={selectedNote} />
+                  <NoteForm user={user} location={location} setLocation={setLocation} selectedNoteLocation={getSelectedNoteLocation()} />
                </NoteEditorLayout>
             </NewNotePageLayout>
             :

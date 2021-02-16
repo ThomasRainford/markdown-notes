@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { UseQueryState } from 'urql'
 import { NoteContext } from '../../context/NoteContext'
 import { MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
-import { NoteLocation } from '../../types/types'
+import { ExactNoteLocation, NoteLocation } from '../../types/types'
 import AutoResizeTextarea from '../AutoResizeTextArea'
 import GoBackAlertDialog from './GoBackAlertDialog'
 import SaveAlertDialog from './SaveAlertDialog'
@@ -14,14 +14,14 @@ interface Props {
    user: UseQueryState<MeQuery, object>
    location: NoteLocation
    setLocation: React.Dispatch<React.SetStateAction<NoteLocation>>
-   selectedNote: Note
+   selectedNoteLocation: ExactNoteLocation
 }
 
-const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNote }) => {
+const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLocation }) => {
 
    const router = useRouter()
 
-   const { selectNote } = useContext(NoteContext)
+   const { selectNoteLocation } = useContext(NoteContext)
 
    const { handleSubmit, errors, register, formState, setValue } = useForm()
    const [saved, setSaved] = useState<boolean>(false)
@@ -49,11 +49,12 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNote }
             const noteLocation: NoteLocationInput = {
                collectionId,
                listId,
-               noteId: localStorage.getItem('noteId')
+               noteId: selectedNoteLocation.noteLocation.note.id
             }
 
             const response = await updateNoteMutation({ noteLocation, noteInput })
-            selectNote(response.data?.updateNote.note as Note)
+            console.log(response)
+            selectNoteLocation(response.data?.updateNote as ExactNoteLocation)
          } else {
             setIsSaveOpen(true)
          }
@@ -99,8 +100,10 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNote }
    }
 
    useEffect(() => {
-      setValue('title', selectedNote.title)
-      setValue('body', selectedNote.body)
+      if (selectedNoteLocation) {
+         setValue('title', selectedNoteLocation.noteLocation.note.title)
+         setValue('body', selectedNoteLocation.noteLocation.note.body)
+      }
    }, [])
 
    return (

@@ -1,28 +1,29 @@
 import React from 'react'
 import { Note } from '../generated/graphql'
+import { ExactNoteLocation, NoteLocation } from '../types/types'
 
 interface NoteContextData {
-   selectNote: (note: Note) => void,
-   getSelectedNote: () => Note
+   selectNoteLocation: (noteLocation: ExactNoteLocation) => void,
+   getSelectedNoteLocation: () => ExactNoteLocation
 }
 
 export const NoteContext = React.createContext<NoteContextData>(null)
 
 const NoteProvider: React.FC = ({ children }) => {
 
-   const [selectedNote, setSelectedNote] = React.useState<Note>()
+   const [selectedNoteLocation, setSelectedNoteLocation] = React.useState<ExactNoteLocation>()
 
-   const selectNote = (note: Note) => {
-      setSelectedNote(note)
+   const selectNoteLocation = (noteLocation: ExactNoteLocation) => {
+      setSelectedNoteLocation(noteLocation)
    }
 
-   const getSelectedNote = (): Note => selectedNote
+   const getSelectedNoteLocation = (): ExactNoteLocation => selectedNoteLocation
 
    return (
       <NoteContext.Provider
          value={{
-            selectNote,
-            getSelectedNote
+            selectNoteLocation,
+            getSelectedNoteLocation
          }}
       >
          {children}

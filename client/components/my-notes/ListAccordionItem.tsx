@@ -1,7 +1,8 @@
 import { AddIcon } from '@chakra-ui/icons'
 import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Text, Button, Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useContext } from 'react'
+import { NoteContext } from '../../context/NoteContext'
 import { Collection, NotesList } from '../../generated/graphql'
 import NoteDisplayItem from './NoteDisplayItem'
 
@@ -14,7 +15,10 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
 
    const router = useRouter()
 
+   const { selectNoteLocation } = useContext(NoteContext)
+
    const handleAddNote = (): void => {
+      selectNoteLocation(null)
       localStorage.setItem('noteLocation', JSON.stringify({ collection, list }))
       router.push(router.asPath + '/editor')
    }
@@ -31,7 +35,7 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
          </h2>
          <AccordionPanel pb={4}>
             {list.notes.map((note) => (
-               <NoteDisplayItem key={note.id} note={note} />
+               <NoteDisplayItem key={note.id} noteLocation={{ noteLocation: { collection, list, note } }} />
             ))}
             <Flex justify="center" mt="0.5em">
                <Button

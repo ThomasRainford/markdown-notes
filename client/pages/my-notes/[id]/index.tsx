@@ -23,8 +23,8 @@ interface Props {
 const MyNotes = ({ }) => {
 
    const router = useRouter()
-   const { getSelectedNote } = useContext(NoteContext)
-   const selectedNote = getSelectedNote()
+   const { getSelectedNoteLocation } = useContext(NoteContext)
+   const selectedNoteLocation = getSelectedNoteLocation()
 
    const [user] = useMeQuery()
    const [collections] = useCollectionsQuery()
@@ -66,17 +66,17 @@ const MyNotes = ({ }) => {
                <NoteDisplayLayout>
                   <Flex w="100%" p="1em">
                      <Heading textColor="#05386B">
-                        {selectedNote ? selectedNote.title : "Select a Note"}
+                        {selectedNoteLocation ? selectedNoteLocation.noteLocation.note.title : "Select a Note"}
                      </Heading>
                   </Flex>
                   <Flex w="100%" p="1em">
                      <Text>
-                        {selectedNote && selectedNote.body}
+                        {selectedNoteLocation && selectedNoteLocation.noteLocation.note.body}
                      </Text>
                   </Flex>
                </NoteDisplayLayout>
-               {selectedNote &&
-                  <NoteEditorPanel user={user} selectedNote={selectedNote} />
+               {selectedNoteLocation &&
+                  <NoteEditorPanel user={user} selectedNoteLocation={selectedNoteLocation} />
                }
             </MyNotesPageLayout>
             :
