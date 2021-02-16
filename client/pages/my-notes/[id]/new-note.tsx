@@ -78,7 +78,7 @@ const NewNote = ({ }) => {
                      //onClick={() => handleGoBack()}
                      >
                         Go Back
-                  </Button>
+                     </Button>
                      <Button
                         colorScheme="blue"
                         isLoading={formState.isSubmitting}
@@ -86,7 +86,7 @@ const NewNote = ({ }) => {
                         onClick={() => setSaved(true)}
                      >
                         Save
-                  </Button>
+                     </Button>
 
                   </form>
                </Flex>

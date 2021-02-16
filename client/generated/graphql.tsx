@@ -287,6 +287,26 @@ export type NoteLocationInput = {
   noteId: Scalars['String'];
 };
 
+export type AddNoteMutationVariables = Exact<{
+  listLocation: ListLocationInput;
+  noteInput: NoteInput;
+}>;
+
+
+export type AddNoteMutation = (
+  { __typename?: 'Mutation' }
+  & { addNote: (
+    { __typename?: 'NoteResponse' }
+    & { note?: Maybe<(
+      { __typename?: 'Note' }
+      & Pick<Note, 'id' | 'title' | 'body'>
+    )>, error?: Maybe<(
+      { __typename?: 'Error' }
+      & Pick<Error, 'property' | 'message'>
+    )> }
+  ) }
+);
+
 export type CreateCollectionMutationVariables = Exact<{
   title: Scalars['String'];
   visibility: Scalars['String'];
@@ -466,6 +486,25 @@ export type MeQuery = (
 );
 
 
+export const AddNoteDocument = gql`
+    mutation AddNote($listLocation: ListLocationInput!, $noteInput: NoteInput!) {
+  addNote(listLocation: $listLocation, noteInput: $noteInput) {
+    note {
+      id
+      title
+      body
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useAddNoteMutation() {
+  return Urql.useMutation<AddNoteMutation, AddNoteMutationVariables>(AddNoteDocument);
+};
 export const CreateCollectionDocument = gql`
     mutation CreateCollection($title: String!, $visibility: String!) {
   createCollection(title: $title, visibility: $visibility) {
