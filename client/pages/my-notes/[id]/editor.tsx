@@ -16,7 +16,7 @@ interface Props {
 
 }
 
-const NewNote = ({ }) => {
+const Editor = ({ }) => {
 
    const router = useRouter()
 
@@ -50,4 +50,4 @@ const NewNote = ({ }) => {
    )
 }
 
-export default withUrqlClient(createUrqlClient)(NewNote)
+export default withUrqlClient(createUrqlClient)(Editor)

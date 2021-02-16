@@ -16,7 +16,7 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
 
    const handleAddNote = (): void => {
       localStorage.setItem('noteLocation', JSON.stringify({ collection, list }))
-      router.push(router.asPath + '/new-note')
+      router.push(router.asPath + '/editor')
    }
 
    return (

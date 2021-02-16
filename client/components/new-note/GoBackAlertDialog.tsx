@@ -40,13 +40,13 @@ const GoBackAlertDialog: React.FC<Props> = ({ isOpen, onClose, deleteNote, user 
                      ml={3}
                      colorScheme="red"
                      onClick={async () => {
-                        await deleteNote()
+                        //await deleteNote()
                         onClose()
                         localStorage.removeItem('noteId')
                         router.replace(`/my-notes/${user.data?.me?.username}`)
                      }}
                   >
-                     Delete
+                     Go Back
                   </Button>
                </AlertDialogFooter>
             </AlertDialogContent>

@@ -7,7 +7,7 @@ interface Props {
    selectedNote: Note
 }
 
-const NoteEditorPanel: React.FC<Props> = ({ }) => {
+const NoteEditorPanel: React.FC<Props> = ({ selectedNote }) => {
    return (
       <Flex direction="column" align="center" h="100%" w="5em" bg="#5CDB95" borderTop="2px" borderColor="#379683">
          <Flex direction="column" align="center" pt="1em">
@@ -19,6 +19,9 @@ const NoteEditorPanel: React.FC<Props> = ({ }) => {
                   colorScheme="black"
                   fontSize="3xl"
                   mb="0.5em"
+                  onClick={() => {
+                     localStorage.setItem('noteId', selectedNote.id)
+                  }}
                />
             </Tooltip>
             <Tooltip label="Delete Note" placement="left">
