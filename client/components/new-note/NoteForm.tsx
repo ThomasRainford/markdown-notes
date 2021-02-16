@@ -1,11 +1,9 @@
-import { FormControl, FormLabel, Input, FormErrorMessage, Button, Link } from '@chakra-ui/react'
-import router from 'next/dist/next-server/lib/router/router'
+import { Button, FormControl, FormErrorMessage, FormLabel, Input, Link } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { UseQueryState } from 'urql'
-import { NoteUpdateInput, NoteLocationInput, NoteInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation, MeQuery } from '../../generated/graphql'
-import register from '../../pages/account/register'
+import { MeQuery, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
 import { NoteLocation } from '../../types/types'
 import AutoResizeTextarea from '../AutoResizeTextArea'
 import GoBackAlertDialog from './GoBackAlertDialog'
@@ -24,9 +22,9 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    const { handleSubmit, errors, register, formState } = useForm()
    const [saved, setSaved] = useState<boolean>(false)
 
-   const [addNoteResult, addNoteMutation] = useAddNoteMutation()
-   const [updateNoteResult, updateNoteMutation] = useUpdateNoteMutation()
-   const [deleteNoteResult, deleteNoteMutation] = useDeleteNoteMutation()
+   const [, addNoteMutation] = useAddNoteMutation()
+   const [, updateNoteMutation] = useUpdateNoteMutation()
+   const [, deleteNoteMutation] = useDeleteNoteMutation()
 
    const [isGoBackOpen, setIsGoBackOpen] = useState<boolean>(false)
    const onGoBackClose = () => setIsGoBackOpen(false)

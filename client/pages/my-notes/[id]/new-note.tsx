@@ -23,7 +23,7 @@ const NewNote = ({ }) => {
    const [location, setLocation] = useState<NoteLocation>()
 
    const [user] = useMeQuery()
-   const [addNoteResult, addNoteMutation] = useAddNoteMutation()
+   const [, addNoteMutation] = useAddNoteMutation()
 
    useIsAuth(user)
 
