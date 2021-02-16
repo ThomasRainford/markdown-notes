@@ -1,17 +1,15 @@
 import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
-import router from 'next/dist/next-server/lib/router/router'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import AutoResizeTextarea from '../../../components/AutoResizeTextArea'
 import NewNotePageLayout from '../../../components/new-note/NewNotePageLayout'
 import NoteLocationBreadcrumb from '../../../components/new-note/NoteLocationBreadcrumb'
 import PageLoadingIndicator from '../../../components/PageLoadingIndicator'
-import { Collection, NoteLocationInput, NotesList, NoteUpdateInput, useMeQuery } from '../../../generated/graphql'
+import { Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useMeQuery } from '../../../generated/graphql'
 import { NoteLocation } from '../../../types/types'
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { useIsAuth } from '../../../utils/useIsAuth'
-import register from '../../account/register'
 
 interface Props {
 
@@ -20,21 +18,51 @@ interface Props {
 const NewNote = ({ }) => {
 
    const [location, setLocation] = useState<NoteLocation>()
+   const [currentNote, setCurrentNote] = useState<Note>()
    const [saved, setSaved] = useState<boolean>(false)
 
-
    const [user] = useMeQuery()
+   const [addNoteResult, addNoteMutation] = useAddNoteMutation()
 
    const { handleSubmit, errors, register, formState } = useForm()
 
    useIsAuth(user)
 
-   const onSubmit = async () => {
+   const onSubmit = async (noteInput: NoteUpdateInput) => {
+      const { title, body } = noteInput
 
+      if (title.length > 0 && text.length > 0) {
+         const listId = location.list.id
+         const collectionId = location.collection.id
+
+         const noteLocation: NoteLocationInput = {
+            collectionId,
+            listId,
+            noteId: currentNote.id
+         }
+
+         //const response = await executeUpdateNote({ noteLocation, updatedNoteFields })
+
+      } else {
+         //setIsSaveOpen(true)
+      }
    }
 
    useEffect(() => {
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
+
+      const addNote = async () => {
+         const noteInput: NoteInput = { title: '', body: '' }
+         const response = await addNoteMutation({ listLocation: { collectionId: location.collection.id, listId: location.list.id }, noteInput })
+         if (!response.data?.addNote.note) {
+            setCurrentNote(response.data?.addNote.note as Note)
+         }
+      }
+
+      if (location) {
+         //addNote()
+      }
+
    }, [setLocation])
 
    return (
@@ -64,10 +92,10 @@ const NewNote = ({ }) => {
                      </FormControl>
 
                      <FormControl mb="5%">
-                        <FormLabel>Text</FormLabel>
+                        <FormLabel>Body</FormLabel>
                         <AutoResizeTextarea ref={register({ required: true })} />
                         <FormErrorMessage>
-                           {errors.text && errors.text.message}
+                           {errors.body && errors.body.message}
                         </FormErrorMessage>
                      </FormControl>
 

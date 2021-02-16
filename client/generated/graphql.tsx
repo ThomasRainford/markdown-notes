@@ -417,6 +417,26 @@ export type SavePublicCollectionMutation = (
   ) }
 );
 
+export type UpdateNoteMutationVariables = Exact<{
+  noteLocation: NoteLocationInput;
+  noteInput: NoteUpdateInput;
+}>;
+
+
+export type UpdateNoteMutation = (
+  { __typename?: 'Mutation' }
+  & { updateNote: (
+    { __typename?: 'NoteResponse' }
+    & { note?: Maybe<(
+      { __typename?: 'Note' }
+      & Pick<Note, 'id' | 'title' | 'body'>
+    )>, error?: Maybe<(
+      { __typename?: 'Error' }
+      & Pick<Error, 'property' | 'message'>
+    )> }
+  ) }
+);
+
 export type VoteMutationVariables = Exact<{
   collectionId: Scalars['String'];
 }>;
@@ -609,6 +629,25 @@ export const SavePublicCollectionDocument = gql`
 
 export function useSavePublicCollectionMutation() {
   return Urql.useMutation<SavePublicCollectionMutation, SavePublicCollectionMutationVariables>(SavePublicCollectionDocument);
+};
+export const UpdateNoteDocument = gql`
+    mutation UpdateNote($noteLocation: NoteLocationInput!, $noteInput: NoteUpdateInput!) {
+  updateNote(noteLocaton: $noteLocation, noteInput: $noteInput) {
+    note {
+      id
+      title
+      body
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useUpdateNoteMutation() {
+  return Urql.useMutation<UpdateNoteMutation, UpdateNoteMutationVariables>(UpdateNoteDocument);
 };
 export const VoteDocument = gql`
     mutation Vote($collectionId: String!) {
