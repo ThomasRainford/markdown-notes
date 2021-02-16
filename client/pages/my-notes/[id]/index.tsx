@@ -79,7 +79,7 @@ const MyNotes = ({ }) => {
                   </Flex>
                </NoteDisplayLayout>
                {selectedNote &&
-                  <NoteEditorPanel selectedNote={selectedNote} />
+                  <NoteEditorPanel user={user} selectedNote={selectedNote} />
                }
             </MyNotesPageLayout>
             :

@@ -97,7 +97,6 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    return (
       <>
          <Flex direction="column" justify="center" align="center" w="60em" mx="auto" mt="3em" border="2px" borderColor="#5CDB95" boxShadow="lg">
-            <Heading textColor="#05386B" mt="0.5em">Create a New Note</Heading>
             <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%", padding: "2em" }}>
 
                <FormControl mb="5%" mt="2%">

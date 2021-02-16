@@ -136,6 +136,46 @@ export class NotesListResolver {
       return notesLists
    }
 
+   @Query(() => NoteResponse)
+   @UseMiddleware(isAuth)
+   async note(
+      @Arg('noteLocation') noteLocation: NoteLocationInput,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<NoteResponse> {
+
+      const { collectionId, listId, noteId } = noteLocation
+
+      const collectionRepo = em.getRepository(Collection)
+      const notesListRepo = em.getRepository(NotesList)
+
+      const collection = await collectionRepo.findOne({ id: collectionId, owner: req.session.userId }, ['owner', 'lists'])
+      const notesList = await notesListRepo.findOne({ id: listId, collection: collection }, ['collection'])
+
+      if (!collection && !notesList) {
+         return {
+            error: {
+               property: 'location',
+               message: 'Incorrect note location.'
+            }
+         }
+      }
+
+      const note: Note | undefined = notesList?.notes.find((n) => {
+         n.id === noteId
+      })
+
+      if (!note) {
+         return {
+            error: {
+               property: 'note',
+               message: 'Note note found.'
+            }
+         }
+      }
+
+      return { note }
+   }
+
    /* Update */
 
    @Mutation(() => NotesListResponse)
