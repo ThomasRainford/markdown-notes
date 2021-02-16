@@ -42,23 +42,51 @@ const NewNote = ({ }) => {
 
    const onSubmit = async (noteInput: NoteUpdateInput) => {
       const { title, body } = noteInput
+      setLocation(JSON.parse(localStorage.getItem('noteLocation')))
 
-      if (localStorage.getItem('noteId') && title.length > 0 && body.length > 0) {
-         const listId = location.list.id
-         const collectionId = location.collection.id
+      // Update note if already saved.
+      if (localStorage.getItem('noteId')) {
+         if (title.length > 0 && body.length > 0) {
+            const listId = location.list.id
+            const collectionId = location.collection.id
 
-         const noteLocation: NoteLocationInput = {
-            collectionId,
-            listId,
-            noteId: localStorage.getItem('noteId')
+            const noteLocation: NoteLocationInput = {
+               collectionId,
+               listId,
+               noteId: localStorage.getItem('noteId')
+            }
+
+            const response = await updateNoteMutation({ noteLocation, noteInput })
+            console.log(response)
+         } else {
+            setIsSaveOpen(true)
          }
 
-         const response = await updateNoteMutation({ noteLocation, noteInput })
-         console.log(response)
-
+         // Add note if no note yet saved.
       } else {
-         setIsSaveOpen(true)
+         const noteInputAdd: NoteInput = { title: noteInput.title, body: noteInput.body }
+         if (!localStorage.getItem('noteId')) {
+            const response = await addNoteMutation({ listLocation: { collectionId: location.collection.id, listId: location.list.id }, noteInput: noteInputAdd })
+            localStorage.setItem('noteId', response.data?.addNote.note.id)
+         }
       }
+
+      // if (localStorage.getItem('noteId') && title.length > 0 && body.length > 0) {
+      //    const listId = location.list.id
+      //    const collectionId = location.collection.id
+
+      //    const noteLocation: NoteLocationInput = {
+      //       collectionId,
+      //       listId,
+      //       noteId: localStorage.getItem('noteId')
+      //    }
+
+      //    const response = await updateNoteMutation({ noteLocation, noteInput })
+      //    console.log(response)
+
+      // } else {
+      //    setIsSaveOpen(true)
+      // }
    }
 
    const handleGoBack = async () => {
@@ -88,20 +116,7 @@ const NewNote = ({ }) => {
    useEffect(() => {
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
 
-      const addNote = async () => {
-         const noteInput: NoteInput = { title: '', body: '' }
-         const response = await addNoteMutation({ listLocation: { collectionId: location.collection.id, listId: location.list.id }, noteInput })
-         console.log(response)
-         if (!localStorage.getItem('noteId')) {
-            localStorage.setItem('noteId', response.data?.addNote.note.id)
-         }
-      }
-
-      if (location) {
-         addNote()
-      }
-
-   }, [setLocation, setCurrentNote])
+   }, [router, addNoteMutation])
 
    return (
       <>
@@ -161,7 +176,7 @@ const NewNote = ({ }) => {
             <PageLoadingIndicator />
          }
 
-         <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} />
+         <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
          <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />
       </>
    )

@@ -34,6 +34,8 @@ const MyNotes = ({ }) => {
 
    useEffect(() => {
       selectNote(JSON.parse(localStorage.getItem('selectedNote')))
+
+      localStorage.removeItem('noteId')
    }, [])
 
    return (

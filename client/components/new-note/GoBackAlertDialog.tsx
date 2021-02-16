@@ -1,14 +1,17 @@
 import { AlertDialog, AlertDialogOverlay, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, Button } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { UseQueryState } from 'urql'
+import { MeQuery, User } from '../../generated/graphql'
 
 interface Props {
    isOpen: boolean
    onClose: () => void
    deleteNote: () => Promise<void>
+   user: UseQueryState<MeQuery, object>
 }
 
-const GoBackAlertDialog: React.FC<Props> = ({ isOpen, onClose, deleteNote }) => {
+const GoBackAlertDialog: React.FC<Props> = ({ isOpen, onClose, deleteNote, user }) => {
 
    const router = useRouter()
    const cancelRef = React.useRef()
@@ -40,7 +43,7 @@ const GoBackAlertDialog: React.FC<Props> = ({ isOpen, onClose, deleteNote }) => 
                         await deleteNote()
                         onClose()
                         localStorage.removeItem('noteId')
-                        router.replace(`/notes/my-notes?listId=${router.query.listId}`)
+                        router.replace(`/my-notes/${user.data?.me?.username}`)
                      }}
                   >
                      Delete
