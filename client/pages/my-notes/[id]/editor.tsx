@@ -7,8 +7,8 @@ import NoteEditorLayout from '../../../components/new-note/NoteEditorLayout'
 import NoteForm from '../../../components/new-note/NoteForm'
 import NoteLocationBreadcrumb from '../../../components/new-note/NoteLocationBreadcrumb'
 import PageLoadingIndicator from '../../../components/PageLoadingIndicator'
-import NoteProvider, { NoteContext } from '../../../context/NoteContext'
-import { Note, useAddNoteMutation, useMeQuery, useNoteQuery } from '../../../generated/graphql'
+import { NoteContext } from '../../../context/NoteContext'
+import { useMeQuery } from '../../../generated/graphql'
 import { NoteLocation } from '../../../types/types'
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { useIsAuth } from '../../../utils/useIsAuth'
@@ -25,8 +25,6 @@ const Editor = ({ }) => {
 
    const { getSelectedNote } = useContext(NoteContext)
    const selectedNote = getSelectedNote()
-
-   console.log(selectedNote)
 
    const [user] = useMeQuery()
 
