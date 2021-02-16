@@ -2,9 +2,9 @@ import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input,
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { UseQueryState } from 'urql'
+import { OperationResult, UseQueryState } from 'urql'
 import { NoteContext } from '../../context/NoteContext'
-import { MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
+import { AddNoteMutation, Exact, MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, UpdateNoteMutation, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
 import { ExactNoteLocation, NoteLocation } from '../../types/types'
 import AutoResizeTextarea from '../AutoResizeTextArea'
 import GoBackAlertDialog from './GoBackAlertDialog'
@@ -35,6 +35,16 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
    const [isSaveOpen, setIsSaveOpen] = useState<boolean>(false)
    const onSaveClose = () => setIsSaveOpen(false)
 
+   const updateSelectedNoteLocation = (note: Note) => {
+      selectNoteLocation({
+         noteLocation: {
+            collection: selectedNoteLocation.noteLocation.collection,
+            list: selectedNoteLocation.noteLocation.list,
+            note
+         }
+      })
+   }
+
 
    const onSubmit = async (noteInput: NoteUpdateInput) => {
       const { title, body } = noteInput
@@ -54,7 +64,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
 
             const response = await updateNoteMutation({ noteLocation, noteInput })
             console.log(response)
-            selectNoteLocation(response.data?.updateNote as ExactNoteLocation)
+            updateSelectedNoteLocation(response.data?.updateNote.note as Note)
          } else {
             setIsSaveOpen(true)
          }
@@ -70,6 +80,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
                },
                noteInput: noteInputAdd
             })
+            updateSelectedNoteLocation(response.data?.addNote.note as Note)
             localStorage.setItem('noteId', response.data?.addNote.note.id)
          }
       }
