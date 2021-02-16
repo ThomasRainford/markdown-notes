@@ -24,7 +24,7 @@ interface Props {
 const MyNotes = ({ }) => {
 
    const router = useRouter()
-   const { getSelectedNote, selectNote } = useContext(NoteContext)
+   const { getSelectedNote } = useContext(NoteContext)
    const selectedNote = getSelectedNote()
 
    const [user] = useMeQuery()
@@ -33,9 +33,8 @@ const MyNotes = ({ }) => {
    useIsAuth(user)
 
    useEffect(() => {
-      selectNote(JSON.parse(localStorage.getItem('selectedNote')))
-
       localStorage.removeItem('noteId')
+      console.log(selectedNote)
    }, [])
 
    return (
@@ -108,8 +107,4 @@ export async function getServerSideProps() {
    }
 }
 
-export default withUrqlClient(createUrqlClient, { neverSuspend: true, ssr: false })(() =>
-   <NoteProvider>
-      <MyNotes />
-   </NoteProvider>
-)
+export default withUrqlClient(createUrqlClient, { neverSuspend: true, ssr: false })(MyNotes)

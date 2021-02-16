@@ -1,13 +1,14 @@
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import EditPanel from '../../../components/new-note/EditPanel'
 import NewNotePageLayout from '../../../components/new-note/NewNotePageLayout'
 import NoteEditorLayout from '../../../components/new-note/NoteEditorLayout'
 import NoteForm from '../../../components/new-note/NoteForm'
 import NoteLocationBreadcrumb from '../../../components/new-note/NoteLocationBreadcrumb'
 import PageLoadingIndicator from '../../../components/PageLoadingIndicator'
-import { useAddNoteMutation, useMeQuery } from '../../../generated/graphql'
+import NoteProvider, { NoteContext } from '../../../context/NoteContext'
+import { Note, useAddNoteMutation, useMeQuery, useNoteQuery } from '../../../generated/graphql'
 import { NoteLocation } from '../../../types/types'
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { useIsAuth } from '../../../utils/useIsAuth'
@@ -22,15 +23,18 @@ const Editor = ({ }) => {
 
    const [location, setLocation] = useState<NoteLocation>()
 
+   const { getSelectedNote } = useContext(NoteContext)
+   const selectedNote = getSelectedNote()
+
+   console.log(selectedNote)
+
    const [user] = useMeQuery()
-   const [, addNoteMutation] = useAddNoteMutation()
 
    useIsAuth(user)
 
    useEffect(() => {
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
-
-   }, [router, addNoteMutation])
+   }, [])
 
    return (
       <>

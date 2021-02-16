@@ -56,7 +56,8 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
                },
             },
             keys: {
-               ActivityFeedResponse: () => null
+               ActivityFeedResponse: () => null,
+               NoteResponse: () => null,
             }
          }),
          ssrExchange,

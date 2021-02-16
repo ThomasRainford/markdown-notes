@@ -41,7 +41,7 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
                   onClick={handleAddNote}
                >
                   Add Note
-                     </Button>
+               </Button>
             </Flex>
          </AccordionPanel >
       </AccordionItem >

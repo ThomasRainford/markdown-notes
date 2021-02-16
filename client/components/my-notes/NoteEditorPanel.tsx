@@ -1,8 +1,9 @@
 import { Flex, Tooltip, IconButton } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useContext } from 'react'
 import { MdAdd, MdEdit, MdDelete } from 'react-icons/md'
 import { UseQueryState } from 'urql'
+import { NoteContext } from '../../context/NoteContext'
 import { MeQuery, Note } from '../../generated/graphql'
 
 interface Props {
@@ -13,6 +14,8 @@ interface Props {
 const NoteEditorPanel: React.FC<Props> = ({ user, selectedNote }) => {
 
    const router = useRouter()
+
+   const { selectNote } = useContext(NoteContext)
 
    return (
       <Flex direction="column" align="center" h="100%" w="5em" bg="#5CDB95" borderTop="2px" borderColor="#379683">
@@ -27,6 +30,7 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNote }) => {
                   mb="0.5em"
                   onClick={() => {
                      localStorage.setItem('noteId', selectedNote.id)
+                     selectNote(selectedNote)
                      router.push(router.asPath + `/editor`)
                   }}
                />

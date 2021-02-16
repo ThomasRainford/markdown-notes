@@ -1,0 +1,12 @@
+query Note($noteLocation: NoteLocationInput!) {
+	note(noteLocation: $noteLocation) {
+		note {
+			id
+			title
+		}
+		error {
+			property
+			message
+		}
+	}
+}

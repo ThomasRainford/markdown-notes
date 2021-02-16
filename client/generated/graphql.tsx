@@ -27,6 +27,7 @@ export type Query = {
   collections: Array<Collection>;
   notesList?: Maybe<NotesList>;
   notesLists?: Maybe<Array<NotesList>>;
+  note: NoteResponse;
 };
 
 
@@ -48,6 +49,11 @@ export type QueryNotesListArgs = {
 
 export type QueryNotesListsArgs = {
   collectionId: Scalars['String'];
+};
+
+
+export type QueryNoteArgs = {
+  noteLocation: NoteLocationInput;
 };
 
 export type User = {
@@ -119,6 +125,18 @@ export type Error = {
 export type ListLocationInput = {
   collectionId: Scalars['String'];
   listId: Scalars['String'];
+};
+
+export type NoteResponse = {
+  __typename?: 'NoteResponse';
+  note?: Maybe<Note>;
+  error?: Maybe<Error>;
+};
+
+export type NoteLocationInput = {
+  collectionId: Scalars['String'];
+  listId: Scalars['String'];
+  noteId: Scalars['String'];
 };
 
 export type Mutation = {
@@ -261,12 +279,6 @@ export type NotesListResponse = {
   error?: Maybe<Error>;
 };
 
-export type NoteResponse = {
-  __typename?: 'NoteResponse';
-  note?: Maybe<Note>;
-  error?: Maybe<Error>;
-};
-
 export type NoteInput = {
   title: Scalars['String'];
   body: Scalars['String'];
@@ -279,12 +291,6 @@ export type NotesListUpdateInput = {
 export type NoteUpdateInput = {
   title?: Maybe<Scalars['String']>;
   body?: Maybe<Scalars['String']>;
-};
-
-export type NoteLocationInput = {
-  collectionId: Scalars['String'];
-  listId: Scalars['String'];
-  noteId: Scalars['String'];
 };
 
 export type DeleteNoteMutationVariables = Exact<{
@@ -563,6 +569,29 @@ export type MeQuery = (
   }
 );
 
+export type NoteQueryVariables = Exact<{
+  noteLocation: NoteLocationInput;
+}>;
+
+
+export type NoteQuery = (
+  { __typename?: 'Query' }
+  & {
+    note: (
+      { __typename?: 'NoteResponse' }
+      & {
+        note?: Maybe<(
+          { __typename?: 'Note' }
+          & Pick<Note, 'id' | 'title'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
+);
+
 
 export const DeleteNoteDocument = gql`
     mutation DeleteNote($noteLocationInput: NoteLocationInput!) {
@@ -796,4 +825,22 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const NoteDocument = gql`
+    query Note($noteLocation: NoteLocationInput!) {
+  note(noteLocation: $noteLocation) {
+    note {
+      id
+      title
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useNoteQuery(options: Omit<Urql.UseQueryArgs<NoteQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<NoteQuery>({ query: NoteDocument, ...options });
 };
