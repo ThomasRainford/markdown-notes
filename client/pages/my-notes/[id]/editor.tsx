@@ -42,7 +42,7 @@ const Editor = ({ }) => {
                <EditPanel />
                <NoteEditorLayout>
                   <NoteLocationBreadcrumb location={location} />
-                  <NoteForm user={user} location={location} setLocation={setLocation} />
+                  <NoteForm user={user} location={location} setLocation={setLocation} selectedNote={selectedNote} />
                </NoteEditorLayout>
             </NewNotePageLayout>
             :

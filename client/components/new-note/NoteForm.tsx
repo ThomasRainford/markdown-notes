@@ -1,9 +1,10 @@
 import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { UseQueryState } from 'urql'
-import { MeQuery, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
+import { NoteContext } from '../../context/NoteContext'
+import { MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
 import { NoteLocation } from '../../types/types'
 import AutoResizeTextarea from '../AutoResizeTextArea'
 import GoBackAlertDialog from './GoBackAlertDialog'
@@ -13,13 +14,16 @@ interface Props {
    user: UseQueryState<MeQuery, object>
    location: NoteLocation
    setLocation: React.Dispatch<React.SetStateAction<NoteLocation>>
+   selectedNote: Note
 }
 
-const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
+const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNote }) => {
 
    const router = useRouter()
 
-   const { handleSubmit, errors, register, formState } = useForm()
+   const { selectNote } = useContext(NoteContext)
+
+   const { handleSubmit, errors, register, formState, setValue } = useForm()
    const [saved, setSaved] = useState<boolean>(false)
 
    const [, addNoteMutation] = useAddNoteMutation()
@@ -49,7 +53,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
             }
 
             const response = await updateNoteMutation({ noteLocation, noteInput })
-            console.log(response)
+            selectNote(response.data?.updateNote.note as Note)
          } else {
             setIsSaveOpen(true)
          }
@@ -93,6 +97,11 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
          const response = await deleteNoteMutation({ noteLocationInput })
       }
    }
+
+   useEffect(() => {
+      setValue('title', selectedNote.title)
+      setValue('body', selectedNote.body)
+   }, [])
 
    return (
       <>

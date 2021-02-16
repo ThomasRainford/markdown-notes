@@ -33,7 +33,6 @@ const MyNotes = ({ }) => {
 
    useEffect(() => {
       localStorage.removeItem('noteId')
-      console.log(selectedNote)
    }, [])
 
    return (
