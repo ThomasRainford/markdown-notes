@@ -3,10 +3,12 @@ import { withUrqlClient } from 'next-urql'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import AutoResizeTextarea from '../../../components/AutoResizeTextArea'
+import GoBackAlertDialog from '../../../components/new-note/GoBackAlertDialog'
 import NewNotePageLayout from '../../../components/new-note/NewNotePageLayout'
 import NoteLocationBreadcrumb from '../../../components/new-note/NoteLocationBreadcrumb'
+import SaveAlertDialog from '../../../components/new-note/SaveAlertDialog'
 import PageLoadingIndicator from '../../../components/PageLoadingIndicator'
-import { Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useMeQuery, useUpdateNoteMutation } from '../../../generated/graphql'
+import { Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useMeQuery, useUpdateNoteMutation } from '../../../generated/graphql'
 import { NoteLocation } from '../../../types/types'
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { useIsAuth } from '../../../utils/useIsAuth'
@@ -24,15 +26,19 @@ const NewNote = ({ }) => {
    const [user] = useMeQuery()
    const [addNoteResult, addNoteMutation] = useAddNoteMutation()
    const [updateNoteResult, updateNoteMutation] = useUpdateNoteMutation()
+   const [deleteNoteResult, deleteNoteMutation] = useDeleteNoteMutation()
 
    const { handleSubmit, errors, register, formState } = useForm()
+
+   const [isGoBackOpen, setIsGoBackOpen] = useState<boolean>(false)
+   const onGoBackClose = () => setIsGoBackOpen(false)
+   const [isSaveOpen, setIsSaveOpen] = useState<boolean>(false)
+   const onSaveClose = () => setIsSaveOpen(false)
 
    useIsAuth(user)
 
    const onSubmit = async (noteInput: NoteUpdateInput) => {
       const { title, body } = noteInput
-
-      console.log(noteInput)
 
       if (currentNote && title.length > 0 && body.length > 0) {
          const listId = location.list.id
@@ -48,6 +54,30 @@ const NewNote = ({ }) => {
 
       } else {
          //setIsSaveOpen(true)
+      }
+   }
+
+   const handleGoBack = async () => {
+      if (!saved) {
+         setIsGoBackOpen(true)
+      } else {
+         localStorage.removeItem('noteId')
+         //router.replace(`/notes/my-notes?listId=${router.query.listId}`)
+      }
+   }
+
+   const deleteNote = async () => {
+      const collectionId = location.collection.id
+      const listId = location.list.id
+
+      const noteLocationInput: NoteLocationInput = {
+         collectionId,
+         listId,
+         noteId: currentNote.id
+      }
+
+      if (location) {
+         const response = await deleteNoteMutation({ noteLocationInput })
       }
    }
 
@@ -125,6 +155,9 @@ const NewNote = ({ }) => {
             :
             <PageLoadingIndicator />
          }
+
+         <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} />
+         <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />
       </>
    )
 }

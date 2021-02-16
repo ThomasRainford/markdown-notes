@@ -287,6 +287,16 @@ export type NoteLocationInput = {
   noteId: Scalars['String'];
 };
 
+export type DeleteNoteMutationVariables = Exact<{
+  noteLocationInput: NoteLocationInput;
+}>;
+
+
+export type DeleteNoteMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteNote'>
+);
+
 export type AddNoteMutationVariables = Exact<{
   listLocation: ListLocationInput;
   noteInput: NoteInput;
@@ -554,6 +564,15 @@ export type MeQuery = (
 );
 
 
+export const DeleteNoteDocument = gql`
+    mutation DeleteNote($noteLocationInput: NoteLocationInput!) {
+  deleteNote(noteLocation: $noteLocationInput)
+}
+    `;
+
+export function useDeleteNoteMutation() {
+  return Urql.useMutation<DeleteNoteMutation, DeleteNoteMutationVariables>(DeleteNoteDocument);
+};
 export const AddNoteDocument = gql`
     mutation AddNote($listLocation: ListLocationInput!, $noteInput: NoteInput!) {
   addNote(listLocation: $listLocation, noteInput: $noteInput) {
