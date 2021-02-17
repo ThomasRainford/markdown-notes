@@ -7,6 +7,11 @@ query Collections {
 		lists {
 			id
 			title
+			collection {
+				id
+				title
+				visibility
+			}
 			notes {
 				id
 				title

@@ -1,5 +1,5 @@
 import { AddIcon } from '@chakra-ui/icons'
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, ExpandedIndex, Flex, ListIcon, Text } from '@chakra-ui/react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, ExpandedIndex, Flex, ListIcon, Text, useDisclosure } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { MdLock, MdLockOpen } from 'react-icons/md'
@@ -7,6 +7,7 @@ import { Collection } from '../../generated/graphql'
 import CollectionInfo from '../activity/CollectionInfo'
 import AddDrawer from './AddDrawer'
 import ListAccordionItem from './ListAccordionItem'
+import UpdateDrawer from './UpdateDrawer'
 
 interface Props {
    collection: Collection
@@ -16,10 +17,19 @@ const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
 
    const router = useRouter()
 
+   const { isOpen, onOpen, onClose } = useDisclosure()
+   const btnRef = React.useRef()
+
+   console.log(collection.visibility)
+
+
    return (
       <AccordionItem>
          <h2>
-            <AccordionButton>
+            <AccordionButton
+               ref={btnRef}
+               onDoubleClick={onOpen}
+            >
                <Box flex="1" textAlign="left">
                   <Flex align="center">
                      <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} />
@@ -29,6 +39,7 @@ const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
                </Box>
                <AccordionIcon />
             </AccordionButton>
+            <UpdateDrawer collection={collection} header="Update Collection" isOpen={isOpen} onClose={onClose} btnRef={btnRef} />
          </h2>
          <AccordionPanel pb={4}>
             <Accordion

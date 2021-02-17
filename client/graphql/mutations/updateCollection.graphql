@@ -1,0 +1,16 @@
+mutation UpdateCollection(
+	$id: String!
+	$collectionInput: CollectionUpdateInput!
+) {
+	updateCollection(id: $id, collectionInput: $collectionInput) {
+		collection {
+			id
+			title
+			visibility
+		}
+		error {
+			property
+			message
+		}
+	}
+}
