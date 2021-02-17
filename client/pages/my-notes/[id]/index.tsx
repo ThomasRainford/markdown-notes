@@ -72,7 +72,7 @@ const MyNotes = ({ }) => {
                      </Heading>
                   </Flex>
                   <Flex w="100%" p="1em">
-                     <Text>
+                     <Text whiteSpace="pre-wrap">
                         {selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body}
                      </Text>
                   </Flex>
