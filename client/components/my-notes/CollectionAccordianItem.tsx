@@ -20,6 +20,8 @@ const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
    const { isOpen, onOpen, onClose } = useDisclosure()
    const btnRef = React.useRef()
 
+   console.log(collection.visibility)
+
 
    return (
       <AccordionItem>

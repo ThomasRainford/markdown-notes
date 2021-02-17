@@ -1,6 +1,6 @@
 import { Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Input, DrawerFooter, Button, Radio, RadioGroup, Stack } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { Collection, NotesList } from '../../generated/graphql'
+import { Collection, NotesList, useUpdateCollectionMutation, useUpdateNotesListMutation } from '../../generated/graphql'
 
 interface Props {
    collection?: Collection
@@ -18,6 +18,9 @@ const UpdateDrawer: React.FC<Props> = ({ collection, list, header, isOpen, onClo
    const isCollection = (): boolean => header.toLowerCase().includes('collection')
    const [title, setTitle] = useState<string>(isCollection() ? collection.title : list.title)
    const [visibility, setVisibility] = useState<string>(collection && collection.visibility)
+
+   const [, updateCollectionMutation] = useUpdateCollectionMutation()
+   const [, updateNotesListMutation] = useUpdateNotesListMutation()
 
    const handleInput = (event: React.FormEvent<EventTarget>) => setTitle((event.target as HTMLInputElement).value)
 
@@ -53,9 +56,28 @@ const UpdateDrawer: React.FC<Props> = ({ collection, list, header, isOpen, onClo
                      mt="2em"
                      mr="1em"
                      onClick={async () => {
-
+                        if (isCollection()) {
+                           await updateCollectionMutation({
+                              id: collection.id,
+                              collectionInput: {
+                                 title,
+                                 visibility
+                              }
+                           })
+                        } else {
+                           await updateNotesListMutation({
+                              listLocation: {
+                                 collectionId: list.collection.id,
+                                 listId: list.id
+                              },
+                              notesListInput: {
+                                 title
+                              }
+                           })
+                        }
+                        onClose()
                      }}
-                  >Create</Button>
+                  >Update</Button>
                   <Button
                      mt="2em"
                      onClick={onClose}
