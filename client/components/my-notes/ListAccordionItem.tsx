@@ -15,10 +15,17 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
 
    const router = useRouter()
 
-   const { selectNoteLocation } = useContext(NoteContext)
+   const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
+   const selectedNoteLocation = getSelectedNoteLocation()
 
    const handleAddNote = (): void => {
-      selectNoteLocation(null)
+      selectNoteLocation({
+         noteLocation: {
+            collection: collection,
+            list: list,
+            note: null
+         }
+      })
       localStorage.setItem('noteLocation', JSON.stringify({ collection, list }))
       router.push(router.asPath + '/editor')
    }

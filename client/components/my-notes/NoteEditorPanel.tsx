@@ -36,7 +36,7 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
       } else {
          toast({
             title: "Note Deleted",
-            description: "Note was created Deleted.",
+            description: "Note was successfully deleted.",
             status: "success",
             duration: 2000,
             isClosable: true,

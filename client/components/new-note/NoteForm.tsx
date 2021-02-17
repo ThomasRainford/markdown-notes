@@ -77,6 +77,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
                },
                noteInput: noteInputAdd
             })
+
             updateSelectedNoteLocation(response.data?.addNote.note as Note)
             localStorage.setItem('noteId', response.data?.addNote.note.id)
          }
@@ -108,7 +109,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
    }
 
    useEffect(() => {
-      if (selectedNoteLocation) {
+      if (selectedNoteLocation.noteLocation.note) {
          setValue('title', selectedNoteLocation.noteLocation.note.title)
          setValue('body', selectedNoteLocation.noteLocation.note.body)
       }

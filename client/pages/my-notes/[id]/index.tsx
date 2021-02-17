@@ -68,16 +68,16 @@ const MyNotes = ({ }) => {
                <NoteDisplayLayout>
                   <Flex w="100%" p="1em">
                      <Heading textColor="#05386B">
-                        {selectedNoteLocation ? selectedNoteLocation.noteLocation.note.title : "Select a Note"}
+                        {selectedNoteLocation?.noteLocation.note ? selectedNoteLocation.noteLocation.note.title : "Select a Note"}
                      </Heading>
                   </Flex>
                   <Flex w="100%" p="1em">
                      <Text>
-                        {selectedNoteLocation && selectedNoteLocation.noteLocation.note.body}
+                        {selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body}
                      </Text>
                   </Flex>
                </NoteDisplayLayout>
-               {selectedNoteLocation &&
+               {selectedNoteLocation?.noteLocation.note &&
                   <NoteEditorPanel user={user} selectedNoteLocation={selectedNoteLocation} />
                }
             </MyNotesPageLayout>
