@@ -1,5 +1,5 @@
-import { Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Input, DrawerFooter, Button } from '@chakra-ui/react'
-import React from 'react'
+import { Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Input, DrawerFooter, Button, Radio, RadioGroup, Stack } from '@chakra-ui/react'
+import React, { useState } from 'react'
 import { Collection, NotesList } from '../../generated/graphql'
 
 interface Props {
@@ -16,6 +16,10 @@ const UpdateDrawer: React.FC<Props> = ({ collection, list, header, isOpen, onClo
    const inputRef = React.useRef()
 
    const isCollection = (): boolean => header.toLowerCase().includes('collection')
+   const [title, setTitle] = useState<string>(isCollection() ? collection.title : list.title)
+   const [visibility, setVisibility] = useState<string>('private')
+
+   const handleInput = (event: React.FormEvent<EventTarget>) => setTitle((event.target as HTMLInputElement).value)
 
    return (
       <Drawer
@@ -33,8 +37,17 @@ const UpdateDrawer: React.FC<Props> = ({ collection, list, header, isOpen, onClo
                <DrawerBody>
                   <Input
                      ref={inputRef}
-                     defaultValue={isCollection() ? collection.title : list.title}
+                     defaultValue={title}
+                     onChange={handleInput}
                   />
+                  {isCollection() &&
+                     <RadioGroup defaultValue={collection.visibility} onChange={(next) => { setVisibility(next.toString()) }}>
+                        <Stack direction="row" mt="1em">
+                           <Radio value="public">Public</Radio>
+                           <Radio value="private">Private</Radio>
+                        </Stack>
+                     </RadioGroup>
+                  }
                   <Button
                      colorScheme="teal"
                      mt="2em"
