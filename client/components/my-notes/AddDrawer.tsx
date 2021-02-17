@@ -134,10 +134,6 @@ const AddDrawer: React.FC<Props> = ({ collection, openButtonText, header }) => {
                   </DrawerBody>
 
                   <DrawerFooter>
-                     <Button variant="outline" mr={3} onClick={onClose}>
-                        Cancel
-                     </Button>
-                     <Button color="blue">Save</Button>
                   </DrawerFooter>
                </DrawerContent>
             </DrawerOverlay>

@@ -87,10 +87,11 @@ const UpdateDrawer: React.FC<Props> = ({ collection, list, header, isOpen, onClo
                </DrawerBody>
 
                <DrawerFooter>
-                  <Button variant="outline" mr={3} onClick={onClose}>
-                     Cancel
+                  <Button
+                     color="red"
+                  >
+                     Delete
                   </Button>
-                  <Button color="blue">Save</Button>
                </DrawerFooter>
             </DrawerContent>
          </DrawerOverlay>
