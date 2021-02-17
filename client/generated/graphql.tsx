@@ -459,6 +459,30 @@ export type SavePublicCollectionMutation = (
   }
 );
 
+export type UpdateCollectionMutationVariables = Exact<{
+  id: Scalars['String'];
+  collectionInput: CollectionUpdateInput;
+}>;
+
+
+export type UpdateCollectionMutation = (
+  { __typename?: 'Mutation' }
+  & {
+    updateCollection: (
+      { __typename?: 'CollectionResponse' }
+      & {
+        collection?: Maybe<(
+          { __typename?: 'Collection' }
+          & Pick<Collection, 'id' | 'title' | 'visibility'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
+);
+
 export type UpdateNoteMutationVariables = Exact<{
   noteLocation: NoteLocationInput;
   noteInput: NoteUpdateInput;
@@ -474,6 +498,30 @@ export type UpdateNoteMutation = (
         note?: Maybe<(
           { __typename?: 'Note' }
           & Pick<Note, 'id' | 'title' | 'body'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
+);
+
+export type UpdateNotesListMutationVariables = Exact<{
+  listLocation: ListLocationInput;
+  notesListInput: NotesListUpdateInput;
+}>;
+
+
+export type UpdateNotesListMutation = (
+  { __typename?: 'Mutation' }
+  & {
+    updateNotesList: (
+      { __typename?: 'NotesListResponse' }
+      & {
+        notesList?: Maybe<(
+          { __typename?: 'NotesList' }
+          & Pick<NotesList, 'id' | 'title'>
         )>, error?: Maybe<(
           { __typename?: 'Error' }
           & Pick<Error, 'property' | 'message'>
@@ -726,6 +774,25 @@ export const SavePublicCollectionDocument = gql`
 export function useSavePublicCollectionMutation() {
   return Urql.useMutation<SavePublicCollectionMutation, SavePublicCollectionMutationVariables>(SavePublicCollectionDocument);
 };
+export const UpdateCollectionDocument = gql`
+    mutation UpdateCollection($id: String!, $collectionInput: CollectionUpdateInput!) {
+  updateCollection(id: $id, collectionInput: $collectionInput) {
+    collection {
+      id
+      title
+      visibility
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useUpdateCollectionMutation() {
+  return Urql.useMutation<UpdateCollectionMutation, UpdateCollectionMutationVariables>(UpdateCollectionDocument);
+};
 export const UpdateNoteDocument = gql`
     mutation UpdateNote($noteLocation: NoteLocationInput!, $noteInput: NoteUpdateInput!) {
   updateNote(noteLocaton: $noteLocation, noteInput: $noteInput) {
@@ -744,6 +811,24 @@ export const UpdateNoteDocument = gql`
 
 export function useUpdateNoteMutation() {
   return Urql.useMutation<UpdateNoteMutation, UpdateNoteMutationVariables>(UpdateNoteDocument);
+};
+export const UpdateNotesListDocument = gql`
+    mutation UpdateNotesList($listLocation: ListLocationInput!, $notesListInput: NotesListUpdateInput!) {
+  updateNotesList(listLocation: $listLocation, notesListInput: $notesListInput) {
+    notesList {
+      id
+      title
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useUpdateNotesListMutation() {
+  return Urql.useMutation<UpdateNotesListMutation, UpdateNotesListMutationVariables>(UpdateNotesListDocument);
 };
 export const VoteDocument = gql`
     mutation Vote($collectionId: String!) {

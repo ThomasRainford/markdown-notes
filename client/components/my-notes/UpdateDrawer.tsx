@@ -17,7 +17,7 @@ const UpdateDrawer: React.FC<Props> = ({ collection, list, header, isOpen, onClo
 
    const isCollection = (): boolean => header.toLowerCase().includes('collection')
    const [title, setTitle] = useState<string>(isCollection() ? collection.title : list.title)
-   const [visibility, setVisibility] = useState<string>('private')
+   const [visibility, setVisibility] = useState<string>(collection && collection.visibility)
 
    const handleInput = (event: React.FormEvent<EventTarget>) => setTitle((event.target as HTMLInputElement).value)
 
@@ -41,7 +41,7 @@ const UpdateDrawer: React.FC<Props> = ({ collection, list, header, isOpen, onClo
                      onChange={handleInput}
                   />
                   {isCollection() &&
-                     <RadioGroup defaultValue={collection.visibility} onChange={(next) => { setVisibility(next.toString()) }}>
+                     <RadioGroup defaultValue={visibility} onChange={(next) => { setVisibility(next.toString()) }}>
                         <Stack direction="row" mt="1em">
                            <Radio value="public">Public</Radio>
                            <Radio value="private">Private</Radio>
