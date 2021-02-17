@@ -27,6 +27,7 @@ export type Query = {
   collections: Array<Collection>;
   notesList?: Maybe<NotesList>;
   notesLists?: Maybe<Array<NotesList>>;
+  note: NoteResponse;
 };
 
 
@@ -48,6 +49,11 @@ export type QueryNotesListArgs = {
 
 export type QueryNotesListsArgs = {
   collectionId: Scalars['String'];
+};
+
+
+export type QueryNoteArgs = {
+  noteLocation: NoteLocationInput;
 };
 
 export type User = {
@@ -119,6 +125,18 @@ export type Error = {
 export type ListLocationInput = {
   collectionId: Scalars['String'];
   listId: Scalars['String'];
+};
+
+export type NoteResponse = {
+  __typename?: 'NoteResponse';
+  note?: Maybe<Note>;
+  error?: Maybe<Error>;
+};
+
+export type NoteLocationInput = {
+  collectionId: Scalars['String'];
+  listId: Scalars['String'];
+  noteId: Scalars['String'];
 };
 
 export type Mutation = {
@@ -261,12 +279,6 @@ export type NotesListResponse = {
   error?: Maybe<Error>;
 };
 
-export type NoteResponse = {
-  __typename?: 'NoteResponse';
-  note?: Maybe<Note>;
-  error?: Maybe<Error>;
-};
-
 export type NoteInput = {
   title: Scalars['String'];
   body: Scalars['String'];
@@ -281,11 +293,39 @@ export type NoteUpdateInput = {
   body?: Maybe<Scalars['String']>;
 };
 
-export type NoteLocationInput = {
-  collectionId: Scalars['String'];
-  listId: Scalars['String'];
-  noteId: Scalars['String'];
-};
+export type DeleteNoteMutationVariables = Exact<{
+  noteLocationInput: NoteLocationInput;
+}>;
+
+
+export type DeleteNoteMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteNote'>
+);
+
+export type AddNoteMutationVariables = Exact<{
+  listLocation: ListLocationInput;
+  noteInput: NoteInput;
+}>;
+
+
+export type AddNoteMutation = (
+  { __typename?: 'Mutation' }
+  & {
+    addNote: (
+      { __typename?: 'NoteResponse' }
+      & {
+        note?: Maybe<(
+          { __typename?: 'Note' }
+          & Pick<Note, 'id' | 'title' | 'body'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
+);
 
 export type CreateCollectionMutationVariables = Exact<{
   title: Scalars['String'];
@@ -295,16 +335,20 @@ export type CreateCollectionMutationVariables = Exact<{
 
 export type CreateCollectionMutation = (
   { __typename?: 'Mutation' }
-  & { createCollection: (
-    { __typename?: 'CollectionResponse' }
-    & { collection?: Maybe<(
-      { __typename?: 'Collection' }
-      & Pick<Collection, 'id' | 'title' | 'visibility'>
-    )>, error?: Maybe<(
-      { __typename?: 'Error' }
-      & Pick<Error, 'property' | 'message'>
-    )> }
-  ) }
+  & {
+    createCollection: (
+      { __typename?: 'CollectionResponse' }
+      & {
+        collection?: Maybe<(
+          { __typename?: 'Collection' }
+          & Pick<Collection, 'id' | 'title' | 'visibility'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
 );
 
 export type CreateNotesListMutationVariables = Exact<{
@@ -315,16 +359,20 @@ export type CreateNotesListMutationVariables = Exact<{
 
 export type CreateNotesListMutation = (
   { __typename?: 'Mutation' }
-  & { createNotesList: (
-    { __typename?: 'NotesListResponse' }
-    & { notesList?: Maybe<(
-      { __typename?: 'NotesList' }
-      & Pick<NotesList, 'id' | 'title'>
-    )>, error?: Maybe<(
-      { __typename?: 'Error' }
-      & Pick<Error, 'property' | 'message'>
-    )> }
-  ) }
+  & {
+    createNotesList: (
+      { __typename?: 'NotesListResponse' }
+      & {
+        notesList?: Maybe<(
+          { __typename?: 'NotesList' }
+          & Pick<NotesList, 'id' | 'title'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
 );
 
 export type LoginMutationVariables = Exact<{
@@ -335,16 +383,20 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = (
   { __typename?: 'Mutation' }
-  & { login: (
-    { __typename?: 'UserResponse' }
-    & { user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, '_id' | 'username' | 'email'>
-    )>, errors?: Maybe<Array<(
-      { __typename?: 'FieldError' }
-      & Pick<FieldError, 'field' | 'message'>
-    )>> }
-  ) }
+  & {
+    login: (
+      { __typename?: 'UserResponse' }
+      & {
+        user?: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, '_id' | 'username' | 'email'>
+        )>, errors?: Maybe<Array<(
+          { __typename?: 'FieldError' }
+          & Pick<FieldError, 'field' | 'message'>
+        )>>
+      }
+    )
+  }
 );
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
@@ -352,10 +404,12 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = (
   { __typename?: 'Mutation' }
-  & { logout?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'username'>
-  )> }
+  & {
+    logout?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'username'>
+    )>
+  }
 );
 
 export type RegisterMutationVariables = Exact<{
@@ -365,16 +419,20 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = (
   { __typename?: 'Mutation' }
-  & { register: (
-    { __typename?: 'UserResponse' }
-    & { user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'email'>
-    )>, errors?: Maybe<Array<(
-      { __typename?: 'FieldError' }
-      & Pick<FieldError, 'field' | 'message'>
-    )>> }
-  ) }
+  & {
+    register: (
+      { __typename?: 'UserResponse' }
+      & {
+        user?: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'username' | 'email'>
+        )>, errors?: Maybe<Array<(
+          { __typename?: 'FieldError' }
+          & Pick<FieldError, 'field' | 'message'>
+        )>>
+      }
+    )
+  }
 );
 
 export type SavePublicCollectionMutationVariables = Exact<{
@@ -385,16 +443,44 @@ export type SavePublicCollectionMutationVariables = Exact<{
 
 export type SavePublicCollectionMutation = (
   { __typename?: 'Mutation' }
-  & { savePublicCollection: (
-    { __typename?: 'CollectionResponse' }
-    & { collection?: Maybe<(
-      { __typename?: 'Collection' }
-      & Pick<Collection, 'id' | 'title' | 'visibility'>
-    )>, error?: Maybe<(
-      { __typename?: 'Error' }
-      & Pick<Error, 'property' | 'message'>
-    )> }
-  ) }
+  & {
+    savePublicCollection: (
+      { __typename?: 'CollectionResponse' }
+      & {
+        collection?: Maybe<(
+          { __typename?: 'Collection' }
+          & Pick<Collection, 'id' | 'title' | 'visibility'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
+);
+
+export type UpdateNoteMutationVariables = Exact<{
+  noteLocation: NoteLocationInput;
+  noteInput: NoteUpdateInput;
+}>;
+
+
+export type UpdateNoteMutation = (
+  { __typename?: 'Mutation' }
+  & {
+    updateNote: (
+      { __typename?: 'NoteResponse' }
+      & {
+        note?: Maybe<(
+          { __typename?: 'Note' }
+          & Pick<Note, 'id' | 'title' | 'body'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
 );
 
 export type VoteMutationVariables = Exact<{
@@ -404,16 +490,20 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = (
   { __typename?: 'Mutation' }
-  & { vote: (
-    { __typename?: 'CollectionResponse' }
-    & { collection?: Maybe<(
-      { __typename?: 'Collection' }
-      & Pick<Collection, 'id' | 'title' | 'upvotes'>
-    )>, error?: Maybe<(
-      { __typename?: 'Error' }
-      & Pick<Error, 'property' | 'message'>
-    )> }
-  ) }
+  & {
+    vote: (
+      { __typename?: 'CollectionResponse' }
+      & {
+        collection?: Maybe<(
+          { __typename?: 'Collection' }
+          & Pick<Collection, 'id' | 'title' | 'upvotes'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
 );
 
 export type ActivityFeedQueryVariables = Exact<{ [key: string]: never; }>;
@@ -421,18 +511,24 @@ export type ActivityFeedQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ActivityFeedQuery = (
   { __typename?: 'Query' }
-  & { activityFeed?: Maybe<Array<(
-    { __typename?: 'ActivityFeedResponse' }
-    & Pick<ActivityFeedResponse, 'activity'>
-    & { collection: (
-      { __typename?: 'Collection' }
-      & Pick<Collection, 'id' | 'title' | 'upvotes' | 'createdAt' | 'updatedAt'>
-      & { owner: (
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'username'>
-      ) }
-    ) }
-  )>> }
+  & {
+    activityFeed?: Maybe<Array<(
+      { __typename?: 'ActivityFeedResponse' }
+      & Pick<ActivityFeedResponse, 'activity'>
+      & {
+        collection: (
+          { __typename?: 'Collection' }
+          & Pick<Collection, 'id' | 'title' | 'upvotes' | 'createdAt' | 'updatedAt'>
+          & {
+            owner: (
+              { __typename?: 'User' }
+              & Pick<User, 'id' | 'username'>
+            )
+          }
+        )
+      }
+    )>>
+  }
 );
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -440,18 +536,24 @@ export type CollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CollectionsQuery = (
   { __typename?: 'Query' }
-  & { collections: Array<(
-    { __typename?: 'Collection' }
-    & Pick<Collection, 'id' | 'title' | 'visibility' | 'upvotes' | 'createdAt'>
-    & { lists: Array<(
-      { __typename?: 'NotesList' }
-      & Pick<NotesList, 'id' | 'title'>
-      & { notes: Array<(
-        { __typename?: 'Note' }
-        & Pick<Note, 'id' | 'title' | 'body'>
-      )> }
-    )> }
-  )> }
+  & {
+    collections: Array<(
+      { __typename?: 'Collection' }
+      & Pick<Collection, 'id' | 'title' | 'visibility' | 'upvotes' | 'createdAt'>
+      & {
+        lists: Array<(
+          { __typename?: 'NotesList' }
+          & Pick<NotesList, 'id' | 'title'>
+          & {
+            notes: Array<(
+              { __typename?: 'Note' }
+              & Pick<Note, 'id' | 'title' | 'body'>
+            )>
+          }
+        )>
+      }
+    )>
+  }
 );
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
@@ -459,13 +561,66 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = (
   { __typename?: 'Query' }
-  & { me?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, '_id' | 'email' | 'username' | 'following' | 'followers' | 'upvoted'>
-  )> }
+  & {
+    me?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, '_id' | 'email' | 'username' | 'following' | 'followers' | 'upvoted'>
+    )>
+  }
+);
+
+export type NoteQueryVariables = Exact<{
+  noteLocation: NoteLocationInput;
+}>;
+
+
+export type NoteQuery = (
+  { __typename?: 'Query' }
+  & {
+    note: (
+      { __typename?: 'NoteResponse' }
+      & {
+        note?: Maybe<(
+          { __typename?: 'Note' }
+          & Pick<Note, 'id' | 'title'>
+        )>, error?: Maybe<(
+          { __typename?: 'Error' }
+          & Pick<Error, 'property' | 'message'>
+        )>
+      }
+    )
+  }
 );
 
 
+export const DeleteNoteDocument = gql`
+    mutation DeleteNote($noteLocationInput: NoteLocationInput!) {
+  deleteNote(noteLocation: $noteLocationInput)
+}
+    `;
+
+export function useDeleteNoteMutation() {
+  return Urql.useMutation<DeleteNoteMutation, DeleteNoteMutationVariables>(DeleteNoteDocument);
+};
+export const AddNoteDocument = gql`
+    mutation AddNote($listLocation: ListLocationInput!, $noteInput: NoteInput!) {
+  addNote(listLocation: $listLocation, noteInput: $noteInput) {
+    note {
+      id
+      title
+      body
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useAddNoteMutation() {
+  return Urql.useMutation<AddNoteMutation, AddNoteMutationVariables>(AddNoteDocument);
+};
 export const CreateCollectionDocument = gql`
     mutation CreateCollection($title: String!, $visibility: String!) {
   createCollection(title: $title, visibility: $visibility) {
@@ -571,6 +726,25 @@ export const SavePublicCollectionDocument = gql`
 export function useSavePublicCollectionMutation() {
   return Urql.useMutation<SavePublicCollectionMutation, SavePublicCollectionMutationVariables>(SavePublicCollectionDocument);
 };
+export const UpdateNoteDocument = gql`
+    mutation UpdateNote($noteLocation: NoteLocationInput!, $noteInput: NoteUpdateInput!) {
+  updateNote(noteLocaton: $noteLocation, noteInput: $noteInput) {
+    note {
+      id
+      title
+      body
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useUpdateNoteMutation() {
+  return Urql.useMutation<UpdateNoteMutation, UpdateNoteMutationVariables>(UpdateNoteDocument);
+};
 export const VoteDocument = gql`
     mutation Vote($collectionId: String!) {
   vote(collectionId: $collectionId) {
@@ -651,4 +825,22 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const NoteDocument = gql`
+    query Note($noteLocation: NoteLocationInput!) {
+  note(noteLocation: $noteLocation) {
+    note {
+      id
+      title
+    }
+    error {
+      property
+      message
+    }
+  }
+}
+    `;
+
+export function useNoteQuery(options: Omit<Urql.UseQueryArgs<NoteQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<NoteQuery>({ query: NoteDocument, ...options });
 };

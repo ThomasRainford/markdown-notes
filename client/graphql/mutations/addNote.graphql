@@ -1,0 +1,13 @@
+mutation AddNote($listLocation: ListLocationInput!, $noteInput: NoteInput!) {
+	addNote(listLocation: $listLocation, noteInput: $noteInput) {
+		note {
+			id
+			title
+			body
+		}
+		error {
+			property
+			message
+		}
+	}
+}

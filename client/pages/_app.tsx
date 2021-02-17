@@ -1,5 +1,6 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
+import NoteProvider from '../context/NoteContext';
 import '../styles/globals.css';
 
 // colour scheme
@@ -12,7 +13,9 @@ import '../styles/globals.css';
 export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<ChakraProvider>
-			<Component {...pageProps} />
+			<NoteProvider>
+				<Component {...pageProps} />
+			</NoteProvider>
 		</ChakraProvider>
 	)
 }

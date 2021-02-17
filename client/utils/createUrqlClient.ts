@@ -47,10 +47,20 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
                   createNotesList: (_result, _args, cache, _info) => {
                      invalidateCollections(cache)
                   },
+                  addNote: (_result, _args, cache, _info) => {
+                     invalidateCollections(cache)
+                  },
+                  updateNote: (_result, _args, cache, _info) => {
+                     invalidateCollections(cache)
+                  },
+                  deleteNote: (_result, _args, cache, _info) => {
+                     invalidateCollections(cache)
+                  },
                },
             },
             keys: {
-               ActivityFeedResponse: () => null
+               ActivityFeedResponse: () => null,
+               NoteResponse: () => null,
             }
          }),
          ssrExchange,

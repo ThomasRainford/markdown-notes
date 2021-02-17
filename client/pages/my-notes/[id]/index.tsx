@@ -1,21 +1,20 @@
-import { AddIcon } from '@chakra-ui/icons'
-import { Accordion, Button, ExpandedIndex, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react'
+import { Accordion, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
-import AddDrawer from '../../components/my-notes/AddDrawer'
-import CollectionAccordianItem from '../../components/my-notes/CollectionAccordianItem'
-import FullCollectionsDisplayLayout from '../../components/my-notes/FullCollectionsDisplayLayout'
-import MyNotesPageLayout from '../../components/my-notes/MyNotesPageLayout'
-import NoteDisplayLayout from '../../components/my-notes/NoteDisplayLayout'
-import NoteEditorPanel from '../../components/my-notes/NoteEditorPanel'
-import PageLoadingIndicator from '../../components/PageLoadingIndicator'
-import NoteProvider, { NoteContext } from '../../context/NoteContext'
-import { Collection, useCollectionsQuery, useMeQuery } from '../../generated/graphql'
-import { createUrqlClient } from '../../utils/createUrqlClient'
-import { COLLECTIONS_QUERY } from '../../utils/ssr-queries/collections'
-import { useIsAuth } from '../../utils/useIsAuth'
+import AddDrawer from '../../../components/my-notes/AddDrawer'
+import CollectionAccordianItem from '../../../components/my-notes/CollectionAccordianItem'
+import FullCollectionsDisplayLayout from '../../../components/my-notes/FullCollectionsDisplayLayout'
+import MyNotesPageLayout from '../../../components/my-notes/MyNotesPageLayout'
+import NoteDisplayLayout from '../../../components/my-notes/NoteDisplayLayout'
+import NoteEditorPanel from '../../../components/my-notes/NoteEditorPanel'
+import PageLoadingIndicator from '../../../components/PageLoadingIndicator'
+import { NoteContext } from '../../../context/NoteContext'
+import { Collection, useCollectionsQuery, useMeQuery } from '../../../generated/graphql'
+import { createUrqlClient } from '../../../utils/createUrqlClient'
+import { COLLECTIONS_QUERY } from '../../../utils/ssr-queries/collections'
+import { useIsAuth } from '../../../utils/useIsAuth'
 
 interface Props {
 
@@ -24,8 +23,10 @@ interface Props {
 const MyNotes = ({ }) => {
 
    const router = useRouter()
-   const { getSelectedNote, selectNote } = useContext(NoteContext)
-   const selectedNote = getSelectedNote()
+   const { getSelectedNoteLocation } = useContext(NoteContext)
+   const selectedNoteLocation = getSelectedNoteLocation()
+
+   console.log(selectedNoteLocation)
 
    const [user] = useMeQuery()
    const [collections] = useCollectionsQuery()
@@ -33,7 +34,7 @@ const MyNotes = ({ }) => {
    useIsAuth(user)
 
    useEffect(() => {
-      selectNote(JSON.parse(localStorage.getItem('selectedNote')))
+      localStorage.removeItem('noteId')
    }, [])
 
    return (
@@ -67,17 +68,17 @@ const MyNotes = ({ }) => {
                <NoteDisplayLayout>
                   <Flex w="100%" p="1em">
                      <Heading textColor="#05386B">
-                        {selectedNote ? selectedNote.title : "Select a Note"}
+                        {selectedNoteLocation?.noteLocation.note ? selectedNoteLocation.noteLocation.note.title : "Select a Note"}
                      </Heading>
                   </Flex>
                   <Flex w="100%" p="1em">
                      <Text>
-                        {selectedNote && selectedNote.body}
+                        {selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body}
                      </Text>
                   </Flex>
                </NoteDisplayLayout>
-               {selectedNote &&
-                  <NoteEditorPanel selectedNote={selectedNote} />
+               {selectedNoteLocation?.noteLocation.note &&
+                  <NoteEditorPanel user={user} selectedNoteLocation={selectedNoteLocation} />
                }
             </MyNotesPageLayout>
             :
@@ -106,8 +107,4 @@ export async function getServerSideProps() {
    }
 }
 
-export default withUrqlClient(createUrqlClient, { neverSuspend: true, ssr: false })(() =>
-   <NoteProvider>
-      <MyNotes />
-   </NoteProvider>
-)
+export default withUrqlClient(createUrqlClient, { neverSuspend: true, ssr: false })(MyNotes)
