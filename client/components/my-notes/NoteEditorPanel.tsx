@@ -1,10 +1,10 @@
-import { Flex, IconButton, Tooltip } from '@chakra-ui/react'
+import { Flex, IconButton, Tooltip, useToast } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useContext } from 'react'
 import { MdDelete, MdEdit } from 'react-icons/md'
-import { UseQueryState } from 'urql'
+import { OperationResult, UseQueryState } from 'urql'
 import { NoteContext } from '../../context/NoteContext'
-import { MeQuery, Note } from '../../generated/graphql'
+import { DeleteNoteMutation, Exact, MeQuery, Note, NoteLocationInput, useDeleteNoteMutation } from '../../generated/graphql'
 import { ExactNoteLocation } from '../../types/types'
 
 interface Props {
@@ -16,7 +16,33 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
 
    const router = useRouter()
 
+   const toast = useToast()
+
    const { selectNoteLocation } = useContext(NoteContext)
+
+   const [, deleteNoteMutation] = useDeleteNoteMutation()
+
+   const displayToast = (response: OperationResult<DeleteNoteMutation, Exact<{
+      noteLocationInput: NoteLocationInput;
+   }>>) => {
+      if (!response.data?.deleteNote || response.error) {
+         toast({
+            title: "Unable to Delete Note.",
+            description: "There was a problem when deleting the note.",
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+         })
+      } else {
+         toast({
+            title: "Note Deleted",
+            description: "Note was created Deleted.",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+         })
+      }
+   }
 
    return (
       <Flex direction="column" align="center" h="100%" w="5em" bg="#5CDB95" borderTop="2px" borderColor="#379683">
@@ -44,6 +70,18 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
                   colorScheme="black"
                   fontSize="3xl"
                   mb="0.5em"
+                  onClick={async () => {
+                     const response = await deleteNoteMutation({
+                        noteLocationInput: {
+                           collectionId: selectedNoteLocation.noteLocation.collection.id,
+                           listId: selectedNoteLocation.noteLocation.list.id,
+                           noteId: selectedNoteLocation.noteLocation.note.id
+                        }
+                     })
+
+                     displayToast(response)
+                     selectNoteLocation(null)
+                  }}
                />
             </Tooltip>
          </Flex>
