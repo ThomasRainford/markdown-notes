@@ -25,8 +25,8 @@ const GoBackAlertDialog: React.FC<Props> = ({ isOpen, onClose, deleteNote, user 
          <AlertDialogOverlay>
             <AlertDialogContent>
                <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                  Empty note will be deleted
-                  </AlertDialogHeader>
+                  Unsaved work will be deleted
+               </AlertDialogHeader>
 
                <AlertDialogBody>
                   Are you sure? You can't undo this action afterwards.
