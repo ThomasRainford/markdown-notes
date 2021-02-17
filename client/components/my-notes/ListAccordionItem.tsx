@@ -1,10 +1,11 @@
 import { AddIcon } from '@chakra-ui/icons'
-import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Text, Button, Flex } from '@chakra-ui/react'
+import { AccordionItem, AccordionButton, Box, AccordionIcon, AccordionPanel, Text, Button, Flex, useDisclosure } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useContext } from 'react'
 import { NoteContext } from '../../context/NoteContext'
 import { Collection, NotesList } from '../../generated/graphql'
 import NoteDisplayItem from './NoteDisplayItem'
+import UpdateDrawer from './UpdateDrawer'
 
 interface Props {
    collection: Collection
@@ -14,6 +15,9 @@ interface Props {
 const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
 
    const router = useRouter()
+
+   const { isOpen, onOpen, onClose } = useDisclosure()
+   const btnRef = React.useRef()
 
    const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
    const selectedNoteLocation = getSelectedNoteLocation()
@@ -33,12 +37,15 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
    return (
       <AccordionItem>
          <h2>
-            <AccordionButton>
+            <AccordionButton
+               onDoubleClick={onOpen}
+            >
                <Box flex="1" textAlign="left" fontWeight="bold">
                   <Text>{list.title}</Text>
                </Box>
                <AccordionIcon />
             </AccordionButton>
+            <UpdateDrawer list={list} header="Update List" isOpen={isOpen} onClose={onClose} btnRef={btnRef} />
          </h2>
          <AccordionPanel pb={4}>
             {list.notes.map((note) => (
