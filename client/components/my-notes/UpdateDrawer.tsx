@@ -1,6 +1,6 @@
 import { Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Input, DrawerFooter, Button, Radio, RadioGroup, Stack } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { Collection, NotesList, useUpdateCollectionMutation, useUpdateNotesListMutation } from '../../generated/graphql'
+import { Collection, NotesList, useDeleteCollectionMutation, useDeleteNotesListMutation, useUpdateCollectionMutation, useUpdateNotesListMutation } from '../../generated/graphql'
 
 interface Props {
    collection?: Collection
@@ -21,6 +21,8 @@ const UpdateDrawer: React.FC<Props> = ({ collection, list, header, isOpen, onClo
 
    const [, updateCollectionMutation] = useUpdateCollectionMutation()
    const [, updateNotesListMutation] = useUpdateNotesListMutation()
+   const [, deleteCollectionMutation] = useDeleteCollectionMutation()
+   const [, deleteNotesListMutation] = useDeleteNotesListMutation()
 
    const handleInput = (event: React.FormEvent<EventTarget>) => setTitle((event.target as HTMLInputElement).value)
 
@@ -89,6 +91,14 @@ const UpdateDrawer: React.FC<Props> = ({ collection, list, header, isOpen, onClo
                <DrawerFooter>
                   <Button
                      color="red"
+                     onClick={async () => {
+                        if (isCollection()) {
+                           await deleteCollectionMutation({ id: collection.id })
+                        } else {
+                           await deleteNotesListMutation({ listLocation: { collectionId: list.collection.id, listId: list.id, } })
+                        }
+                        onClose()
+                     }}
                   >
                      Delete
                   </Button>
