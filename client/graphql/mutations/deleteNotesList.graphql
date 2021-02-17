@@ -1,0 +1,3 @@
+mutation DeleteNotesList($listLocation: ListLocationInput!) {
+	deleteNotesList(listLocation: $listLocation)
+}
