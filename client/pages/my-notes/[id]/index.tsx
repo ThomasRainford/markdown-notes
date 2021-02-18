@@ -67,12 +67,12 @@ const MyNotes = ({ }) => {
                   />
                </FullCollectionsDisplayLayout>
                <NoteDisplayLayout>
-                  <Flex w="100%" p="1em">
+                  <Flex w="100%" pt="1em" px="1em">
                      <Heading textColor="#05386B">
                         {selectedNoteLocation?.noteLocation.note ? selectedNoteLocation.noteLocation.note.title : "Select a Note"}
                      </Heading>
                   </Flex>
-                  <Flex w="100%" p="1em" whiteSpace="pre-wrap">
+                  <Flex direction="column" w="100%" p="2em" whiteSpace="pre-wrap">
                      <ReactMarkdown children={selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body} />
                   </Flex>
                </NoteDisplayLayout>

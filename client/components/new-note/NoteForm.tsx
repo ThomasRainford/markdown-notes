@@ -115,6 +115,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
       if (selectedNoteLocation?.noteLocation.note) {
          setValue('title', selectedNoteLocation.noteLocation.note.title)
          setValue('body', selectedNoteLocation.noteLocation.note.body)
+         setBody(selectedNoteLocation.noteLocation.note.body)
       } else {
          router.back()
       }
@@ -123,22 +124,21 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    return (
       <>
          <Flex
-            w="60em"
+            w="100%"
+            h="100%"
             mx="auto"
-            mt="3em"
             border="2px"
             borderColor="#5CDB95"
             boxShadow="lg"
          >
             <Flex
                direction="column"
-               justify="center"
                align="center"
                w="50%"
             >
                <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%", padding: "2em" }}>
 
-                  <FormControl mb="5%" mt="2%">
+                  <FormControl mb="1em">
                      <FormLabel>Title</FormLabel>
                      <Input
                         name="title"
@@ -153,7 +153,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                      </FormErrorMessage>
                   </FormControl>
 
-                  <FormControl mb="5%">
+                  <FormControl mb="1em">
                      <FormLabel>Body</FormLabel>
                      <AutoResizeTextarea
                         ref={register({ required: true })}
@@ -169,7 +169,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
 
                   <Button
                      colorScheme="teal"
-                     mr="1%"
+                     mr="1em"
                      as={Link}
                      onClick={() => handleGoBack()}
                   >
@@ -189,6 +189,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
             <Flex
                direction="column"
                w="50%"
+               p="1em"
                whiteSpace="pre-wrap"
             >
                <ReactMarkdown children={body} />

@@ -8,11 +8,10 @@ interface Props {
 
 const NoteLocationBreadcrumb: React.FC<Props> = ({ location }) => {
    return (
-      <Breadcrumb spacing={3} fontWeight="medium" fontSize="md" p="1em">
+      <Breadcrumb spacing={3} fontWeight="medium" fontSize="lg" p="1em">
          <BreadcrumbItem>
             <BreadcrumbLink>{location.collection.title}</BreadcrumbLink>
          </BreadcrumbItem>
-
          <BreadcrumbItem>
             <BreadcrumbLink>{location.list.title}</BreadcrumbLink>
          </BreadcrumbItem>
