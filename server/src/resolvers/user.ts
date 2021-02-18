@@ -10,6 +10,7 @@ import { isAuth } from "../middleware/isAuth"
 import { Collection } from "../entities/Collection"
 import { CollectionResponse } from "./object-types/CollectionResponse"
 import { ActivityFeedResponse } from "./object-types/ActivityFeedResponse"
+import jwt from 'jsonwebtoken'
 
 @Resolver(User)
 export class UserResolver {
@@ -42,9 +43,9 @@ export class UserResolver {
          return errors
       }
 
-      const hasUser = await repo.findOne({ $and: [email, username] })
-
-      if (hasUser) {
+      const hasUserName = await repo.findOne({ username })
+      const hasUserEmail = await repo.findOne({ email })
+      if (hasUserName || hasUserEmail) {
          return {
             errors: [
                {
@@ -430,6 +431,43 @@ export class UserResolver {
          })
       }
       return publicCollections
+   }
+
+   @Mutation(() => [UserResponse])
+   @UseMiddleware(isAuth)
+   async forgotPassword(
+      @Arg('email') email: string,
+      @Ctx() { em, req }: OrmContext
+   ): Promise<UserResponse> {
+
+      const repo = em.getRepository(User)
+
+      const user = await repo.findOne({ id: req.session['userId']?.toString(), email })
+
+      if (!user) {
+         return {
+            errors: [
+               {
+                  field: 'email',
+                  message: "User not registered."
+               }
+            ]
+         }
+      }
+
+      const secret = process.env.JWT_SECRET + user.password
+      const payload = {
+         id: user.id,
+         email: user.email
+      }
+
+      const token = jwt.sign(payload, secret, { expiresIn: '15m' })
+      const link = `${process.env.CLIENT_DOMAIN}/account/rest-password/${user.id}/${token}`
+
+      // This is temp. Need to send link in email.
+      console.log('Reset password: ', link)
+
+      return { user }
    }
 
 }
