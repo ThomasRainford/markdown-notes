@@ -27,8 +27,6 @@ const MyNotes = ({ }) => {
    const { getSelectedNoteLocation } = useContext(NoteContext)
    const selectedNoteLocation = getSelectedNoteLocation()
 
-   console.log(selectedNoteLocation)
-
    const [user] = useMeQuery()
    const [collections] = useCollectionsQuery()
 

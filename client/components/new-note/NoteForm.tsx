@@ -1,4 +1,4 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -8,6 +8,7 @@ import { NoteContext } from '../../context/NoteContext'
 import { MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
 import { ExactNoteLocation, NoteLocation } from '../../types/types'
 import AutoResizeTextarea from '../AutoResizeTextArea'
+import MarkdownSyntaxHighligher from '../MarkdownSyntaxHighligher'
 import GoBackAlertDialog from './GoBackAlertDialog'
 import SaveAlertDialog from './SaveAlertDialog'
 
@@ -63,7 +64,6 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
             }
 
             const response = await updateNoteMutation({ noteLocation, noteInput })
-            console.log(response)
             updateSelectedNoteLocation(response.data?.updateNote.note as Note)
          } else {
             setIsSaveOpen(true)
@@ -193,7 +193,10 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                p="1em"
                whiteSpace="pre-wrap"
             >
-               <ReactMarkdown children={body} />
+               <ReactMarkdown
+                  children={body}
+               //renderers={{ code: MarkdownSyntaxHighligher }}
+               />
             </Flex>
          </Flex>
          <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />

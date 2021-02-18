@@ -12,7 +12,7 @@ const NoteProvider: React.FC = ({ children }) => {
 
    const [selectedNoteLocation, setSelectedNoteLocation] = React.useState<ExactNoteLocation>()
 
-   console.log('context: ', selectedNoteLocation)
+   //console.log('context: ', selectedNoteLocation)
 
    const selectNoteLocation = (noteLocation: ExactNoteLocation) => {
       setSelectedNoteLocation(noteLocation)
