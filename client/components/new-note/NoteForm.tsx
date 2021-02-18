@@ -127,7 +127,8 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
             w="100%"
             h="100%"
             mx="auto"
-            border="2px"
+            borderRight="2px"
+            borderY="2px"
             borderColor="#5CDB95"
             boxShadow="lg"
          >

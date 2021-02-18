@@ -41,16 +41,20 @@ const NavBar: React.FC<Props> = ({ user }) => {
             textColor="#05386B"
             p="1.25em"
          >
-            <Flex align="center">
-               <Icon as={MdList} h={10} w={10} mr="0.25em" />
-               <Heading size="md" mr="4.5em">Markdown Notes</Heading>
+            <Flex align="center" justify="space-between">
+               <Flex mr="2em">
+                  <Icon as={MdList} h={10} w={10} mr="0.25em" />
+                  <Heading size="md">Markdown Notes</Heading>
+               </Flex>
                <Flex>
                   <NextLink href="/activity">
-                     <Link mr="1.5em">Activity</Link>
+                     <Link mr="1em">Activity</Link>
                   </NextLink>
                   <NextLink href={`/my-notes/${user.data?.me?.username}`}>
                      <Link>My Notes</Link>
                   </NextLink>
+               </Flex>
+               <Flex>
                </Flex>
             </Flex>
             <Flex align="center">

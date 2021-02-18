@@ -67,7 +67,7 @@ const MyNotes = ({ }) => {
                   />
                </FullCollectionsDisplayLayout>
                <NoteDisplayLayout>
-                  <Flex w="100%" pt="1em" px="1em">
+                  <Flex w="100%" pt="1em" px="2em">
                      <Heading textColor="#05386B">
                         {selectedNoteLocation?.noteLocation.note ? selectedNoteLocation.noteLocation.note.title : "Select a Note"}
                      </Heading>
