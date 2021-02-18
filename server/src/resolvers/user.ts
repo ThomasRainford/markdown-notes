@@ -474,8 +474,8 @@ export class UserResolver {
    async resetPassword(
       @Arg('userId') userId: string,
       @Arg('token') token: string,
-      @Arg('newPassword') newPassword: string
-      @Ctx() { em, req }: OrmContext
+      @Arg('newPassword') newPassword: string,
+      @Ctx() { em }: OrmContext
    ): Promise<UserResponse> {
 
       const repo = em.getRepository(User)
