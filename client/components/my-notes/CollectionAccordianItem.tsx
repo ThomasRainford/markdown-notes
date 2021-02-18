@@ -1,5 +1,4 @@
-import { AddIcon } from '@chakra-ui/icons'
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, ExpandedIndex, Flex, ListIcon, Text, useDisclosure } from '@chakra-ui/react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, ExpandedIndex, Flex, ListIcon, Text, useDisclosure } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { MdLock, MdLockOpen } from 'react-icons/md'
@@ -19,9 +18,6 @@ const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
 
    const { isOpen, onOpen, onClose } = useDisclosure()
    const btnRef = React.useRef()
-
-   console.log(collection.visibility)
-
 
    return (
       <AccordionItem>

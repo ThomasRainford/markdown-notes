@@ -2,11 +2,13 @@ import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link } f
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import ReactMarkdown from 'react-markdown'
 import { UseQueryState } from 'urql'
 import { NoteContext } from '../../context/NoteContext'
 import { MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
 import { ExactNoteLocation, NoteLocation } from '../../types/types'
 import AutoResizeTextarea from '../AutoResizeTextArea'
+import MarkdownSyntaxHighligher from '../MarkdownSyntaxHighligher'
 import GoBackAlertDialog from './GoBackAlertDialog'
 import SaveAlertDialog from './SaveAlertDialog'
 
@@ -17,14 +19,16 @@ interface Props {
    selectedNoteLocation: ExactNoteLocation
 }
 
-const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLocation }) => {
+const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
 
    const router = useRouter()
 
-   const { selectNoteLocation } = useContext(NoteContext)
+   const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
+   const selectedNoteLocation = getSelectedNoteLocation()
 
    const { handleSubmit, errors, register, formState, setValue } = useForm()
    const [saved, setSaved] = useState<boolean>(false)
+   const [body, setBody] = useState<string>() // This is used to pass to the markdown component.
 
    const [, addNoteMutation] = useAddNoteMutation()
    const [, updateNoteMutation] = useUpdateNoteMutation()
@@ -60,7 +64,6 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
             }
 
             const response = await updateNoteMutation({ noteLocation, noteInput })
-            console.log(response)
             updateSelectedNoteLocation(response.data?.updateNote.note as Note)
          } else {
             setIsSaveOpen(true)
@@ -109,58 +112,92 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
    }
 
    useEffect(() => {
-      if (selectedNoteLocation.noteLocation.note) {
+      if (selectedNoteLocation?.noteLocation.note) {
          setValue('title', selectedNoteLocation.noteLocation.note.title)
          setValue('body', selectedNoteLocation.noteLocation.note.body)
+         setBody(selectedNoteLocation.noteLocation.note.body)
+      } else {
+         router.back()
       }
    }, [])
 
    return (
       <>
-         <Flex direction="column" justify="center" align="center" w="60em" mx="auto" mt="3em" border="2px" borderColor="#5CDB95" boxShadow="lg">
-            <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%", padding: "2em" }}>
+         <Flex
+            w="100%"
+            h="100%"
+            mx="auto"
+            borderRight="2px"
+            borderY="2px"
+            borderColor="#5CDB95"
+            boxShadow="lg"
+         >
+            <Flex
+               direction="column"
+               align="center"
+               w="50%"
+            >
+               <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%", padding: "2em" }}>
 
-               <FormControl mb="5%" mt="2%">
-                  <FormLabel>Title</FormLabel>
-                  <Input
-                     name="title"
-                     autoComplete="off"
-                     ref={register({ required: true })}
-                     size="lg"
-                     border="1px"
-                     borderColor="#5CDB95"
-                  />
-                  <FormErrorMessage>
-                     {errors.title && errors.title.message}
-                  </FormErrorMessage>
-               </FormControl>
+                  <FormControl mb="1em">
+                     <FormLabel>Title</FormLabel>
+                     <Input
+                        name="title"
+                        autoComplete="off"
+                        ref={register({ required: true })}
+                        size="lg"
+                        border="1px"
+                        borderColor="#5CDB95"
+                     />
+                     <FormErrorMessage>
+                        {errors.title && errors.title.message}
+                     </FormErrorMessage>
+                  </FormControl>
 
-               <FormControl mb="5%">
-                  <FormLabel>Body</FormLabel>
-                  <AutoResizeTextarea ref={register({ required: true })} border="1px" borderColor="#5CDB95" p="0.5em" />
-                  <FormErrorMessage>
-                     {errors.body && errors.body.message}
-                  </FormErrorMessage>
-               </FormControl>
+                  <FormControl mb="1em">
+                     <FormLabel>Body</FormLabel>
+                     <AutoResizeTextarea
+                        ref={register({ required: true })}
+                        border="1px"
+                        borderColor="#5CDB95"
+                        p="0.5em"
+                        onChange={(event) => setBody(event.target.value as string)}
+                     />
+                     <FormErrorMessage>
+                        {errors.body && errors.body.message}
+                     </FormErrorMessage>
+                  </FormControl>
 
-               <Button
-                  colorScheme="teal"
-                  mr="1%"
-                  as={Link}
-                  onClick={() => handleGoBack()}
-               >
-                  Go Back
+                  <Button
+                     colorScheme="teal"
+                     mr="1em"
+                     as={Link}
+                     onClick={() => handleGoBack()}
+                  >
+                     Go Back
                </Button>
-               <Button
-                  colorScheme="blue"
-                  isLoading={formState.isSubmitting}
-                  type="submit"
-                  onClick={() => setSaved(true)}
-               >
-                  Save
+                  <Button
+                     colorScheme="blue"
+                     isLoading={formState.isSubmitting}
+                     type="submit"
+                     onClick={() => setSaved(true)}
+                  >
+                     Save
                </Button>
 
-            </form>
+               </form>
+            </Flex>
+            <Flex
+               direction="column"
+               w="50%"
+               p="1em"
+               whiteSpace="pre-wrap"
+            >
+               <ReactMarkdown
+                  children={body}
+               //renderers={{ code: MarkdownSyntaxHighligher }}
+               />
+            </Flex>
          </Flex>
          <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
          <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />
