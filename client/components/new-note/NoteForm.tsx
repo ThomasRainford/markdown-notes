@@ -123,69 +123,76 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    return (
       <>
          <Flex
-            direction="column"
-            justify="center"
-            align="center"
             w="60em"
             mx="auto"
             mt="3em"
             border="2px"
             borderColor="#5CDB95"
             boxShadow="lg"
-            fontSize="unset"
          >
-            <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%", padding: "2em" }}>
+            <Flex
+               direction="column"
+               justify="center"
+               align="center"
+               w="50%"
+            >
+               <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%", padding: "2em" }}>
 
-               <FormControl mb="5%" mt="2%">
-                  <FormLabel>Title</FormLabel>
-                  <Input
-                     name="title"
-                     autoComplete="off"
-                     ref={register({ required: true })}
-                     size="lg"
-                     border="1px"
-                     borderColor="#5CDB95"
-                  />
-                  <FormErrorMessage>
-                     {errors.title && errors.title.message}
-                  </FormErrorMessage>
-               </FormControl>
+                  <FormControl mb="5%" mt="2%">
+                     <FormLabel>Title</FormLabel>
+                     <Input
+                        name="title"
+                        autoComplete="off"
+                        ref={register({ required: true })}
+                        size="lg"
+                        border="1px"
+                        borderColor="#5CDB95"
+                     />
+                     <FormErrorMessage>
+                        {errors.title && errors.title.message}
+                     </FormErrorMessage>
+                  </FormControl>
 
-               <FormControl mb="5%">
-                  <FormLabel>Body</FormLabel>
-                  <AutoResizeTextarea
-                     ref={register({ required: true })}
-                     border="1px"
-                     borderColor="#5CDB95"
-                     p="0.5em"
-                     onChange={(event) => setBody(event.target.value as string)}
-                  />
-                  <FormErrorMessage>
-                     {errors.body && errors.body.message}
-                  </FormErrorMessage>
-               </FormControl>
+                  <FormControl mb="5%">
+                     <FormLabel>Body</FormLabel>
+                     <AutoResizeTextarea
+                        ref={register({ required: true })}
+                        border="1px"
+                        borderColor="#5CDB95"
+                        p="0.5em"
+                        onChange={(event) => setBody(event.target.value as string)}
+                     />
+                     <FormErrorMessage>
+                        {errors.body && errors.body.message}
+                     </FormErrorMessage>
+                  </FormControl>
 
-               <Button
-                  colorScheme="teal"
-                  mr="1%"
-                  as={Link}
-                  onClick={() => handleGoBack()}
-               >
-                  Go Back
+                  <Button
+                     colorScheme="teal"
+                     mr="1%"
+                     as={Link}
+                     onClick={() => handleGoBack()}
+                  >
+                     Go Back
                </Button>
-               <Button
-                  colorScheme="blue"
-                  isLoading={formState.isSubmitting}
-                  type="submit"
-                  onClick={() => setSaved(true)}
-               >
-                  Save
+                  <Button
+                     colorScheme="blue"
+                     isLoading={formState.isSubmitting}
+                     type="submit"
+                     onClick={() => setSaved(true)}
+                  >
+                     Save
                </Button>
 
-            </form>
-
-            <ReactMarkdown children={body} />
-
+               </form>
+            </Flex>
+            <Flex
+               direction="column"
+               w="50%"
+               whiteSpace="pre-wrap"
+            >
+               <ReactMarkdown children={body} />
+            </Flex>
          </Flex>
          <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
          <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />

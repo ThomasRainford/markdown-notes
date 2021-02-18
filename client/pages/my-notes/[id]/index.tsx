@@ -2,6 +2,7 @@ import { Accordion, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import AddDrawer from '../../../components/my-notes/AddDrawer'
 import CollectionAccordianItem from '../../../components/my-notes/CollectionAccordianItem'
@@ -71,10 +72,8 @@ const MyNotes = ({ }) => {
                         {selectedNoteLocation?.noteLocation.note ? selectedNoteLocation.noteLocation.note.title : "Select a Note"}
                      </Heading>
                   </Flex>
-                  <Flex w="100%" p="1em">
-                     <Text whiteSpace="pre-wrap">
-                        {selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body}
-                     </Text>
+                  <Flex w="100%" p="1em" whiteSpace="pre-wrap">
+                     <ReactMarkdown children={selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body} />
                   </Flex>
                </NoteDisplayLayout>
                {selectedNoteLocation?.noteLocation.note &&
