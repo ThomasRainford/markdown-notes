@@ -1,7 +1,8 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import ReactMarkdown from 'react-markdown'
 import { UseQueryState } from 'urql'
 import { NoteContext } from '../../context/NoteContext'
 import { MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
@@ -17,14 +18,16 @@ interface Props {
    selectedNoteLocation: ExactNoteLocation
 }
 
-const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLocation }) => {
+const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
 
    const router = useRouter()
 
-   const { selectNoteLocation } = useContext(NoteContext)
+   const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
+   const selectedNoteLocation = getSelectedNoteLocation()
 
    const { handleSubmit, errors, register, formState, setValue } = useForm()
    const [saved, setSaved] = useState<boolean>(false)
+   const [body, setBody] = useState<string>() // This is used to pass to the markdown component.
 
    const [, addNoteMutation] = useAddNoteMutation()
    const [, updateNoteMutation] = useUpdateNoteMutation()
@@ -109,15 +112,28 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
    }
 
    useEffect(() => {
-      if (selectedNoteLocation.noteLocation.note) {
+      if (selectedNoteLocation?.noteLocation.note) {
          setValue('title', selectedNoteLocation.noteLocation.note.title)
          setValue('body', selectedNoteLocation.noteLocation.note.body)
+      } else {
+         router.back()
       }
    }, [])
 
    return (
       <>
-         <Flex direction="column" justify="center" align="center" w="60em" mx="auto" mt="3em" border="2px" borderColor="#5CDB95" boxShadow="lg">
+         <Flex
+            direction="column"
+            justify="center"
+            align="center"
+            w="60em"
+            mx="auto"
+            mt="3em"
+            border="2px"
+            borderColor="#5CDB95"
+            boxShadow="lg"
+            fontSize="unset"
+         >
             <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%", padding: "2em" }}>
 
                <FormControl mb="5%" mt="2%">
@@ -137,7 +153,13 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
 
                <FormControl mb="5%">
                   <FormLabel>Body</FormLabel>
-                  <AutoResizeTextarea ref={register({ required: true })} border="1px" borderColor="#5CDB95" p="0.5em" />
+                  <AutoResizeTextarea
+                     ref={register({ required: true })}
+                     border="1px"
+                     borderColor="#5CDB95"
+                     p="0.5em"
+                     onChange={(event) => setBody(event.target.value as string)}
+                  />
                   <FormErrorMessage>
                      {errors.body && errors.body.message}
                   </FormErrorMessage>
@@ -161,6 +183,9 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation, selectedNoteLo
                </Button>
 
             </form>
+
+            <ReactMarkdown children={body} />
+
          </Flex>
          <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
          <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />
