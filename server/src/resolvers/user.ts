@@ -462,7 +462,7 @@ export class UserResolver {
       }
 
       const token = jwt.sign(payload, secret, { expiresIn: '15m' })
-      const link = `${process.env.CLIENT_DOMAIN}/account/rest-password/${user.id}/${token}`
+      const link = `${process.env.CLIENT_DOMAIN}/account/reset-password/${user.id}/${token}`
 
       // This is temp. Need to send link in email.
       console.log('Reset password: ', link)
@@ -508,7 +508,9 @@ export class UserResolver {
          }
       }
 
-      await repo.nativeUpdate({ id: userId }, { password: newPassword })
+      user.password = await argon2.hash(newPassword)
+
+      await em.persistAndFlush(user)
 
       return { user }
    }
