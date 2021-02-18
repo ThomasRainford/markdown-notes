@@ -1,11 +1,12 @@
-import { Flex, FormControl, Input, FormErrorMessage, Button, Alert, AlertDescription, AlertIcon, CloseButton } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Button, CloseButton, Flex, FormControl, FormErrorMessage, Input } from '@chakra-ui/react'
 import { NextPage } from 'next'
+import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import ResetPasswordLayout from '../../components/account/ResetPasswordLayout'
-import { LoginMutationVariables } from '../../generated/graphql'
-import register from './register'
+import { useResetPasswordMutation } from '../../generated/graphql'
+import { createUrqlClient } from '../../utils/createUrqlClient'
 
 interface Props {
 
@@ -14,25 +15,52 @@ interface Props {
 const ResetPassword: NextPage = ({ }) => {
 
    const router = useRouter()
-   const { handleSubmit, errors, register, formState } = useForm()
+   const { handleSubmit, errors, register, formState, setValue } = useForm()
    const [invalidPassword, setInvalidPassword] = useState<JSX.Element>(null)
 
    //const [result, loginMutation] = useLoginMutation()
+   const [result, resetPasswordMutation] = useResetPasswordMutation()
 
-   const onSubmit = async ({ usernameOrEmail, password }: LoginMutationVariables) => {
+   const onSubmit = async (input: { password: string, confirmPassword: string }) => {
+      const { password, confirmPassword } = input
 
-      const response = await loginMutation({ usernameOrEmail, password })
-      if (response.data?.login.user) {
+      console.log(password, confirmPassword)
+      if (password !== confirmPassword) {
+         setInvalidPassword(
+            <Alert status="error" mb="1em">
+               <AlertIcon />
+               <AlertDescription>Incorrect Password</AlertDescription>
+               <CloseButton
+                  position="absolute"
+                  right="8px"
+                  top="8px"
+                  onClick={() => setInvalidPassword(null)}
+               />
+            </Alert>
+         )
+         setValue('password', '')
+         setValue('confirmPassword', '')
+         return
+      }
+
+      const response = await resetPasswordMutation({
+         userId: router.query.id as string,
+         token: router.query.token as string,
+         newPassword: password
+      })
+      console.log(response)
+
+      if (response.data?.resetPassword.user) {
          console.log('Success!')
          router.push('/activity')
       }
 
-      if (response.data?.login.errors) {
-         console.log('Invalid login')
+      if (response.data?.resetPassword.errors) {
+         console.log('Something went wrong')
          setInvalidPassword(
             <Alert status="error" mb="1em">
                <AlertIcon />
-               <AlertDescription>Incorrect Login</AlertDescription>
+               <AlertDescription>Something went wrong...</AlertDescription>
                <CloseButton
                   position="absolute"
                   right="8px"
@@ -67,7 +95,7 @@ const ResetPassword: NextPage = ({ }) => {
                <FormControl pb="1em">
                   <Input
                      id="confirmPassword"
-                     name="conformPassword"
+                     name="confirmPassword"
                      placeholder="Confirm Password"
                      type="password"
                      ref={register({ required: true })}
@@ -79,19 +107,12 @@ const ResetPassword: NextPage = ({ }) => {
 
                <Flex direction="column">
                   <Button
-                     variant="solid"
-                     colorScheme="teal"
-                     mb="2em"
-                  >
-                     Forgotten Password
-                  </Button>
-                  <Button
                      variant="outline"
                      colorScheme="teal"
                      isLoading={formState.isSubmitting}
                      type="submit"
                   >
-                     Login
+                     Submit
                   </Button>
                </Flex>
             </form>
@@ -100,4 +121,4 @@ const ResetPassword: NextPage = ({ }) => {
    )
 }
 
-export default ResetPassword
+export default withUrqlClient(createUrqlClient)(ResetPassword)

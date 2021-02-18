@@ -462,7 +462,7 @@ export class UserResolver {
       }
 
       const token = jwt.sign(payload, secret, { expiresIn: '15m' })
-      const link = `${process.env.CLIENT_DOMAIN}/account/reset-password/?id=${user.id}/&token=${token}`
+      const link = `${process.env.CLIENT_DOMAIN}/account/reset-password/?id=${user.id}&token=${token}`
 
       // This is temp. Need to send link in email.
       console.log('Reset password: ', link)
