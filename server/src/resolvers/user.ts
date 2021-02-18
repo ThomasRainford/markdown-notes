@@ -470,4 +470,47 @@ export class UserResolver {
       return { user }
    }
 
+   @Mutation(() => UserResponse)
+   async resetPassword(
+      @Arg('userId') userId: string,
+      @Arg('token') token: string,
+      @Arg('newPassword') newPassword: string
+      @Ctx() { em, req }: OrmContext
+   ): Promise<UserResponse> {
+
+      const repo = em.getRepository(User)
+
+      const user = await repo.findOne({ id: userId })
+
+      if (!user) {
+         return {
+            errors: [
+               {
+                  field: 'email',
+                  message: "User not registered."
+               }
+            ]
+         }
+      }
+
+      const secret = process.env.JWT_SECRET + user.password
+
+      try {
+         jwt.verify(token, secret)
+      } catch (error) {
+         return {
+            errors: [
+               {
+                  field: 'token',
+                  message: 'Unable to verify token'
+               }
+            ]
+         }
+      }
+
+      await repo.nativeUpdate({ id: userId }, { password: newPassword })
+
+      return { user }
+   }
+
 }
