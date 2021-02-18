@@ -433,7 +433,7 @@ export class UserResolver {
       return publicCollections
    }
 
-   @Mutation(() => [UserResponse])
+   @Mutation(() => UserResponse)
    @UseMiddleware(isAuth)
    async forgotPassword(
       @Arg('email') email: string,
