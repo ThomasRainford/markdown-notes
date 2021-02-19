@@ -21,11 +21,22 @@ interface Lists {
    paragraph: string
 }
 
+interface Images {
+   inline: string
+}
+
+interface Code {
+   inline: string
+   block: string
+}
+
 export interface Snippets {
    heading: Heading
    emphasis: Emphasis
    link: string
    lists: Lists
+   images: Images
+   code: Code
 }
 
 export const snippets: Snippets = {
@@ -49,5 +60,12 @@ export const snippets: Snippets = {
       unordered: "* ",
       unorderedSublist: "⋅⋅* ",
       paragraph: "⋅⋅⋅ "
+   },
+   images: {
+      inline: "![]()",
+   },
+   code: {
+      inline: ` `,
+      block: '```<language here>\n\n```'
    }
 }
