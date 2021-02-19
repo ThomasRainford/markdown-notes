@@ -34,7 +34,7 @@ interface Table {
    create: (rows: number, columns: number) => string
 }
 
-export interface Snippets {
+interface Snippets {
    heading: Heading
    emphasis: Emphasis
    link: string

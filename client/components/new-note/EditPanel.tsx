@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/react'
 import React from 'react'
+import { snippets } from '../../utils/snippets'
 
 interface Props {
 
