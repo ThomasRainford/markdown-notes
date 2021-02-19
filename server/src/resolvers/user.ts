@@ -1,17 +1,17 @@
 import argon2 from "argon2"
-import { COOKIE_NAME } from "../constants"
-import { OrmContext } from "../types/types"
-import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql"
-import { User } from "../entities/User"
-import { UserRegisterInput } from "./input-types/UserRegisterInput"
-import { UserResponse } from './object-types/UserResponse'
-import { validateRegister } from '../utils/validateRegister'
-import { isAuth } from "../middleware/isAuth"
-import { Collection } from "../entities/Collection"
-import { CollectionResponse } from "./object-types/CollectionResponse"
-import { ActivityFeedResponse } from "./object-types/ActivityFeedResponse"
 import jwt from 'jsonwebtoken'
+import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql"
+import { COOKIE_NAME } from "../constants"
+import { Collection } from "../entities/Collection"
+import { User } from "../entities/User"
+import { isAuth } from "../middleware/isAuth"
+import { OrmContext } from "../types/types"
 import { sendEmail } from "../utils/sendEmail"
+import { validateRegister } from '../utils/validateRegister'
+import { UserRegisterInput } from "./input-types/UserRegisterInput"
+import { ActivityFeedResponse } from "./object-types/ActivityFeedResponse"
+import { CollectionResponse } from "./object-types/CollectionResponse"
+import { UserResponse } from './object-types/UserResponse'
 
 @Resolver(User)
 export class UserResolver {

@@ -1,5 +1,4 @@
 import { Flex, Heading, Divider, Button } from '@chakra-ui/react'
-import router from 'next/dist/next-server/lib/router/router'
 import React from 'react'
 
 interface Props {

@@ -1,13 +1,13 @@
 import { Alert, AlertDescription, AlertIcon, Button, CloseButton, Flex, FormControl, FormErrorMessage, Input, Link, Text } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import { withUrqlClient } from 'next-urql'
+import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import PasswordResetLayout from '../../components/account/PasswordResetLayout'
 import { useResetPasswordMutation } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
-import NextLink from 'next/link'
 
 interface Props {
 
@@ -54,7 +54,6 @@ const ResetPassword: NextPage = ({ }) => {
       if (response.data?.resetPassword.user) {
          console.log('Success!')
          setSuccess(true)
-         // router.push('/activity')
       }
 
       if (response.data?.resetPassword.errors) {
@@ -72,7 +71,6 @@ const ResetPassword: NextPage = ({ }) => {
             </Alert>
          )
       }
-
    }
 
 
