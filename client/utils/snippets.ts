@@ -30,6 +30,10 @@ interface Code {
    block: string
 }
 
+interface Table {
+   create: (rows: number, columns: number) => string
+}
+
 export interface Snippets {
    heading: Heading
    emphasis: Emphasis
@@ -37,6 +41,10 @@ export interface Snippets {
    lists: Lists
    images: Images
    code: Code
+   table: Table
+   blockquotes: string
+   htmlElement: string
+   horizontalRule: string
 }
 
 export const snippets: Snippets = {
@@ -67,5 +75,14 @@ export const snippets: Snippets = {
    code: {
       inline: ` `,
       block: '```<language here>\n\n```'
-   }
+   },
+   table: {
+      create: (rows: number, columns: number) => { // TODO: implement this.
+         return ''
+      }
+   },
+   blockquotes: '>',
+   htmlElement: '< ></ >',
+   horizontalRule: "***\n"
+
 }
