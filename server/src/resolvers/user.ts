@@ -11,7 +11,7 @@ import { Collection } from "../entities/Collection"
 import { CollectionResponse } from "./object-types/CollectionResponse"
 import { ActivityFeedResponse } from "./object-types/ActivityFeedResponse"
 import jwt from 'jsonwebtoken'
-import { sendEmail } from "src/utils/sendEmail"
+import { sendEmail } from "../utils/sendEmail"
 
 @Resolver(User)
 export class UserResolver {

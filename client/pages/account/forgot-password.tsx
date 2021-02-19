@@ -1,4 +1,4 @@
-import { Button, Flex, Input, Text } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Button, CloseButton, Flex, Input, Text } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import React, { useState } from 'react'
 import PasswordResetLayout from '../../components/account/PasswordResetLayout'
@@ -11,7 +11,8 @@ interface Props {
 
 const ForgotPassword = ({ }) => {
 
-   const [email, setEmail] = useState<string>()
+   const [email, setEmail] = useState<string>('')
+   const [invalidEmail, setInvalidEmail] = useState<boolean>(false)
 
    const [, forgotPasswordMutation] = useForgotPasswordMutation()
 
@@ -21,6 +22,18 @@ const ForgotPassword = ({ }) => {
    return (
       <PasswordResetLayout header="Forgot Password">
          <Flex direction="column" h="100%" w="20em">
+            {invalidEmail &&
+               <Alert status="error" mb="1em">
+                  <AlertIcon />
+                  <AlertDescription>Email not register</AlertDescription>
+                  <CloseButton
+                     position="absolute"
+                     right="8px"
+                     top="8px"
+                     onClick={() => setInvalidEmail(false)}
+                  />
+               </Alert>
+            }
             <Text mb="0.5em">Enter your Email Address</Text>
             <Input
                name="email"
@@ -36,6 +49,10 @@ const ForgotPassword = ({ }) => {
                w="30%"
                onClick={async () => {
                   const response = await forgotPasswordMutation({ email })
+                  if (response.data?.forgotPassword.errors) {
+                     setInvalidEmail(true)
+                  }
+                  console.log(response)
                }}
             >
                Submit
