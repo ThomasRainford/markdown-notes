@@ -79,29 +79,26 @@ export const snippets: Snippets = {
    table: {
       create: (rows: number, columns: number) => { // TODO: implement this.
 
-         const headerTop = '|   '
+         const tableBlock = '|   '
          const headerBottom = '|:---:'
          const rowEnd = '|\n'
 
          let table = ''
-
          for (let row = -2; row < rows; row++) {
             for (let col = 0; col < columns; col++) {
                if (row < 0) {
-                  row === -2 ? table += headerTop : table += headerBottom
+                  row === -2 ? table += tableBlock : table += headerBottom
                }
                else {
-                  table += headerTop
+                  table += tableBlock
                }
             }
             table += rowEnd
          }
-
          return table
       }
    },
    blockquotes: '>',
    htmlElement: '< ></ >',
    horizontalRule: "***\n"
-
 }
