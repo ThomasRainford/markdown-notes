@@ -64,7 +64,7 @@ const ActivityItem: React.FC<Props> = ({ activity, user }) => {
                </Flex>
                <Flex justify="space-between" bg="#5CDB95" p="0.75em" boxShadow="lg" border="1px" borderColor="#379683" borderRadius="md">
                   <Flex direction="column" >
-                     <Heading size="md" mb="0.25em">{collection.title}</Heading>
+                     <Heading size="md" as="h4" mb="0.25em">{collection.title}</Heading>
                      <CollectionInfo collection={collection} />
                   </Flex>
                   <Flex align="center">
