@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertIcon, Button, CloseButton, Flex, FormControl, FormErrorMessage, Input } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Button, CloseButton, Flex, FormControl, FormErrorMessage, Input, Link, Text } from '@chakra-ui/react'
 import { NextPage } from 'next'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import PasswordResetLayout from '../../components/account/PasswordResetLayout'
 import { useResetPasswordMutation } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
+import NextLink from 'next/link'
 
 interface Props {
 
@@ -17,6 +18,7 @@ const ResetPassword: NextPage = ({ }) => {
    const router = useRouter()
    const { handleSubmit, errors, register, formState, setValue } = useForm()
    const [invalidPassword, setInvalidPassword] = useState<JSX.Element>(null)
+   const [success, setSuccess] = useState<boolean>(false)
 
    //const [result, loginMutation] = useLoginMutation()
    const [result, resetPasswordMutation] = useResetPasswordMutation()
@@ -48,11 +50,11 @@ const ResetPassword: NextPage = ({ }) => {
          token: router.query.token as string,
          newPassword: password
       })
-      console.log(response)
 
       if (response.data?.resetPassword.user) {
          console.log('Success!')
-         router.push('/activity')
+         setSuccess(true)
+         // router.push('/activity')
       }
 
       if (response.data?.resetPassword.errors) {
@@ -114,6 +116,14 @@ const ResetPassword: NextPage = ({ }) => {
                   >
                      Submit
                   </Button>
+                  {success &&
+                     <>
+                        <Text>Reset Successfull!</Text>
+                        <NextLink href="/account/login">
+                           <Link>Click to Login</Link>
+                        </NextLink>
+                     </>
+                  }
                </Flex>
             </form>
          </Flex>

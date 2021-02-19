@@ -12,28 +12,35 @@ interface Props {
 const ForgotPassword = ({ }) => {
 
    const [email, setEmail] = useState<string>('')
-   const [invalidEmail, setInvalidEmail] = useState<boolean>(false)
+   const [alert, setAlert] = useState<JSX.Element>(null)
 
    const [, forgotPasswordMutation] = useForgotPasswordMutation()
 
    const handleInput = (event: React.FormEvent<EventTarget>) => setEmail((event.target as HTMLInputElement).value)
 
+   const alertElement = (
+      status: "info" | "warning" | "success" | "error",
+      description: string
+   ): JSX.Element => (
+      <Alert status={status} mb="1em">
+         <AlertIcon />
+         <AlertDescription>{description}</AlertDescription>
+         <CloseButton
+            position="absolute"
+            right="8px"
+            top="8px"
+            onClick={() => {
+               setAlert(null)
+            }}
+         />
+      </Alert>
+   )
+
 
    return (
       <PasswordResetLayout header="Forgot Password">
          <Flex direction="column" h="100%" w="20em">
-            {invalidEmail &&
-               <Alert status="error" mb="1em">
-                  <AlertIcon />
-                  <AlertDescription>Email not register</AlertDescription>
-                  <CloseButton
-                     position="absolute"
-                     right="8px"
-                     top="8px"
-                     onClick={() => setInvalidEmail(false)}
-                  />
-               </Alert>
-            }
+            {alert}
             <Text mb="0.5em">Enter your Email Address</Text>
             <Input
                name="email"
@@ -50,7 +57,11 @@ const ForgotPassword = ({ }) => {
                onClick={async () => {
                   const response = await forgotPasswordMutation({ email })
                   if (response.data?.forgotPassword.errors) {
-                     setInvalidEmail(true)
+                     setAlert(alertElement("error", "Email not register"))
+                  }
+
+                  if (response.data?.forgotPassword.user) {
+                     setAlert(alertElement("success", "Check your inbox for a link"))
                   }
                   console.log(response)
                }}

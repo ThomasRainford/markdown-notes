@@ -435,15 +435,14 @@ export class UserResolver {
    }
 
    @Mutation(() => UserResponse)
-   @UseMiddleware(isAuth)
    async forgotPassword(
       @Arg('email') email: string,
-      @Ctx() { em, req }: OrmContext
+      @Ctx() { em }: OrmContext
    ): Promise<UserResponse> {
 
       const repo = em.getRepository(User)
 
-      const user = await repo.findOne({ id: req.session['userId']?.toString(), email })
+      const user = await repo.findOne({ email })
 
       if (!user) {
          return {
@@ -468,7 +467,7 @@ export class UserResolver {
       // This is temp. Need to send link in email.
       //console.log('Reset password: ', link)
 
-      sendEmail(user.email, link)
+      await sendEmail(user.email, `<a href="${link}">Click here to reset your password.</a>`)
 
       return { user }
    }
