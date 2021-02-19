@@ -58,7 +58,11 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
                   onClick={() => {
                      localStorage.setItem('noteId', selectedNoteLocation.noteLocation.note.id)
                      selectNoteLocation(selectedNoteLocation)
-                     router.push(router.asPath + `/editor`)
+                     localStorage.setItem('noteLocation', JSON.stringify({
+                        collection: selectedNoteLocation.noteLocation.collection,
+                        list: selectedNoteLocation.noteLocation.list
+                     }))
+                     router.push(router.asPath + '/editor')
                   }}
                />
             </Tooltip>

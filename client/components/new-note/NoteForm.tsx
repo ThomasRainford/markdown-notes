@@ -11,6 +11,7 @@ import AutoResizeTextarea from '../AutoResizeTextArea'
 import MarkdownSyntaxHighligher from '../MarkdownSyntaxHighligher'
 import GoBackAlertDialog from './GoBackAlertDialog'
 import SaveAlertDialog from './SaveAlertDialog'
+import gfm from 'remark-gfm'
 
 interface Props {
    user: UseQueryState<MeQuery, object>
@@ -117,7 +118,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
          setValue('body', selectedNoteLocation.noteLocation.note.body)
          setBody(selectedNoteLocation.noteLocation.note.body)
       } else {
-         router.back()
+         // router.back()
       }
    }, [])
 
@@ -195,6 +196,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
             >
                <ReactMarkdown
                   children={body}
+                  plugins={[gfm]}
                //renderers={{ code: MarkdownSyntaxHighligher }}
                />
             </Flex>

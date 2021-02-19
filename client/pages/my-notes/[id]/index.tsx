@@ -16,6 +16,7 @@ import { Collection, useCollectionsQuery, useMeQuery } from '../../../generated/
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { COLLECTIONS_QUERY } from '../../../utils/ssr-queries/collections'
 import { useIsAuth } from '../../../utils/useIsAuth'
+import gfm from 'remark-gfm'
 
 interface Props {
 
@@ -71,7 +72,10 @@ const MyNotes = ({ }) => {
                      </Heading>
                   </Flex>
                   <Flex direction="column" w="100%" p="2em" whiteSpace="pre-wrap">
-                     <ReactMarkdown children={selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body} />
+                     <ReactMarkdown
+                        children={selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body}
+                        plugins={[gfm]}
+                     />
                   </Flex>
                </NoteDisplayLayout>
                {selectedNoteLocation?.noteLocation.note &&

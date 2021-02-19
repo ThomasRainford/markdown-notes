@@ -78,7 +78,26 @@ export const snippets: Snippets = {
    },
    table: {
       create: (rows: number, columns: number) => { // TODO: implement this.
-         return ''
+
+         const headerTop = '|   '
+         const headerBottom = '|:---:'
+         const rowEnd = '|\n'
+
+         let table = ''
+
+         for (let row = -2; row < rows; row++) {
+            for (let col = 0; col < columns; col++) {
+               if (row < 0) {
+                  row === -2 ? table += headerTop : table += headerBottom
+               }
+               else {
+                  table += headerTop
+               }
+            }
+            table += rowEnd
+         }
+
+         return table
       }
    },
    blockquotes: '>',
