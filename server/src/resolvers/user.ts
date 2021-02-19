@@ -11,6 +11,7 @@ import { Collection } from "../entities/Collection"
 import { CollectionResponse } from "./object-types/CollectionResponse"
 import { ActivityFeedResponse } from "./object-types/ActivityFeedResponse"
 import jwt from 'jsonwebtoken'
+import { sendEmail } from "src/utils/sendEmail"
 
 @Resolver(User)
 export class UserResolver {
@@ -465,7 +466,9 @@ export class UserResolver {
       const link = `${process.env.CLIENT_DOMAIN}/account/reset-password/?id=${user.id}&token=${token}`
 
       // This is temp. Need to send link in email.
-      console.log('Reset password: ', link)
+      //console.log('Reset password: ', link)
+
+      sendEmail(user.email, link)
 
       return { user }
    }

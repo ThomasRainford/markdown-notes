@@ -3,15 +3,15 @@ import router from 'next/dist/next-server/lib/router/router'
 import React from 'react'
 
 interface Props {
-
+   header: string
 }
 
-const ResetPasswordLayout = ({ children }) => {
+const PasswordResetLayout: React.FC<Props> = ({ children, header }) => {
    return (
       <Flex h="100vh" w="100vw" justify="center" align="center" bg="#5CDB95">
-         <Flex h="30em" w="100vw" justify="center" align="center">
+         <Flex h="20em" w="100vw" justify="center" align="center">
             <Flex direction="column" align="center" bg="#EDF5E1" boxShadow="dark-lg" p="2em" h="100%" w="25.5em">
-               <Heading fontSize="2xl" color="#05386B" pb="1em">Rest Password</Heading>
+               <Heading fontSize="2xl" color="#05386B" pb="1em">{header}</Heading>
                <Divider orientation="horizontal" colorScheme="blackAlpha" />
                {children}
             </Flex>
@@ -30,4 +30,4 @@ const ResetPasswordLayout = ({ children }) => {
    )
 }
 
-export default ResetPasswordLayout
+export default PasswordResetLayout

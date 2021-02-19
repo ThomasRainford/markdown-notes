@@ -4,7 +4,7 @@ import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import ResetPasswordLayout from '../../components/account/ResetPasswordLayout'
+import PasswordResetLayout from '../../components/account/PasswordResetLayout'
 import { useResetPasswordMutation } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 
@@ -75,7 +75,7 @@ const ResetPassword: NextPage = ({ }) => {
 
 
    return (
-      <ResetPasswordLayout>
+      <PasswordResetLayout header="Reset Password">
          <Flex direction="column" h="100%" w="20em">
             {invalidPassword}
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -117,7 +117,7 @@ const ResetPassword: NextPage = ({ }) => {
                </Flex>
             </form>
          </Flex>
-      </ResetPasswordLayout>
+      </PasswordResetLayout>
    )
 }
 
