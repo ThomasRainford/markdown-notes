@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import LoginLayout from '../../components/account/LoginLayout'
 import { LoginMutationVariables, useLoginMutation } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
+import NextLink from 'next/link'
 
 interface Props {
 
@@ -77,13 +78,15 @@ const Login = ({ }) => {
                </FormControl>
 
                <Flex direction="column">
-                  <Button
-                     variant="solid"
-                     colorScheme="teal"
-                     mb="2em"
-                  >
-                     Forgotten Password
+                  <NextLink href="/account/forgot-password">
+                     <Button
+                        variant="solid"
+                        colorScheme="teal"
+                        mb="2em"
+                     >
+                        Forgotten Password
                   </Button>
+                  </NextLink>
                   <Button
                      variant="outline"
                      colorScheme="teal"

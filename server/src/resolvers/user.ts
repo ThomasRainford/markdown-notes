@@ -1,15 +1,17 @@
 import argon2 from "argon2"
-import { COOKIE_NAME } from "../constants"
-import { OrmContext } from "../types/types"
+import jwt from 'jsonwebtoken'
 import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql"
-import { User } from "../entities/User"
-import { UserRegisterInput } from "./input-types/UserRegisterInput"
-import { UserResponse } from './object-types/UserResponse'
-import { validateRegister } from '../utils/validateRegister'
-import { isAuth } from "../middleware/isAuth"
+import { COOKIE_NAME } from "../constants"
 import { Collection } from "../entities/Collection"
-import { CollectionResponse } from "./object-types/CollectionResponse"
+import { User } from "../entities/User"
+import { isAuth } from "../middleware/isAuth"
+import { OrmContext } from "../types/types"
+import { sendEmail } from "../utils/sendEmail"
+import { validateRegister } from '../utils/validateRegister'
+import { UserRegisterInput } from "./input-types/UserRegisterInput"
 import { ActivityFeedResponse } from "./object-types/ActivityFeedResponse"
+import { CollectionResponse } from "./object-types/CollectionResponse"
+import { UserResponse } from './object-types/UserResponse'
 
 @Resolver(User)
 export class UserResolver {
@@ -42,9 +44,9 @@ export class UserResolver {
          return errors
       }
 
-      const hasUser = await repo.findOne({ $and: [email, username] })
-
-      if (hasUser) {
+      const hasUserName = await repo.findOne({ username })
+      const hasUserEmail = await repo.findOne({ email })
+      if (hasUserName || hasUserEmail) {
          return {
             errors: [
                {
@@ -430,6 +432,89 @@ export class UserResolver {
          })
       }
       return publicCollections
+   }
+
+   @Mutation(() => UserResponse)
+   async forgotPassword(
+      @Arg('email') email: string,
+      @Ctx() { em }: OrmContext
+   ): Promise<UserResponse> {
+
+      const repo = em.getRepository(User)
+
+      const user = await repo.findOne({ email })
+
+      if (!user) {
+         return {
+            errors: [
+               {
+                  field: 'email',
+                  message: "User not registered."
+               }
+            ]
+         }
+      }
+
+      const secret = process.env.JWT_SECRET + user.password
+      const payload = {
+         id: user.id,
+         email: user.email
+      }
+
+      const token = jwt.sign(payload, secret, { expiresIn: '15m' })
+      const link = `${process.env.CLIENT_DOMAIN}/account/reset-password/?id=${user.id}&token=${token}`
+
+      // This is temp. Need to send link in email.
+      //console.log('Reset password: ', link)
+
+      await sendEmail(user.email, `<a href="${link}">Click here to reset your password.</a>`)
+
+      return { user }
+   }
+
+   @Mutation(() => UserResponse)
+   async resetPassword(
+      @Arg('userId') userId: string,
+      @Arg('token') token: string,
+      @Arg('newPassword') newPassword: string,
+      @Ctx() { em }: OrmContext
+   ): Promise<UserResponse> {
+
+      const repo = em.getRepository(User)
+
+      const user = await repo.findOne({ id: userId })
+
+      if (!user) {
+         return {
+            errors: [
+               {
+                  field: 'email',
+                  message: "User not registered."
+               }
+            ]
+         }
+      }
+
+      const secret = process.env.JWT_SECRET + user.password
+
+      try {
+         jwt.verify(token, secret)
+      } catch (error) {
+         return {
+            errors: [
+               {
+                  field: 'token',
+                  message: 'Unable to verify token'
+               }
+            ]
+         }
+      }
+
+      user.password = await argon2.hash(newPassword)
+
+      await em.persistAndFlush(user)
+
+      return { user }
    }
 
 }
