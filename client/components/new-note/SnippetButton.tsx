@@ -6,10 +6,9 @@ import { MdEdit } from 'react-icons/md'
 interface Props {
    label: string
    icon: IconType
-   handleClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const SnippetButton = ({ label, icon, handleClick }) => {
+const SnippetButton = ({ label, icon }) => {
    return (
       <Tooltip label={label} placement="right">
          <IconButton
@@ -19,7 +18,6 @@ const SnippetButton = ({ label, icon, handleClick }) => {
             colorScheme="black"
             fontSize="2xl"
             mb="0.15em"
-            onClick={handleClick}
          />
       </Tooltip>
    )

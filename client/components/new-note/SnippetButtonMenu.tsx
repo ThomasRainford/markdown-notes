@@ -1,4 +1,4 @@
-import { IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import { IconButton, Menu, MenuButton, MenuItem, MenuList, Tooltip } from '@chakra-ui/react'
 import React from 'react'
 import { IconType } from 'react-icons'
 
@@ -6,22 +6,23 @@ interface Props {
    label: string
    icon: IconType
    snippetItem: unknown
-   handleClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const SnippetButtonMenu = ({ label, icon, snippetItem, handleClick }) => {
+const SnippetButtonMenu = ({ label, icon, snippetItem }) => {
    return (
+
       <Menu>
-         <MenuButton
-            as={IconButton}
-            aria-label={label}
-            icon={icon}
-            variant="outline"
-            colorScheme="black"
-            fontSize="2xl"
-            mb="0.15em"
-            onClick={handleClick}
-         />
+         <Tooltip label={label} placement="right">
+            <MenuButton
+               as={IconButton}
+               aria-label={label}
+               icon={icon}
+               variant="outline"
+               colorScheme="black"
+               fontSize="2xl"
+               mb="0.15em"
+            />
+         </Tooltip>
          <MenuList>
             {
                Object.keys(snippetItem).map((snippet) => {
