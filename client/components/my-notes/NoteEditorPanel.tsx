@@ -56,7 +56,7 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
                   fontSize="3xl"
                   mb="0.5em"
                   onClick={() => {
-                     localStorage.setItem('noteId', selectedNoteLocation.noteLocation.note.id)
+                     localStorage.setItem('note', JSON.stringify(selectedNoteLocation.noteLocation.note))
                      selectNoteLocation(selectedNoteLocation)
                      localStorage.setItem('noteLocation', JSON.stringify({
                         collection: selectedNoteLocation.noteLocation.collection,

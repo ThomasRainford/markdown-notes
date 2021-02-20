@@ -113,14 +113,24 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    }
 
    useEffect(() => {
+
+      if (!selectedNoteLocation) {
+         selectNoteLocation({
+            noteLocation: {
+               collection: location.collection,
+               list: location.list,
+               note: JSON.parse(localStorage.getItem('note')) as Note
+            }
+         })
+      }
+
       if (selectedNoteLocation?.noteLocation.note) {
          setValue('title', selectedNoteLocation.noteLocation.note.title)
          setValue('body', selectedNoteLocation.noteLocation.note.body)
          setBody(selectedNoteLocation.noteLocation.note.body)
-      } else {
-         // router.back()
       }
-   }, [])
+
+   }, [selectedNoteLocation])
 
    return (
       <>
