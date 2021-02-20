@@ -33,7 +33,6 @@ interface Code {
 interface Table {
    create: (rows: number, columns: number) => string
 }
-
 interface Snippets {
    heading: Heading
    emphasis: Emphasis
