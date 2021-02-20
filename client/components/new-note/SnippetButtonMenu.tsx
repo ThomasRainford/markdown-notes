@@ -4,17 +4,16 @@ import { IconType } from 'react-icons'
 
 interface Props {
    label: string
-   icon: IconType
+   icon: JSX.Element
    snippetItem: unknown
 }
 
-const SnippetButtonMenu = ({ label, icon, snippetItem }) => {
+const SnippetButtonMenu: React.FC<Props> = ({ label, icon, snippetItem }) => {
 
    const [snippetValue, setSnippetValue] = useState<string>()
    const { hasCopied, onCopy } = useClipboard(snippetValue)
 
    useEffect(() => {
-      console.log('copy')
       onCopy()
    }, [snippetValue])
 

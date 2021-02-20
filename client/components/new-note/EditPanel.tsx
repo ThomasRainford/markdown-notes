@@ -31,6 +31,7 @@ const EditPanel = ({ }) => {
             <SnippetButton
                label="Link"
                icon={<FiLink />}
+               snippetItem={snippets.link}
             />
             <SnippetButtonMenu
                label="Lists"
@@ -57,14 +58,17 @@ const EditPanel = ({ }) => {
             <SnippetButton
                label="Block quote"
                icon={<BsBlockquoteLeft />}
+               snippetItem={snippets.blockquotes}
             />
             <SnippetButton
                label="HTML Element"
                icon={<BiCodeAlt />}
+               snippetItem={snippets.htmlElement}
             />
             <SnippetButton
                label="Horizontal Rule"
                icon={<BiMoveHorizontal />}
+               snippetItem={snippets.horizontalRule}
             />
          </Flex>
       </Flex>

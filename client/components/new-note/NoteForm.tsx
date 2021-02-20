@@ -55,7 +55,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
 
       // Update note if already saved.
-      if (localStorage.getItem('noteId')) {
+      if (localStorage.getItem('note')) {
          if (title.length > 0 && body.length > 0) {
 
             const noteLocation: NoteLocationInput = {
@@ -73,7 +73,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
          // Add note if no note yet saved.
       } else {
          const noteInputAdd: NoteInput = { title: noteInput.title, body: noteInput.body }
-         if (!localStorage.getItem('noteId')) {
+         if (!localStorage.getItem('note')) {
             const response = await addNoteMutation({
                listLocation: {
                   collectionId: location.collection.id,
@@ -83,7 +83,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
             })
 
             updateSelectedNoteLocation(response.data?.addNote.note as Note)
-            localStorage.setItem('noteId', response.data?.addNote.note.id)
+            localStorage.setItem('note', JSON.stringify(response.data?.addNote.note))
          }
       }
    }
@@ -92,7 +92,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
       if (!saved) {
          setIsGoBackOpen(true)
       } else {
-         localStorage.removeItem('noteId')
+         localStorage.removeItem('note')
          router.replace(`/my-notes/${user.data?.me?.username}`)
       }
    }
@@ -104,7 +104,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
       const noteLocationInput: NoteLocationInput = {
          collectionId,
          listId,
-         noteId: localStorage.getItem('noteId')
+         noteId: (JSON.parse(localStorage.getItem('note')) as Note).id
       }
 
       if (location) {
@@ -129,7 +129,6 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
          setValue('body', selectedNoteLocation.noteLocation.note.body)
          setBody(selectedNoteLocation.noteLocation.note.body)
       }
-
    }, [selectedNoteLocation])
 
    return (
