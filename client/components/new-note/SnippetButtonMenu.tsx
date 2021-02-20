@@ -1,5 +1,5 @@
-import { IconButton, Menu, MenuButton, MenuItem, MenuList, Tooltip } from '@chakra-ui/react'
-import React from 'react'
+import { IconButton, Menu, MenuButton, MenuItem, MenuList, Tooltip, useClipboard } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import { IconType } from 'react-icons'
 
 interface Props {
@@ -9,6 +9,15 @@ interface Props {
 }
 
 const SnippetButtonMenu = ({ label, icon, snippetItem }) => {
+
+   const [snippetValue, setSnippetValue] = useState<string>()
+   const { hasCopied, onCopy } = useClipboard(snippetValue)
+
+   useEffect(() => {
+      console.log('copy')
+      onCopy()
+   }, [snippetValue])
+
    return (
 
       <Menu>
@@ -30,7 +39,7 @@ const SnippetButtonMenu = ({ label, icon, snippetItem }) => {
                      <MenuItem
                         key={snippet}
                         onClick={() => {
-
+                           setSnippetValue(snippetItem[snippet])
                         }}
                      >
                         {snippet}
