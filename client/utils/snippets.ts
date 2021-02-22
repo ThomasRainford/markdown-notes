@@ -30,8 +30,13 @@ interface Code {
    block: string
 }
 
+export interface TableDimensions {
+   rows: number
+   columns: number
+}
+
 interface Table {
-   create: (rows: number, columns: number) => string
+   create: (dimensions: TableDimensions) => string
 }
 interface Snippets {
    heading: Heading
@@ -76,7 +81,7 @@ export const snippets: Snippets = {
       block: '```<language here>\n\n```'
    },
    table: {
-      create: (rows: number, columns: number) => { // TODO: implement this.
+      create: ({ rows, columns }) => { // TODO: implement this.
 
          const tableBlock = '|   '
          const headerBottom = '|:---:'

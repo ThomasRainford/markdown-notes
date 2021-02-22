@@ -4,10 +4,11 @@ import { BiHeading, BiCodeAlt, BiMoveHorizontal } from 'react-icons/bi'
 import { Ri4KFill } from 'react-icons/ri'
 import { FiLink } from 'react-icons/fi'
 import { AiOutlineUnorderedList, AiFillCode } from 'react-icons/ai'
-import { BsImage, BsBlockquoteLeft } from 'react-icons/bs'
+import { BsImage, BsBlockquoteLeft, BsTable } from 'react-icons/bs'
 import SnippetButton from './SnippetButton'
 import SnippetButtonMenu from './SnippetButtonMenu'
 import { snippets } from '../../utils/snippets'
+import SnippetButtonPopover from './SnippetButtonPopover'
 
 interface Props {
 
@@ -48,13 +49,10 @@ const EditPanel = ({ }) => {
                icon={<AiFillCode />}
                snippetItem={snippets.code}
             />
-            {/* 
-               // TODO: Table needs a popover to enter dimensions.
-            <SnippetButtonMenu
+            <SnippetButtonPopover
                label="Table"
-               icon={<AiFillCode />}
-               snippetItem={snippets.code}
-            /> */}
+               icon={<BsTable />}
+            />
             <SnippetButton
                label="Block quote"
                icon={<BsBlockquoteLeft />}
