@@ -40,6 +40,8 @@ const SnippetButtonPopover: React.FC<Props> = ({ label, icon }) => {
                <Text>Rows</Text>
                <NumberInput
                   onChange={(value) => setDimensions({ ...dimensions, rows: parseInt(value) })}
+                  value={dimensions.rows}
+                  min={1}
                >
                   <NumberInputField />
                   <NumberInputStepper>
@@ -50,6 +52,8 @@ const SnippetButtonPopover: React.FC<Props> = ({ label, icon }) => {
                <Text>Columns</Text>
                <NumberInput
                   onChange={(value) => setDimensions({ ...dimensions, columns: parseInt(value) })}
+                  value={dimensions.columns}
+                  min={1}
                >
                   <NumberInputField />
                   <NumberInputStepper>
