@@ -1,7 +1,5 @@
-import { Tooltip, IconButton, useClipboard } from '@chakra-ui/react'
+import { IconButton, Tooltip, useClipboard } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { IconType } from 'react-icons'
-import { MdEdit } from 'react-icons/md'
 
 interface Props {
    label: string

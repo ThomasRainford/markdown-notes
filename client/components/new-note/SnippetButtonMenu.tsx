@@ -1,6 +1,5 @@
 import { IconButton, Menu, MenuButton, MenuItem, MenuList, Tooltip, useClipboard } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { IconType } from 'react-icons'
 
 interface Props {
    label: string

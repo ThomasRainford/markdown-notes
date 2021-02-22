@@ -77,11 +77,11 @@ export const snippets: Snippets = {
       inline: "![]()",
    },
    code: {
-      inline: ` `,
+      inline: '` `',
       block: '```<language here>\n\n```'
    },
    table: {
-      create: ({ rows, columns }) => { // TODO: implement this.
+      create: ({ rows, columns }) => {
 
          const tableBlock = '|   '
          const headerBottom = '|:---:'
