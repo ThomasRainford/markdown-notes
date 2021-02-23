@@ -1,4 +1,4 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, CSSReset } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import NoteProvider from '../context/NoteContext';
 import '../styles/globals.css';
@@ -13,6 +13,7 @@ import '../styles/globals.css';
 export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<ChakraProvider>
+			<CSSReset />
 			<NoteProvider>
 				<Component {...pageProps} />
 			</NoteProvider>
