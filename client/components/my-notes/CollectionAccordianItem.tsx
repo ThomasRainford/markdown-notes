@@ -29,7 +29,7 @@ const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
                <Box flex="1" textAlign="left">
                   <Flex align="center">
                      <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} />
-                     <Text fontSize="lg" fontWeight="bold" mb="0.25em" ml="0.5em">{collection.title}</Text>
+                     <Text fontSize="lg" fontWeight="bold" textColor="brand.300" mb="0.25em" ml="0.5em">{collection.title}</Text>
                   </Flex>
                   <CollectionInfo collection={collection} />
                </Box>

@@ -41,6 +41,7 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
                onDoubleClick={onOpen}
             >
                <Box flex="1" textAlign="left" fontWeight="bold">
+                  {/** TODO: Add list icon here. */}
                   <Text>{list.title}</Text>
                </Box>
                <AccordionIcon />
@@ -54,6 +55,7 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
             <Flex justify="center" mt="0.5em">
                <Button
                   leftIcon={<AddIcon />}
+                  colorScheme="brand"
                   variant="outline"
                   size="sm"
                   onClick={handleAddNote}

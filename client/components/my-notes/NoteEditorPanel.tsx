@@ -45,14 +45,14 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
    }
 
    return (
-      <Flex direction="column" align="center" h="100%" w="5em" bg="#5CDB95" borderTop="2px" borderColor="#379683">
+      <Flex direction="column" align="center" h="100%" w="5em" bg="brand.100" borderTop="2px" borderColor="#379683">
          <Flex direction="column" align="center" pt="1em">
             <Tooltip label="Edit Note" placement="left">
                <IconButton
                   aria-label="Edit Note"
+                  color="brand.300"
                   icon={<MdEdit />}
                   variant="ghost"
-                  colorScheme="black"
                   fontSize="3xl"
                   mb="0.5em"
                   onClick={() => {
@@ -69,9 +69,9 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
             <Tooltip label="Delete Note" placement="left">
                <IconButton
                   aria-label="Delete Note"
+                  color="brand.300"
                   icon={<MdDelete />}
                   variant="ghost"
-                  colorScheme="black"
                   fontSize="3xl"
                   mb="0.5em"
                   onClick={async () => {
