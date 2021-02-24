@@ -1,6 +1,7 @@
 import { Popover, PopoverTrigger, Button, PopoverContent, Text, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody, IconButton, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, useClipboard } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { snippets, TableDimensions } from '../../utils/snippets'
+import { TableDimensions } from '../../types/types'
+import { snippets } from '../../utils/snippets'
 
 interface Props {
    label: string
@@ -23,9 +24,9 @@ const SnippetButtonPopover: React.FC<Props> = ({ label, icon }) => {
          <PopoverTrigger>
             <IconButton
                aria-label={label}
+               color="brand.300"
                icon={icon}
                variant="outline"
-               colorScheme="black"
                fontSize="2xl"
                mb="0.15em"
                onClick={() => {

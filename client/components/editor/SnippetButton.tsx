@@ -20,9 +20,9 @@ const SnippetButton: React.FC<Props> = ({ label, icon, snippetItem }) => {
       <Tooltip label={label} placement="right">
          <IconButton
             aria-label={label}
+            color="brand.300"
             icon={icon}
             variant="outline"
-            colorScheme="black"
             fontSize="2xl"
             mb="0.15em"
             onClick={() => {

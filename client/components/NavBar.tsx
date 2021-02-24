@@ -37,8 +37,8 @@ const NavBar: React.FC<Props> = ({ user }) => {
             align="center"
             justify="space-between"
             as="nav"
-            bg="#5CDB95"
-            textColor="#05386B"
+            bg="brand.100"
+            textColor="brand.900"
             p="1.25em"
          >
             <Flex align="center" justify="space-between">

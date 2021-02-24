@@ -18,9 +18,9 @@ const CollectionItem: React.FC<Props> = ({ collection, user, index }) => {
 
    return (
       <ListItem key={collection.id}>
-         <Tooltip hasArrow label="Click to Open" placement="top" bg="#379683">
-            <Flex direction="column" bg="#8EE4AF" p="0.5em" border="1px" borderColor="#EDF5E1" borderRadius="md"
-               _hover={{ borderColor: "#05386B" }}
+         <Tooltip hasArrow label="Click to Open" placement="top" bg="brand.200">
+            <Flex direction="column" bg="brand.100" p="0.5em" border="1px" borderColor="brand.200" borderRadius="md"
+               _hover={{ borderColor: "brand.900" }}
                onClick={() => {
                   localStorage.setItem('collectionIndex', index.toString())
                   localStorage.removeItem('selectedNote')
@@ -29,7 +29,7 @@ const CollectionItem: React.FC<Props> = ({ collection, user, index }) => {
             >
                <Flex align="center">
                   <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} />
-                  <Text fontSize="lg" fontWeight="bold" mb="0.25em" ml="0.5em">{collection.title}</Text>
+                  <Text fontSize="lg" fontWeight="bold" textColor="brand.300" mb="0.25em" ml="0.5em">{collection.title}</Text>
                </Flex>
                <CollectionInfo collection={collection} />
             </Flex>

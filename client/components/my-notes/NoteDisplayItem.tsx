@@ -19,7 +19,7 @@ const NoteDisplayItem: React.FC<Props> = ({ noteLocation }) => {
          align="center"
          justify="space-between"
          p="0.5em"
-         _hover={{ backgroundColor: "#8EE4AF" }}
+         _hover={{ backgroundColor: "brand.200" }}
          onClick={() => {
             selectNoteLocation(noteLocation)
          }}

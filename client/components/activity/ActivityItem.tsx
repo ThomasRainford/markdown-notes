@@ -62,16 +62,16 @@ const ActivityItem: React.FC<Props> = ({ activity, user }) => {
                   <Text fontWeight="bold" mr="1.25em">{collection.title}</Text>
                   <Text fontStyle="oblique">{_activity === 'create' ? toDays(collection.createdAt) : toDays(collection.updatedAt)} days ago</Text>
                </Flex>
-               <Flex justify="space-between" bg="#5CDB95" p="0.75em" boxShadow="lg" border="1px" borderColor="#379683" borderRadius="md">
+               <Flex justify="space-between" bg="brand.100" textColor="brand.900" p="0.75em" boxShadow="lg" border="1px" borderColor="brand.200" borderRadius="md">
                   <Flex direction="column" >
-                     <Heading size="md" as="h4" mb="0.25em">{collection.title}</Heading>
+                     <Heading size="md" as="h4" mb="0.25em" textColor="brand.300">{collection.title}</Heading>
                      <CollectionInfo collection={collection} />
                   </Flex>
                   <Flex align="center">
                      <Button
                         size="sm"
                         colorScheme="teal"
-                        variant="outline"
+                        variant="solid"
                         mr="0.5em"
                         onClick={async () => {
                            const response = await voteMutation({ collectionId: collection.id })
@@ -81,8 +81,8 @@ const ActivityItem: React.FC<Props> = ({ activity, user }) => {
                      </Button>
                      <Button
                         size="sm"
-                        colorScheme="teal"
-                        variant="outline"
+                        colorScheme="blue"
+                        variant="solid"
                         onClick={async () => {
                            const response = await saveMutation({
                               targetUserId: owner.id,
