@@ -17,7 +17,7 @@ interface Props {
 const EditPanel = ({ }) => {
 
    return (
-      <Flex direction="column" h="100%" w="5em" bg="#5CDB95">
+      <Flex direction="column" h="100%" w="5em" bg="brand.100">
          <Flex direction="column" align="center" pt="1em">
             <SnippetButtonMenu
                label="Heading"

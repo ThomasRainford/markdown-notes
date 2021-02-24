@@ -23,9 +23,9 @@ const SnippetButtonPopover: React.FC<Props> = ({ label, icon }) => {
          <PopoverTrigger>
             <IconButton
                aria-label={label}
+               color="brand.300"
                icon={icon}
                variant="outline"
-               colorScheme="black"
                fontSize="2xl"
                mb="0.15em"
                onClick={() => {

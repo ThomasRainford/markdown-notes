@@ -139,7 +139,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
             mx="auto"
             borderRight="2px"
             borderY="2px"
-            borderColor="#5CDB95"
+            borderColor="brand.100"
             boxShadow="lg"
          >
             <Flex
