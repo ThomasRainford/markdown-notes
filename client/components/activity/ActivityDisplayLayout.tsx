@@ -7,7 +7,7 @@ interface Props {
 
 const ActivityDisplayLayout = ({ children }) => {
    return (
-      <Flex align="center" direction="column" bg="#EDF5E1" h="100%" w="100%">
+      <Flex align="center" direction="column" h="100%" w="100%">
          {children}
       </Flex>
    )
