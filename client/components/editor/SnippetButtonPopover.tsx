@@ -1,6 +1,7 @@
 import { Popover, PopoverTrigger, Button, PopoverContent, Text, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody, IconButton, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, useClipboard } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { snippets, TableDimensions } from '../../utils/snippets'
+import { TableDimensions } from '../../types/types'
+import { snippets } from '../../utils/snippets'
 
 interface Props {
    label: string
