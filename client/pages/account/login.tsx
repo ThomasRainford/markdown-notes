@@ -102,4 +102,4 @@ const Login = ({ }) => {
    )
 }
 
-export default withUrqlClient(createUrqlClient)(Login)
+export default withUrqlClient(createUrqlClient, { ssr: false })(Login)
