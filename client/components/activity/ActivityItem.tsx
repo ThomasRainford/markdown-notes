@@ -57,14 +57,14 @@ const ActivityItem: React.FC<Props> = ({ activity, user }) => {
             <Icon as={MdAccountCircle} h={6} w={6} mr="1em" />
             <Flex direction="column" w="100%">
                <Flex mb="0.75em">
-                  <Text fontWeight="bold" mr="0.5em">{owner.username}</Text>
+                  <Text fontWeight="bold" color="brand.400" mr="0.5em">{owner.username}</Text>
                   <Text fontStyle="italic" mr="0.5em">{_activity}d</Text>
                   <Text fontWeight="bold" mr="1.25em">{collection.title}</Text>
                   <Text fontStyle="oblique">{_activity === 'create' ? toDays(collection.createdAt) : toDays(collection.updatedAt)} days ago</Text>
                </Flex>
-               <Flex justify="space-between" bg="brand.100" textColor="brand.900" p="0.75em" boxShadow="lg" border="1px" borderColor="brand.200" borderRadius="md">
+               <Flex justify="space-between" bg="brand.800" textColor="brand.100" p="0.75em" boxShadow="lg" border="1px" borderColor="brand.200" borderRadius="md">
                   <Flex direction="column" >
-                     <Heading size="md" as="h4" mb="0.25em" textColor="brand.300">{collection.title}</Heading>
+                     <Heading size="md" as="h4" mb="0.25em" textColor="brand.100">{collection.title}</Heading>
                      <CollectionInfo collection={collection} />
                   </Flex>
                   <Flex align="center">
