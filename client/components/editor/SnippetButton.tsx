@@ -14,6 +14,7 @@ const SnippetButton: React.FC<Props> = ({ label, icon, snippetItem }) => {
 
    useEffect(() => {
       onCopy()
+      console.log(snippetValue)
    }, [snippetValue])
 
    return (
