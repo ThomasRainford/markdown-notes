@@ -7,7 +7,7 @@ interface Props {
 
 const NoteEditorLayout = ({ children }) => {
    return (
-      <Flex direction="column" h="100%" w="100%" bg="brand.900">
+      <Flex direction="column" h="100%" w="100%" bg="brand.100">
          {children}
       </Flex>
 

@@ -12,8 +12,8 @@ const AutoResizeTextarea: any = React.forwardRef<HTMLTextAreaElement>((props: Pr
       <Textarea
          name="body"
          variant="flushed"
-         minH="unset"
-         overflow="hidden"
+         //minH="unset"
+         //overflow="hidden"
          w="100%"
          resize="none"
          ref={ref}

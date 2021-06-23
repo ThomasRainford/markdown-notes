@@ -12,6 +12,7 @@ import MarkdownSyntaxHighligher from '../MarkdownSyntaxHighligher'
 import GoBackAlertDialog from './GoBackAlertDialog'
 import SaveAlertDialog from './SaveAlertDialog'
 import gfm from 'remark-gfm'
+import EditPanel from './EditPanel'
 
 interface Props {
    user: UseQueryState<MeQuery, object>
@@ -137,27 +138,26 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
             w="100%"
             h="100%"
             mx="auto"
-            borderRight="2px"
-            borderY="2px"
-            borderColor="brand.100"
-            boxShadow="lg"
          >
             <Flex
                direction="column"
                align="center"
                w="50%"
+               h="100%"
+               bg="brand.100"
             >
-               <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%", padding: "2em" }}>
+               <form onSubmit={handleSubmit(onSubmit)} style={{ height: "100%", width: "100%", padding: "1em", paddingTop: "0em" }}>
 
                   <FormControl mb="1em">
-                     <FormLabel>Title</FormLabel>
                      <Input
                         name="title"
+                        placeholder="Title"
                         autoComplete="off"
                         ref={register({ required: true })}
                         size="lg"
                         border="1px"
                         borderColor="#5CDB95"
+                        bg="brand.900"
                      />
                      <FormErrorMessage>
                         {errors.title && errors.title.message}
@@ -165,12 +165,14 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                   </FormControl>
 
                   <FormControl mb="1em">
-                     <FormLabel>Body</FormLabel>
+                     <EditPanel />
                      <AutoResizeTextarea
                         ref={register({ required: true })}
+                        placeholder="Body"
                         border="1px"
                         borderColor="#5CDB95"
                         p="0.5em"
+                        bg="brand.900"
                         onChange={(event) => setBody(event.target.value as string)}
                      />
                      <FormErrorMessage>
@@ -185,7 +187,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                      onClick={() => handleGoBack()}
                   >
                      Go Back
-               </Button>
+                  </Button>
                   <Button
                      colorScheme="blue"
                      isLoading={formState.isSubmitting}
@@ -193,14 +195,15 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                      onClick={() => setSaved(true)}
                   >
                      Save
-               </Button>
-
+                  </Button>
                </form>
             </Flex>
             <Flex
                direction="column"
                w="50%"
+               h="100%"
                p="1em"
+               bg="brand.900"
                whiteSpace="pre-wrap"
             >
                <ReactMarkdown
@@ -209,10 +212,9 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                //renderers={{ code: MarkdownSyntaxHighligher }}
                />
             </Flex>
+            <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
+            <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />
          </Flex>
-         <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
-         <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />
-
       </>
    )
 }

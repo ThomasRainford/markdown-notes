@@ -17,8 +17,8 @@ interface Props {
 const EditPanel = ({ }) => {
 
    return (
-      <Flex direction="column" h="100%" w="5em" bg="brand.100">
-         <Flex direction="column" align="center" pt="1em">
+      <Flex direction="row" bg="brand.100">
+         <Flex direction="row" align="center">
             <SnippetButtonMenu
                label="Heading"
                icon={<BiHeading />}

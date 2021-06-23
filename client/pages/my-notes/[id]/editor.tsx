@@ -36,10 +36,9 @@ const Editor = ({ }) => {
 
    return (
       <>
-         { !user.fetching && user.data?.me && location
+         {!user.fetching && user.data?.me && location
             ?
             <NewNotePageLayout user={user}>
-               <EditPanel />
                <NoteEditorLayout>
                   <NoteLocationBreadcrumb location={location} />
                   <NoteForm user={user} location={location} setLocation={setLocation} selectedNoteLocation={selectedNoteLocation} />
