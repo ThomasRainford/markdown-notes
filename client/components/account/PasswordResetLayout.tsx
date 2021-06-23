@@ -7,7 +7,7 @@ interface Props {
 
 const PasswordResetLayout: React.FC<Props> = ({ children, header }) => {
    return (
-      <Flex h="100vh" w="100vw" justify="center" align="center" bg="#5CDB95">
+      <Flex h="100vh" w="100vw" justify="center" align="center" bg="brand.100">
          <Flex h="20em" w="100vw" justify="center" align="center">
             <Flex direction="column" align="center" bg="#EDF5E1" boxShadow="dark-lg" p="2em" h="100%" w="25.5em">
                <Heading fontSize="2xl" color="#05386B" pb="1em">{header}</Heading>

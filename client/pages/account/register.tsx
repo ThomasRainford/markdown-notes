@@ -85,4 +85,4 @@ const Register = ({ }) => {
    )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(Register)
+export default withUrqlClient(createUrqlClient)(Register)

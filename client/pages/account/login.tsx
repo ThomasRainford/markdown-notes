@@ -85,7 +85,7 @@ const Login = ({ }) => {
                         mb="2em"
                      >
                         Forgotten Password
-                  </Button>
+                     </Button>
                   </NextLink>
                   <Button
                      variant="outline"
@@ -102,4 +102,4 @@ const Login = ({ }) => {
    )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(Login)
+export default withUrqlClient(createUrqlClient)(Login)
