@@ -60,3 +60,8 @@ h6 {
 	font-size: 0.75em !important;
 	font-weight: bold !important;
 }
+
+hr {
+	margin-top: 1em !important;
+	margin-bottom: 1em !important;
+}

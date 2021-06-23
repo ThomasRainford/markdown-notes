@@ -7,7 +7,7 @@ interface Props {
 
 const FullCollectionsDisplayLayout = ({ children }) => {
    return (
-      <Flex direction="column" h="100%" w="25em" bg="brand.100">
+      <Flex direction="column" h="100%" w="25em" bg="brand.100" textColor="brand.800">
          {children}
       </Flex >
    )
