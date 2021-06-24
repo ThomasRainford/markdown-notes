@@ -57,7 +57,6 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    const onSubmit = async (noteInput: NoteUpdateInput) => {
       const { title, body } = noteInput
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
-      console.log(noteInput)
       // Update note if already saved.
       if (localStorage.getItem('note')) {
          if (title.length > 0 && body.length > 0) {
@@ -117,13 +116,12 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    }
 
    useEffect(() => {
-      console.log(selectedNoteLocation)
       if (!selectedNoteLocation) {
          selectNoteLocation({
             noteLocation: {
                collection: location.collection,
                list: location.list,
-               note: JSON.parse(localStorage.getItem('note')) as Note
+               note: localStorage.getItem('note') !== "undefined" ? JSON.parse(localStorage.getItem('note')) as Note : null
             }
          })
       }
@@ -156,7 +154,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                         name="title"
                         placeholder="Title"
                         autoComplete="off"
-                        {...register("title", { required: true })}
+                        ref={register({ required: true })}
                         size="lg"
                         border="1px"
                         borderColor="#5CDB95"
@@ -172,7 +170,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                      <AutoResizeTextarea
                         name="body"
                         placeholder="Body"
-                        {...register("body", { required: true })}
+                        ref={register({ required: true })}
                         border="1px"
                         borderColor="#5CDB95"
                         p="0.5em"
