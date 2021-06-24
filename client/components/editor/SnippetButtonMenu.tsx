@@ -12,12 +12,7 @@ const SnippetButtonMenu: React.FC<Props> = ({ label, icon, snippetItem }) => {
    const [snippetValue, setSnippetValue] = useState<string>()
    const { hasCopied, onCopy } = useClipboard(snippetValue)
 
-   useEffect(() => {
-      onCopy()
-   }, [snippetValue])
-
    return (
-
       <Menu>
          <Tooltip label={label} placement="right">
             <MenuButton
@@ -38,7 +33,10 @@ const SnippetButtonMenu: React.FC<Props> = ({ label, icon, snippetItem }) => {
                         key={snippet}
                         onClick={() => {
                            setSnippetValue(snippetItem[snippet])
+                           onCopy()
+                           console.log(snippetValue)
                         }}
+                        value={snippetItem[snippet]}
                      >
                         {snippet}
                      </MenuItem>

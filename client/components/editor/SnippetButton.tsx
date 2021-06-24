@@ -12,11 +12,6 @@ const SnippetButton: React.FC<Props> = ({ label, icon, snippetItem }) => {
    const [snippetValue, setSnippetValue] = useState<string>()
    const { hasCopied, onCopy } = useClipboard(snippetValue)
 
-   useEffect(() => {
-      onCopy()
-      console.log(snippetValue)
-   }, [snippetValue])
-
    return (
       <Tooltip label={label} placement="right">
          <IconButton
@@ -28,7 +23,9 @@ const SnippetButton: React.FC<Props> = ({ label, icon, snippetItem }) => {
             mb="0.15em"
             onClick={() => {
                setSnippetValue(snippetItem)
+               onCopy()
             }}
+            value={snippetItem}
          />
       </Tooltip>
    )

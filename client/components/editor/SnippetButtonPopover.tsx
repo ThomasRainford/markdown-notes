@@ -15,10 +15,6 @@ const SnippetButtonPopover: React.FC<Props> = ({ label, icon }) => {
    const [snippetValue, setSnippetValue] = useState<string>()
    const { hasCopied, onCopy } = useClipboard(snippetValue)
 
-   useEffect(() => {
-      onCopy()
-   }, [snippetValue])
-
    return (
       <Popover>
          <PopoverTrigger>
@@ -69,6 +65,7 @@ const SnippetButtonPopover: React.FC<Props> = ({ label, icon }) => {
                         columns: dimensions.columns
                      })
                      setSnippetValue(table)
+                     onCopy()
                   }}
                >
                   Create
