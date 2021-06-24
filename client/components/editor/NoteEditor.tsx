@@ -61,6 +61,14 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       })
    }
 
+   const didFindNote = (): boolean => {
+      const note = localStorage.getItem('note')
+      if (!note || note === "undefined") {
+         return false;
+      }
+      return true
+   }
+
    const handleGoBack = async () => {
       if (!saved) {
          setIsGoBackOpen(true)
@@ -85,11 +93,12 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       }
    }
 
-   const onSubmit = async (noteInput: NoteInput) => {
-      const { title, body } = noteInput
+   const onSubmit = async (_noteInput: NoteInput) => {
+      const noteInput = { title: _noteInput.title, body } as NoteInput
+      console.log(body)
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
       // Update note if already saved.
-      if (localStorage.getItem('note')) {
+      if (didFindNote()) {
          if (title.length > 0 && body.length > 0) {
 
             const noteLocation: NoteLocationInput = {
@@ -107,18 +116,18 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
          // Add note if no note yet saved.
       } else {
          const noteInputAdd: NoteInput = { title: noteInput.title, body: noteInput.body }
-         if (!localStorage.getItem('note')) {
-            const response = await addNoteMutation({
-               listLocation: {
-                  collectionId: location.collection.id,
-                  listId: location.list.id
-               },
-               noteInput: noteInputAdd
-            })
+         //if (!localStorage.getItem('note')) {
+         const response = await addNoteMutation({
+            listLocation: {
+               collectionId: location.collection.id,
+               listId: location.list.id
+            },
+            noteInput: noteInputAdd
+         })
 
-            updateSelectedNoteLocation(response.data?.addNote.note as Note)
-            localStorage.setItem('note', JSON.stringify(response.data?.addNote.note))
-         }
+         updateSelectedNoteLocation(response.data?.addNote.note as Note)
+         localStorage.setItem('note', JSON.stringify(response.data?.addNote.note))
+         // }
       }
    }
 
@@ -128,7 +137,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
             noteLocation: {
                collection: location.collection,
                list: location.list,
-               note: localStorage.getItem('note') !== "undefined" ? JSON.parse(localStorage.getItem('note')) as Note : null
+               note: didFindNote() ? JSON.parse(localStorage.getItem('note')) as Note : null
             }
          })
       }
@@ -161,7 +170,9 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                      colorScheme="blue"
                      isLoading={formState.isSubmitting}
                      type="submit"
-                     onClick={() => setSaved(true)}
+                     onClick={() => {
+                        setSaved(true)
+                     }}
                   >
                      Save
                   </IconButton>
@@ -183,6 +194,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                </FormControl>
                <FormControl mb="1em">
                   <MDEditor
+                     //ref={register({ required: true })}
                      value={body}
                      height={window.innerHeight * 0.8}
                      onChange={setBody}
