@@ -12,6 +12,9 @@ import { useMeQuery } from '../../../generated/graphql'
 import { NoteLocation } from '../../../types/types'
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { useIsAuth } from '../../../utils/useIsAuth'
+import '@uiw/react-md-editor/dist/markdown-editor.css'
+import '@uiw/react-markdown-preview/dist/markdown.css';
+import NoteEditor from '../../../components/editor/NoteEditor'
 
 interface Props {
 
@@ -40,8 +43,9 @@ const Editor = ({ }) => {
             ?
             <NewNotePageLayout user={user}>
                <NoteEditorLayout>
-                  <NoteLocationBreadcrumb location={location} />
-                  <NoteForm user={user} location={location} setLocation={setLocation} selectedNoteLocation={selectedNoteLocation} />
+                  <NoteEditor user={user} location={location} setLocation={setLocation} selectedNoteLocation={selectedNoteLocation} />
+                  {/* <NoteLocationBreadcrumb location={location} />
+                  <NoteForm user={user} location={location} setLocation={setLocation} selectedNoteLocation={selectedNoteLocation} /> */}
                </NoteEditorLayout>
             </NewNotePageLayout>
             :

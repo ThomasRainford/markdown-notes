@@ -175,7 +175,7 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                         borderColor="#5CDB95"
                         p="0.5em"
                         bg="brand.900"
-                        onChange={(event) => setBody(event.target.value as string)}
+                        onChange={(event) => { setBody(event.target.value as string) }}
                      />
                      <FormErrorMessage>
                         {errors.body && errors.body.message}
