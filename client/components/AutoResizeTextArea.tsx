@@ -1,5 +1,6 @@
 import { Textarea } from "@chakra-ui/react";
-import ResizeTextarea from "react-textarea-autosize";
+//import ResizeTextarea from "react-textarea-autosize";
+import TextareaAutosize from 'react-autosize-textarea';
 import React, { ReactNode } from "react";
 
 interface Props {
@@ -12,13 +13,11 @@ const AutoResizeTextarea: any = React.forwardRef<HTMLTextAreaElement>((props: Pr
       <Textarea
          name="body"
          variant="flushed"
-         //minH="unset"
-         //overflow="hidden"
          w="100%"
          resize="none"
+         rows={15}
          ref={ref}
-         minRows={20}
-         as={ResizeTextarea}
+         as={TextareaAutosize}
          {...props}
       />
    )
