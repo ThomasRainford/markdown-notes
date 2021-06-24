@@ -3,10 +3,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/dist/markdown-editor.css'
 import '@uiw/react-markdown-preview/dist/markdown.css';
-import { Button, Flex, FormControl, FormErrorMessage, IconButton, Input, Link } from '@chakra-ui/react';
+import { Flex, FormControl, IconButton, Input, Link } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { MeQuery, Note, NoteInput, NoteLocationInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql';
-import { SearchIcon } from '@chakra-ui/icons';
 import { AiOutlineSave } from 'react-icons/ai';
 import { BiArrowBack } from 'react-icons/bi';
 import { NoteContext } from '../../context/NoteContext';
@@ -145,6 +144,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       if (selectedNoteLocation?.noteLocation.note) {
          setValue('title', selectedNoteLocation.noteLocation.note.title)
          setValue('body', selectedNoteLocation.noteLocation.note.body)
+         setTitle(selectedNoteLocation.noteLocation.note.title)
          setBody(selectedNoteLocation.noteLocation.note.body)
       }
    }, [selectedNoteLocation])
