@@ -2,7 +2,6 @@ import { Accordion, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
-import ReactMarkdown from 'react-markdown'
 import { cacheExchange, dedupExchange, fetchExchange, ssrExchange } from 'urql'
 import AddDrawer from '../../../components/my-notes/AddDrawer'
 import CollectionAccordianItem from '../../../components/my-notes/CollectionAccordianItem'
@@ -16,7 +15,7 @@ import { Collection, useCollectionsQuery, useMeQuery } from '../../../generated/
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { COLLECTIONS_QUERY } from '../../../utils/ssr-queries/collections'
 import { useIsAuth } from '../../../utils/useIsAuth'
-import gfm from 'remark-gfm'
+import MarkdownRenderer from '../../../components/editor/MarkdownRenderer'
 
 interface Props {
 
@@ -72,9 +71,8 @@ const MyNotes = ({ }) => {
                      </Heading>
                   </Flex>
                   <Flex direction="column" w="100%" p="2em" whiteSpace="pre-wrap">
-                     <ReactMarkdown
-                        children={selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body}
-                        plugins={[gfm]}
+                     <MarkdownRenderer
+                        markdown={selectedNoteLocation?.noteLocation.note && selectedNoteLocation.noteLocation.note.body || ""}
                      />
                   </Flex>
                </NoteDisplayLayout>
