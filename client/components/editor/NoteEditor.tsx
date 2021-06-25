@@ -40,6 +40,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
    const [body, setBody] = useState<string>("") // This is used to pass to the markdown component.
 
    const [saved, setSaved] = useState<boolean>(false)
+   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight * 0.8)
 
    const [isGoBackOpen, setIsGoBackOpen] = useState<boolean>(false)
    const onGoBackClose = () => setIsGoBackOpen(false)
@@ -94,7 +95,6 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
 
    const onSubmit = async (_noteInput: NoteInput) => {
       const noteInput = { title: _noteInput.title, body } as NoteInput
-      console.log(body)
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
       // Update note if already saved.
       if (didFindNote()) {
@@ -149,9 +149,13 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       }
    }, [selectedNoteLocation])
 
+   window.addEventListener('resize', () => {
+      setWindowHeight(window.innerHeight * 0.8)
+   })
+
    return (
       <>
-         <Flex direction="column" p="1em">
+         <Flex direction="column" px="1em" pb="1em" h="100%">
             <form onSubmit={handleSubmit(onSubmit)}>
                <Flex mb="1em">
                   <IconButton
@@ -196,7 +200,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                   <MDEditor
                      //ref={register({ required: true })}
                      value={body}
-                     height={window.innerHeight * 0.8}
+                     height={windowHeight}
                      onChange={setBody}
                   />
                </FormControl>

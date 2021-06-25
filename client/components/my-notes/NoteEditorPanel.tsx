@@ -75,6 +75,7 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
                   fontSize="3xl"
                   mb="0.5em"
                   onClick={async () => {
+                     localStorage.removeItem("note")
                      const response = await deleteNoteMutation({
                         noteLocationInput: {
                            collectionId: selectedNoteLocation.noteLocation.collection.id,

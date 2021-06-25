@@ -1,10 +1,8 @@
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
-import EditPanel from '../../../components/editor/EditPanel'
 import NewNotePageLayout from '../../../components/editor/NewNotePageLayout'
 import NoteEditorLayout from '../../../components/editor/NoteEditorLayout'
-import NoteForm from '../../../components/editor/NoteForm'
 import NoteLocationBreadcrumb from '../../../components/editor/NoteLocationBreadcrumb'
 import PageLoadingIndicator from '../../../components/PageLoadingIndicator'
 import { NoteContext } from '../../../context/NoteContext'
@@ -43,9 +41,8 @@ const Editor = ({ }) => {
             ?
             <NewNotePageLayout user={user}>
                <NoteEditorLayout>
+                  <NoteLocationBreadcrumb location={location} />
                   <NoteEditor user={user} location={location} setLocation={setLocation} selectedNoteLocation={selectedNoteLocation} />
-                  {/* <NoteLocationBreadcrumb location={location} />
-                  <NoteForm user={user} location={location} setLocation={setLocation} selectedNoteLocation={selectedNoteLocation} /> */}
                </NoteEditorLayout>
             </NewNotePageLayout>
             :
