@@ -1,6 +1,5 @@
 import { MikroORM } from '@mikro-orm/core'
 import { ApolloServer } from "apollo-server-express"
-import cors from 'cors'
 import 'dotenv-safe/config'
 import express from "express"
 import session from 'express-session'
@@ -13,6 +12,7 @@ import { OrmContext } from './types/types'
 import MongoDBStore from 'connect-mongodb-session'
 import { CollectionResolver } from './resolvers/collection'
 import { NotesListResolver } from './resolvers/notesList'
+import cors from 'cors'
 const MongoStore = MongoDBStore(session)
 
 const main = async () => {

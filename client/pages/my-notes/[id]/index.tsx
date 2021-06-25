@@ -90,7 +90,7 @@ const MyNotes = ({ }) => {
 export async function getServerSideProps() {
    const ssrCache = ssrExchange({ isClient: false })
    const client = initUrqlClient({
-      url: 'http://localhost:3000/graphql',
+      url: 'https://markdown-notes-app-api.herokuapp.com/graphql',
       exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
    }, true)
 
