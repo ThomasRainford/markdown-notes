@@ -15,7 +15,7 @@ import { Collection, useCollectionsQuery, useMeQuery } from '../../../generated/
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { COLLECTIONS_QUERY } from '../../../utils/ssr-queries/collections'
 import { useIsAuth } from '../../../utils/useIsAuth'
-import MarkdownRenderer from '../../../components/editor/MarkdownRenderer'
+import MarkdownRenderer from '../../../components/MarkdownRenderer'
 
 interface Props {
 

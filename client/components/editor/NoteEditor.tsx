@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import MDEditor from '@uiw/react-md-editor';
+import MDEditor, { commands, ICommand, TextState, TextAreaTextApi } from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/dist/markdown-editor.css'
 import '@uiw/react-markdown-preview/dist/markdown.css';
 import { Flex, FormControl, IconButton, Input, Link } from '@chakra-ui/react';
@@ -13,6 +13,7 @@ import { UseQueryState } from 'urql';
 import { NoteLocation, ExactNoteLocation } from '../../types/types';
 import GoBackAlertDialog from './GoBackAlertDialog';
 import SaveAlertDialog from './SaveAlertDialog';
+import { MDEditorCommands } from '../../utils/MDEditorCommands';
 
 type FormValues = {
    title: string
@@ -201,6 +202,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                      value={body}
                      height={windowHeight}
                      onChange={setBody}
+                     commands={MDEditorCommands}
                   />
                </FormControl>
             </form>

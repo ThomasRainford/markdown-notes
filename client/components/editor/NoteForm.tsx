@@ -10,7 +10,7 @@ import AutoResizeTextarea from '../AutoResizeTextArea'
 import GoBackAlertDialog from './GoBackAlertDialog'
 import SaveAlertDialog from './SaveAlertDialog'
 import EditPanel from './EditPanel'
-import MarkdownRenderer from './MarkdownRenderer'
+import MarkdownRenderer from '../MarkdownRenderer'
 
 interface Props {
    user: UseQueryState<MeQuery, object>
