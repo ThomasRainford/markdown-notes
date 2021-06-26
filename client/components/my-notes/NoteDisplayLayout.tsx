@@ -7,11 +7,7 @@ interface Props {
 
 const NoteDisplayLayout = ({ children }) => {
    return (
-      <Flex align="center" direction="column" bg="brand.900" h="100%" w="100%"
-         borderTop="2px"
-         borderLeft="2px"
-         borderColor="brand.300"
-      >
+      <Flex align="center" direction="column" bg="brand.900" h="100%" w="100%">
          {children}
       </Flex>
    )
