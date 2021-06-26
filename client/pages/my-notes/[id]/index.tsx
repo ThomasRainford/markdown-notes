@@ -45,6 +45,7 @@ const MyNotes = ({ }) => {
                   <Text fontStyle="italic" pb="1em" pl="1em">Your Collections</Text>
                   {!collections.fetching && collections.data?.collections &&
                      <Accordion
+                        allowToggle
                         px="1em"
                         textColor="brand.900"
                         defaultIndex={parseInt(localStorage.getItem('collectionIndex'))}

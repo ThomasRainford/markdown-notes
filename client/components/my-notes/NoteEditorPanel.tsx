@@ -46,7 +46,7 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
 
    return (
       <Flex direction="column" align="center" h="100%" w="5em" bg="brand.100">
-         <Flex direction="column" align="center" pt="1em">
+         <Flex direction="column" align="center">
             <Tooltip label="Edit Note" placement="left">
                <IconButton
                   aria-label="Edit Note"
