@@ -39,7 +39,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
    const [title, setTitle] = useState<string>("")
    const [body, setBody] = useState<string>("") // This is used to pass to the markdown component.
 
-   const [saved, setSaved] = useState<boolean>(false)
+   const [saved, setSaved] = useState<boolean>(true)
    const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight * 0.8)
 
    const [isGoBackOpen, setIsGoBackOpen] = useState<boolean>(false)
@@ -115,7 +115,6 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
          // Add note if no note yet saved.
       } else {
          const noteInputAdd: NoteInput = { title: noteInput.title, body: noteInput.body }
-         //if (!localStorage.getItem('note')) {
          const response = await addNoteMutation({
             listLocation: {
                collectionId: location.collection.id,
@@ -126,7 +125,6 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
 
          updateSelectedNoteLocation(response.data?.addNote.note as Note)
          localStorage.setItem('note', JSON.stringify(response.data?.addNote.note))
-         // }
       }
    }
 
@@ -149,6 +147,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       }
    }, [selectedNoteLocation])
 
+   // Set the size of the MD editor when the window is resized.
    window.addEventListener('resize', () => {
       setWindowHeight(window.innerHeight * 0.8)
    })
@@ -196,9 +195,8 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                      }}
                   />
                </FormControl>
-               <FormControl mb="1em">
+               <FormControl mb="1em" onChange={() => setSaved(false)}>
                   <MDEditor
-                     //ref={register({ required: true })}
                      value={body}
                      height={windowHeight}
                      onChange={setBody}
