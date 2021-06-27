@@ -10,16 +10,10 @@ interface Props {
 
 const MyNotesPageLayout: React.FC<Props> = ({ children, user }) => {
 
-   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight)
-
-   window.addEventListener('resize', () => {
-      setWindowHeight(window.innerHeight)
-   })
-
    return (
-      <Flex direction="column" h={windowHeight}>
+      <Flex direction="column" h="100%" minHeight="100vh">
          <NavBar user={user} />
-         <Flex h="100%">
+         <Flex>
             {children}
          </Flex>
       </Flex>
