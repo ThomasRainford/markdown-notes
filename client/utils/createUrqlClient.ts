@@ -28,7 +28,7 @@ const invalidateCollections = (cache: Cache) => {
 
 export const createUrqlClient = (ssrExchange: SSRExchange) => {
    return {
-      url: 'http://localhost:3000/graphql',
+      url: 'https://markdown-notes-app-api.herokuapp.com/graphql',
       exchanges: [
          dedupExchange,
          cacheExchange({

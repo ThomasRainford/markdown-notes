@@ -45,7 +45,7 @@ const NavBar: React.FC<Props> = ({ user }) => {
             <Flex align="center" justify="space-between">
                <Flex mr="2em">
                   <Icon as={MdList} h={10} w={10} mr="0.25em" />
-                  <Heading size="md">Markdown Notes</Heading>
+                  <Heading size="md" my="auto">Markdown Notes</Heading>
                </Flex>
                <Flex>
                   <NextLink href="/activity">
@@ -72,7 +72,7 @@ const NavBar: React.FC<Props> = ({ user }) => {
                   onClick={() => setIsOpen(true)}
                >
                   Logout
-            </Button>
+               </Button>
             </Flex>
          </Flex>
          {/* Alert dialog for logging out */}
@@ -85,10 +85,10 @@ const NavBar: React.FC<Props> = ({ user }) => {
                <AlertDialogContent>
                   <AlertDialogHeader fontSize="lg" fontWeight="bold">
                      log Out
-                        </AlertDialogHeader>
+                  </AlertDialogHeader>
                   <AlertDialogBody>
                      Are you sure you want to log out?
-                        </AlertDialogBody>
+                  </AlertDialogBody>
                   <AlertDialogFooter>
                      <Button ref={cancelRef} onClick={() => setIsOpen(false)}>
                         Cancel

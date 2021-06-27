@@ -30,12 +30,12 @@ const GoBackAlertDialog: React.FC<Props> = ({ isOpen, onClose, deleteNote, user 
 
                <AlertDialogBody>
                   Are you sure? You can't undo this action afterwards.
-                  </AlertDialogBody>
+               </AlertDialogBody>
 
                <AlertDialogFooter>
                   <Button ref={cancelRef} onClick={onClose}>
                      Cancel
-                     </Button>
+                  </Button>
                   <Button
                      ml={3}
                      colorScheme="red"
@@ -43,6 +43,7 @@ const GoBackAlertDialog: React.FC<Props> = ({ isOpen, onClose, deleteNote, user 
                         //await deleteNote()
                         onClose()
                         localStorage.removeItem('noteId')
+                        localStorage.removeItem('note')
                         router.replace(`/my-notes/${user.data?.me?.username}`)
                      }}
                   >

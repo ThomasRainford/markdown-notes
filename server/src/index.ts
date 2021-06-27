@@ -1,6 +1,5 @@
 import { MikroORM } from '@mikro-orm/core'
 import { ApolloServer } from "apollo-server-express"
-import cors from 'cors'
 import 'dotenv-safe/config'
 import express from "express"
 import session from 'express-session'
@@ -13,6 +12,7 @@ import { OrmContext } from './types/types'
 import MongoDBStore from 'connect-mongodb-session'
 import { CollectionResolver } from './resolvers/collection'
 import { NotesListResolver } from './resolvers/notesList'
+import cors from 'cors'
 const MongoStore = MongoDBStore(session)
 
 const main = async () => {
@@ -20,7 +20,7 @@ const main = async () => {
    const orm = await MikroORM.init(ormConfig)
 
    const app = express()
-
+   app.set('trust proxy', 1)
    app.use(
       cors({
          origin: process.env.CORS_ORIGIN,
@@ -39,8 +39,9 @@ const main = async () => {
          cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
             httpOnly: true,
-            sameSite: "lax", // csrf
+            sameSite: __prod__ ? "none" : "lax", // csrf
             secure: __prod__, // cookie only works in https
+            //domain: __prod__ ? "http://localhost:4000/account/login" : undefined
          },
          saveUninitialized: false,
          secret: process.env.SESSION_SECRET,

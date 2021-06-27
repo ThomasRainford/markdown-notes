@@ -45,8 +45,8 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
    }
 
    return (
-      <Flex direction="column" align="center" h="100%" w="5em" bg="brand.100">
-         <Flex direction="column" align="center" pt="1em">
+      <Flex direction="column" align="center" w="5em" bg="brand.100">
+         <Flex direction="column" align="center">
             <Tooltip label="Edit Note" placement="left">
                <IconButton
                   aria-label="Edit Note"
@@ -75,6 +75,7 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
                   fontSize="3xl"
                   mb="0.5em"
                   onClick={async () => {
+                     localStorage.removeItem("note")
                      const response = await deleteNoteMutation({
                         noteLocationInput: {
                            collectionId: selectedNoteLocation.noteLocation.collection.id,

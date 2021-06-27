@@ -10,7 +10,7 @@ interface Props {
 
 const NewNotePageLayout: React.FC<Props> = ({ children, user }) => {
    return (
-      <Flex direction="column" h="100vh">
+      <Flex direction="column">
          <NavBar user={user} />
          <Flex h="100%">
             {children}

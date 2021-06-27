@@ -1,24 +1,27 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, Input, Link } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import ReactMarkdown from 'react-markdown'
 import { UseQueryState } from 'urql'
 import { NoteContext } from '../../context/NoteContext'
 import { MeQuery, Note, NoteInput, NoteLocationInput, NoteUpdateInput, useAddNoteMutation, useDeleteNoteMutation, useUpdateNoteMutation } from '../../generated/graphql'
 import { ExactNoteLocation, NoteLocation } from '../../types/types'
 import AutoResizeTextarea from '../AutoResizeTextArea'
-import MarkdownSyntaxHighligher from '../MarkdownSyntaxHighligher'
 import GoBackAlertDialog from './GoBackAlertDialog'
 import SaveAlertDialog from './SaveAlertDialog'
-import gfm from 'remark-gfm'
 import EditPanel from './EditPanel'
+import MarkdownRenderer from '../MarkdownRenderer'
 
 interface Props {
    user: UseQueryState<MeQuery, object>
    location: NoteLocation
    setLocation: React.Dispatch<React.SetStateAction<NoteLocation>>
    selectedNoteLocation: ExactNoteLocation
+}
+
+type FormValues = {
+   title: string
+   body: string
 }
 
 const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
@@ -28,9 +31,9 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
    const selectedNoteLocation = getSelectedNoteLocation()
 
-   const { handleSubmit, errors, register, formState, setValue } = useForm()
+   const { handleSubmit, errors, register, formState, setValue } = useForm<FormValues>()
    const [saved, setSaved] = useState<boolean>(false)
-   const [body, setBody] = useState<string>() // This is used to pass to the markdown component.
+   const [body, setBody] = useState<string>("") // This is used to pass to the markdown component.
 
    const [, addNoteMutation] = useAddNoteMutation()
    const [, updateNoteMutation] = useUpdateNoteMutation()
@@ -54,7 +57,6 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    const onSubmit = async (noteInput: NoteUpdateInput) => {
       const { title, body } = noteInput
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
-
       // Update note if already saved.
       if (localStorage.getItem('note')) {
          if (title.length > 0 && body.length > 0) {
@@ -114,13 +116,12 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
    }
 
    useEffect(() => {
-
       if (!selectedNoteLocation) {
          selectNoteLocation({
             noteLocation: {
                collection: location.collection,
                list: location.list,
-               note: JSON.parse(localStorage.getItem('note')) as Note
+               note: localStorage.getItem('note') !== "undefined" ? JSON.parse(localStorage.getItem('note')) as Note : null
             }
          })
       }
@@ -167,13 +168,14 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                   <FormControl mb="1em">
                      <EditPanel />
                      <AutoResizeTextarea
-                        ref={register({ required: true })}
+                        name="body"
                         placeholder="Body"
+                        ref={register({ required: true })}
                         border="1px"
                         borderColor="#5CDB95"
                         p="0.5em"
                         bg="brand.900"
-                        onChange={(event) => setBody(event.target.value as string)}
+                        onChange={(event) => { setBody(event.target.value as string) }}
                      />
                      <FormErrorMessage>
                         {errors.body && errors.body.message}
@@ -206,15 +208,11 @@ const NoteForm: React.FC<Props> = ({ user, location, setLocation }) => {
                bg="brand.900"
                whiteSpace="pre-wrap"
             >
-               <ReactMarkdown
-                  children={body}
-                  plugins={[gfm]}
-               //renderers={{ code: MarkdownSyntaxHighligher }}
-               />
+               <MarkdownRenderer markdown={body} />
             </Flex>
-            <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
-            <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />
          </Flex>
+         <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
+         <SaveAlertDialog isOpen={isSaveOpen} onClose={onSaveClose} />
       </>
    )
 }

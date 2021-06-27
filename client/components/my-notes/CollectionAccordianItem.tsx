@@ -39,6 +39,7 @@ const CollectionAccordianItem: React.FC<Props> = ({ collection }) => {
          </h2>
          <AccordionPanel pb={4}>
             <Accordion
+               allowToggle
                defaultIndex={parseInt(localStorage.getItem('listIndex'))}
                onChange={(expandedIndex: ExpandedIndex) => {
                   localStorage.setItem('listIndex', expandedIndex.toString())
