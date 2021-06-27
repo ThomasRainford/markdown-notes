@@ -96,8 +96,8 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       }
    }
 
-   const onSubmit = async (noteInput: NoteInput) => {
-      const { title, body } = noteInput
+   const onSubmit = async (_noteInput: NoteInput) => {
+      const noteInput: NoteInput = { title, body }
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
       // Update note if already saved.
       if (didFindNote()) {
@@ -111,6 +111,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
 
             const response = await updateNoteMutation({ noteLocation, noteInput })
             updateSelectedNoteLocation(response.data?.updateNote.note as Note)
+            localStorage.setItem('note', JSON.stringify(response.data?.updateNote.note))
          } else {
             setIsSaveOpen(true)
          }
@@ -131,6 +132,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       }
    }
 
+   // Auto-save
    useEffect(() => {
       if (autosave && watchedFields.body && watchedFields.title) {
          handleSubmit(onSubmit)()
@@ -215,7 +217,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                      }}
                   />
                </FormControl>
-               <FormControl mb="1em" onChange={() => setSaved(false)}>
+               <FormControl mb="1em" >
                   <MDEditor
                      value={body}
                      height={windowHeight}
