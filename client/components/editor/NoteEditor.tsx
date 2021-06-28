@@ -29,18 +29,17 @@ interface Props {
    selectedNoteLocation: ExactNoteLocation
 }
 
-const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
+const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNoteLocation }) => {
 
    const router = useRouter()
 
-   const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
-   const selectedNoteLocation = getSelectedNoteLocation()
+   const { selectNoteLocation } = useContext(NoteContext)
 
    const { handleSubmit, errors, register, formState, setValue, watch } = useForm<FormValues>()
 
    const [autosave, setAutoSave] = useState<boolean>(false)
-   const [title, setTitle] = useState<string>("")
-   const [body, setBody] = useState<string>("") // This is used to pass to the markdown component.
+   const [title, setTitle] = useState<string>(selectedNoteLocation.noteLocation.note.title)
+   const [body, setBody] = useState<string>(selectedNoteLocation.noteLocation.note.body) // This is used to pass to the markdown component.
 
    const [saved, setSaved] = useState<boolean>(true)
    const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight * 0.8)
@@ -103,6 +102,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       // Update note if already saved.
       if (didFindNote()) {
          if (noteInput.title.length > 0 && noteInput.body.length > 0) {
+            console.log(selectedNoteLocation)
             const noteLocation: NoteLocationInput = {
                collectionId: selectedNoteLocation.noteLocation.collection.id,
                listId: selectedNoteLocation.noteLocation.list.id,
@@ -133,18 +133,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
    }
 
    useEffect(() => {
-      if (!selectedNoteLocation) {
-         selectNoteLocation({
-            noteLocation: {
-               collection: location.collection,
-               list: location.list,
-               note: didFindNote() ? JSON.parse(localStorage.getItem('note')) as Note : null
-            }
-         })
-      }
-
       if (selectedNoteLocation?.noteLocation.note) {
-         console.log("here")
          setValue('title', selectedNoteLocation.noteLocation.note.title)
          setValue('body', selectedNoteLocation.noteLocation.note.body)
          setTitle(selectedNoteLocation.noteLocation.note.title)
@@ -156,13 +145,15 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
    window.addEventListener('resize', () => {
       setWindowHeight(window.innerHeight * 0.8)
    })
+   console.log("change")
 
-   const updateNote = React.useCallback(async (note: NoteInput) => {
-      //onSubmit({ title, body } as NoteInput)
+   const updateBody = React.useCallback(async (body: string) => {
       setSaved(true)
-      console.log(note)
-      await onSubmit(note)
+      console.log(body)
+      await onSubmit({ title: selectedNoteLocation.noteLocation.note.title, body: body })
    }, [])
+
+   useAutosave({ data: body, onSave: updateBody, interval: 3000 })
 
    return (
       <>
@@ -228,7 +219,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                      onChange={setBody}
                      commands={MDEditorCommands}
                   />
-                  {autosave && <Autosave data={{ title, body }} onSave={updateNote} interval={3000} />}
+                  {/* {autosave && <Autosave data={{ title, body }} onSave={updateNote} interval={3000} />} */}
                </FormControl>
             </form>
          </Flex>
