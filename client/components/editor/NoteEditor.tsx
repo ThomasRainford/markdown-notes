@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import MDEditor, { commands, ICommand, TextState, TextAreaTextApi } from '@uiw/react-md-editor';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
+import MDEditor, { commands, ICommand, TextState, TextAreaTextApi, ContextStore } from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/dist/markdown-editor.css'
 import '@uiw/react-markdown-preview/dist/markdown.css';
 import { Flex, FormControl, IconButton, Input, Link, Switch, Text } from '@chakra-ui/react';
@@ -14,6 +14,7 @@ import { NoteLocation, ExactNoteLocation } from '../../types/types';
 import GoBackAlertDialog from './GoBackAlertDialog';
 import SaveAlertDialog from './SaveAlertDialog';
 import { MDEditorCommands } from '../../utils/MDEditorCommands';
+import { Autosave, useAutosave } from "react-autosave";
 
 type FormValues = {
    title: string
@@ -36,7 +37,6 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
    const selectedNoteLocation = getSelectedNoteLocation()
 
    const { handleSubmit, errors, register, formState, setValue, watch } = useForm<FormValues>()
-   const watchedFields = watch()
 
    const [autosave, setAutoSave] = useState<boolean>(false)
    const [title, setTitle] = useState<string>("")
@@ -97,12 +97,12 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
    }
 
    const onSubmit = async (_noteInput: NoteInput) => {
-      const noteInput: NoteInput = { title, body }
+      const noteInput = Object.keys(_noteInput).length == 2 ? { title: _noteInput.title, body: _noteInput.body } : { title, body }
+      console.log(noteInput)
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
       // Update note if already saved.
       if (didFindNote()) {
-         if (title.length > 0 && body.length > 0) {
-
+         if (noteInput.title.length > 0 && noteInput.body.length > 0) {
             const noteLocation: NoteLocationInput = {
                collectionId: selectedNoteLocation.noteLocation.collection.id,
                listId: selectedNoteLocation.noteLocation.list.id,
@@ -132,13 +132,6 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       }
    }
 
-   // Auto-save
-   useEffect(() => {
-      if (autosave && watchedFields.body && watchedFields.title) {
-         handleSubmit(onSubmit)()
-      }
-   }, [body, title])
-
    useEffect(() => {
       if (!selectedNoteLocation) {
          selectNoteLocation({
@@ -151,6 +144,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
       }
 
       if (selectedNoteLocation?.noteLocation.note) {
+         console.log("here")
          setValue('title', selectedNoteLocation.noteLocation.note.title)
          setValue('body', selectedNoteLocation.noteLocation.note.body)
          setTitle(selectedNoteLocation.noteLocation.note.title)
@@ -162,6 +156,13 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
    window.addEventListener('resize', () => {
       setWindowHeight(window.innerHeight * 0.8)
    })
+
+   const updateNote = React.useCallback(async (note: NoteInput) => {
+      //onSubmit({ title, body } as NoteInput)
+      setSaved(true)
+      console.log(note)
+      await onSubmit(note)
+   }, [])
 
    return (
       <>
@@ -197,7 +198,10 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                      </Text>
                      <Switch
                         isChecked={autosave}
-                        onChange={() => setAutoSave(!autosave)}
+                        onChange={() => {
+                           setAutoSave(!autosave)
+                           console.log(autosave)
+                        }}
                      />
                   </Flex>
                </Flex>
@@ -207,7 +211,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                      name="title"
                      placeholder="Title"
                      autoComplete="off"
-                     {...register("title")}
+                     //ref={register({ required: true })}
                      size="lg"
                      border="1px"
                      borderColor="#5CDB95"
@@ -217,14 +221,14 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                      }}
                   />
                </FormControl>
-               <FormControl mb="1em" >
+               <FormControl mb="1em">
                   <MDEditor
                      value={body}
                      height={windowHeight}
                      onChange={setBody}
                      commands={MDEditorCommands}
-                     {...register("body")}
                   />
+                  {autosave && <Autosave data={{ title, body }} onSave={updateNote} interval={3000} />}
                </FormControl>
             </form>
          </Flex>
