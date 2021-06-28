@@ -14,7 +14,7 @@ import { NoteLocation, ExactNoteLocation } from '../../types/types';
 import GoBackAlertDialog from './GoBackAlertDialog';
 import SaveAlertDialog from './SaveAlertDialog';
 import { MDEditorCommands } from '../../utils/MDEditorCommands';
-import { useAutosave } from "react-autosave";
+import { Autosave, useAutosave } from "react-autosave";
 
 type FormValues = {
    title: string
@@ -35,7 +35,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
 
    const { selectNoteLocation } = useContext(NoteContext)
 
-   const { handleSubmit, formState, setValue } = useForm<FormValues>()
+   const { handleSubmit, formState, setValue, register } = useForm<FormValues>()
 
    const [autosave, setAutoSave] = useState<boolean>(false)
 
@@ -105,7 +105,6 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
       // Update note if already saved.
       if (didFindNote()) {
          if (noteInput.title.length > 0 && noteInput.body.length > 0) {
-            console.log(selectedNoteLocation)
             const noteLocation: NoteLocationInput = {
                collectionId: selectedNoteLocation.noteLocation.collection.id,
                listId: selectedNoteLocation.noteLocation.list.id,
@@ -148,11 +147,12 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
       await onSubmit({ title: note.title, body: note.body })
    }, [])
 
-   useAutosave({ data: note, onSave: updateNote, interval: 3000 })
-
-   const setBody = (value: string) => {
-      setNote({ ...note, body: value })
-   }
+   useEffect(() => {
+      register("title", { required: true });
+      register("body");
+      setValue("title", note.title)
+      setValue("body", note.body)
+   }, []);
 
    return (
       <>
@@ -201,13 +201,13 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
                      name="title"
                      placeholder="Title"
                      autoComplete="off"
-                     //ref={register({ required: true })}
                      size="lg"
                      border="1px"
                      borderColor="#5CDB95"
                      bg="brand.900"
                      onChange={(event: any) => {
-                        setNote({ ...note, title: event.target.value })
+                        setValue("title", event.target.value)
+                        setNote((prevState) => ({ ...prevState, title: event.target.value }))
                      }}
                   />
                </FormControl>
@@ -215,11 +215,15 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
                   <MDEditor
                      value={note.body}
                      height={windowHeight}
-                     onChange={setBody}
                      commands={MDEditorCommands}
+                     textareaProps={{ name: "body" }}
+                     onChange={(value) => {
+                        setValue("body", value)
+                        setNote((prevState) => ({ ...prevState, body: value }))
+                     }}
                   />
-                  {/* {autosave && <Autosave data={{ title, body }} onSave={updateNote} interval={3000} />} */}
                </FormControl>
+               {autosave && <Autosave data={note} onSave={updateNote} interval={3000} />}
             </form>
          </Flex>
          <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />
