@@ -5702,6 +5702,11 @@ rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-autosave@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-autosave/-/react-autosave-0.2.2.tgz#af4141cb4b3c1acaafa2f5b2cb7707d5f6f53f02"
+  integrity sha512-sx6wvVGlCNIS8H20q69SKag5GxYZ7sF63cMyB0rY1EkMl9vdutdApgmOQIkNFzVZA8EIJiQwkcXFBWHFSa18kg==
+
 react-autosize-textarea@^7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/react-autosize-textarea/-/react-autosize-textarea-7.1.0.tgz#902c84fc395a689ca3a484dfb6bc2be9ba3694d1"

@@ -6,7 +6,7 @@ import NoteEditorLayout from '../../../components/editor/NoteEditorLayout'
 import NoteLocationBreadcrumb from '../../../components/editor/NoteLocationBreadcrumb'
 import PageLoadingIndicator from '../../../components/PageLoadingIndicator'
 import { NoteContext } from '../../../context/NoteContext'
-import { useMeQuery } from '../../../generated/graphql'
+import { Note, useMeQuery } from '../../../generated/graphql'
 import { NoteLocation } from '../../../types/types'
 import { createUrqlClient } from '../../../utils/createUrqlClient'
 import { useIsAuth } from '../../../utils/useIsAuth'
@@ -24,15 +24,35 @@ const Editor = ({ }) => {
 
    const [location, setLocation] = useState<NoteLocation>()
 
-   const { getSelectedNoteLocation } = useContext(NoteContext)
+   const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
    const selectedNoteLocation = getSelectedNoteLocation()
 
    const [user] = useMeQuery()
 
    useIsAuth(user)
 
+   const didFindNote = (): boolean => {
+      const note = localStorage.getItem('note')
+      if (!note || note === "undefined") {
+         return false;
+      }
+      return true
+   }
+
    useEffect(() => {
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
+
+      const noteLoc = JSON.parse(localStorage.getItem('noteLocation')) as NoteLocation
+
+      if (!selectedNoteLocation) {
+         selectNoteLocation({
+            noteLocation: {
+               collection: noteLoc.collection,
+               list: noteLoc.list,
+               note: didFindNote() ? JSON.parse(localStorage.getItem('note')) as Note : null
+            }
+         })
+      }
    }, [])
 
    return (
