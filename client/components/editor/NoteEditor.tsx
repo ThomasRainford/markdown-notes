@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
-import MDEditor, { commands, ICommand, TextState, TextAreaTextApi, ContextStore } from '@uiw/react-md-editor';
+import React, { useContext, useEffect, useState } from 'react'
+import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/dist/markdown-editor.css'
 import '@uiw/react-markdown-preview/dist/markdown.css';
 import { Flex, FormControl, IconButton, Input, Link, Switch, Text } from '@chakra-ui/react';
@@ -14,7 +14,7 @@ import { NoteLocation, ExactNoteLocation } from '../../types/types';
 import GoBackAlertDialog from './GoBackAlertDialog';
 import SaveAlertDialog from './SaveAlertDialog';
 import { MDEditorCommands } from '../../utils/MDEditorCommands';
-import { Autosave, useAutosave } from "react-autosave";
+import { useAutosave } from "react-autosave";
 
 type FormValues = {
    title: string
@@ -35,7 +35,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
 
    const { selectNoteLocation } = useContext(NoteContext)
 
-   const { handleSubmit, errors, register, formState, setValue, watch } = useForm<FormValues>()
+   const { handleSubmit, formState, setValue } = useForm<FormValues>()
 
    const [autosave, setAutoSave] = useState<boolean>(false)
    const [title, setTitle] = useState<string>(selectedNoteLocation.noteLocation.note.title)
