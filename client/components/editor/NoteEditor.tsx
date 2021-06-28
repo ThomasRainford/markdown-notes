@@ -38,8 +38,11 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
    const { handleSubmit, formState, setValue } = useForm<FormValues>()
 
    const [autosave, setAutoSave] = useState<boolean>(false)
-   const [title, setTitle] = useState<string>(selectedNoteLocation.noteLocation.note.title)
-   const [body, setBody] = useState<string>(selectedNoteLocation.noteLocation.note.body) // This is used to pass to the markdown component.
+
+   const [note, setNote] = useState<FormValues>({
+      title: selectedNoteLocation.noteLocation.note.title,
+      body: selectedNoteLocation.noteLocation.note.body
+   })
 
    const [saved, setSaved] = useState<boolean>(true)
    const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight * 0.8)
@@ -96,7 +99,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
    }
 
    const onSubmit = async (_noteInput: NoteInput) => {
-      const noteInput = Object.keys(_noteInput).length == 2 ? { title: _noteInput.title, body: _noteInput.body } : { title, body }
+      const noteInput = { title: _noteInput.title, body: _noteInput.body }
       console.log(noteInput)
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
       // Update note if already saved.
@@ -132,28 +135,24 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
       }
    }
 
-   useEffect(() => {
-      if (selectedNoteLocation?.noteLocation.note) {
-         setValue('title', selectedNoteLocation.noteLocation.note.title)
-         setValue('body', selectedNoteLocation.noteLocation.note.body)
-         setTitle(selectedNoteLocation.noteLocation.note.title)
-         setBody(selectedNoteLocation.noteLocation.note.body)
-      }
-   }, [selectedNoteLocation])
-
    // Set the size of the MD editor when the window is resized.
    window.addEventListener('resize', () => {
       setWindowHeight(window.innerHeight * 0.8)
    })
    console.log("change")
 
-   const updateBody = React.useCallback(async (body: string) => {
+   // Function for saving note automatically.
+   const updateNote = React.useCallback(async (note: FormValues) => {
       setSaved(true)
-      console.log(body)
-      await onSubmit({ title: selectedNoteLocation.noteLocation.note.title, body: body })
+      console.log(note)
+      await onSubmit({ title: note.title, body: note.body })
    }, [])
 
-   useAutosave({ data: body, onSave: updateBody, interval: 3000 })
+   useAutosave({ data: note, onSave: updateNote, interval: 3000 })
+
+   const setBody = (value: string) => {
+      setNote({ ...note, body: value })
+   }
 
    return (
       <>
@@ -198,7 +197,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
                </Flex>
                <FormControl mb="1em">
                   <Input
-                     value={title}
+                     value={note.title}
                      name="title"
                      placeholder="Title"
                      autoComplete="off"
@@ -208,13 +207,13 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
                      borderColor="#5CDB95"
                      bg="brand.900"
                      onChange={(event: any) => {
-                        setTitle(event.target.value as string)
+                        setNote({ ...note, title: event.target.value })
                      }}
                   />
                </FormControl>
                <FormControl mb="1em">
                   <MDEditor
-                     value={body}
+                     value={note.body}
                      height={windowHeight}
                      onChange={setBody}
                      commands={MDEditorCommands}
