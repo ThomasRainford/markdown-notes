@@ -14,32 +14,29 @@ import { NoteLocation, ExactNoteLocation } from '../../types/types';
 import GoBackAlertDialog from './GoBackAlertDialog';
 import SaveAlertDialog from './SaveAlertDialog';
 import { MDEditorCommands } from '../../utils/MDEditorCommands';
-import { useAutosave } from "react-autosave";
-
-type FormValues = {
-   title: string
-   body: string
-}
-
+import { Autosave, useAutosave } from "react-autosave";
 
 interface Props {
    user: UseQueryState<MeQuery, object>
    location: NoteLocation
    setLocation: React.Dispatch<React.SetStateAction<NoteLocation>>
-   selectedNoteLocation: ExactNoteLocation
 }
 
-const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNoteLocation }) => {
+const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
 
    const router = useRouter()
 
-   const { selectNoteLocation } = useContext(NoteContext)
+   const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
+   const selectedNoteLocation = getSelectedNoteLocation()
 
-   const { handleSubmit, formState, setValue } = useForm<FormValues>()
+   const { handleSubmit, formState, setValue, register } = useForm<NoteInput>()
 
    const [autosave, setAutoSave] = useState<boolean>(false)
-   const [title, setTitle] = useState<string>(selectedNoteLocation.noteLocation.note.title)
-   const [body, setBody] = useState<string>(selectedNoteLocation.noteLocation.note.body) // This is used to pass to the markdown component.
+
+   const [note, setNote] = useState<NoteInput>({
+      title: selectedNoteLocation.noteLocation.note?.title || "",
+      body: selectedNoteLocation.noteLocation.note?.body || ""
+   })
 
    const [saved, setSaved] = useState<boolean>(true)
    const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight * 0.8)
@@ -53,12 +50,12 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
    const [, updateNoteMutation] = useUpdateNoteMutation()
    const [, deleteNoteMutation] = useDeleteNoteMutation()
 
-   const updateSelectedNoteLocation = (note: Note) => {
+   const updateSelectedNoteLocation = (newNote: Note) => {
       selectNoteLocation({
          noteLocation: {
             collection: selectedNoteLocation.noteLocation.collection,
             list: selectedNoteLocation.noteLocation.list,
-            note
+            note: newNote
          }
       })
    }
@@ -96,19 +93,18 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
    }
 
    const onSubmit = async (_noteInput: NoteInput) => {
-      const noteInput = Object.keys(_noteInput).length == 2 ? { title: _noteInput.title, body: _noteInput.body } : { title, body }
+      const noteInput = { title: _noteInput.title, body: _noteInput.body }
       console.log(noteInput)
       setLocation(JSON.parse(localStorage.getItem('noteLocation')))
       // Update note if already saved.
       if (didFindNote()) {
          if (noteInput.title.length > 0 && noteInput.body.length > 0) {
-            console.log(selectedNoteLocation)
             const noteLocation: NoteLocationInput = {
                collectionId: selectedNoteLocation.noteLocation.collection.id,
                listId: selectedNoteLocation.noteLocation.list.id,
-               noteId: selectedNoteLocation.noteLocation.note.id
+               noteId: (JSON.parse(localStorage.getItem("note")) as Note).id
             }
-
+            console.log(noteLocation)
             const response = await updateNoteMutation({ noteLocation, noteInput })
             updateSelectedNoteLocation(response.data?.updateNote.note as Note)
             localStorage.setItem('note', JSON.stringify(response.data?.updateNote.note))
@@ -129,17 +125,9 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
 
          updateSelectedNoteLocation(response.data?.addNote.note as Note)
          localStorage.setItem('note', JSON.stringify(response.data?.addNote.note))
+         console.log(localStorage.getItem("note"))
       }
    }
-
-   useEffect(() => {
-      if (selectedNoteLocation?.noteLocation.note) {
-         setValue('title', selectedNoteLocation.noteLocation.note.title)
-         setValue('body', selectedNoteLocation.noteLocation.note.body)
-         setTitle(selectedNoteLocation.noteLocation.note.title)
-         setBody(selectedNoteLocation.noteLocation.note.body)
-      }
-   }, [selectedNoteLocation])
 
    // Set the size of the MD editor when the window is resized.
    window.addEventListener('resize', () => {
@@ -147,13 +135,20 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
    })
    console.log("change")
 
-   const updateBody = React.useCallback(async (body: string) => {
+   // Callback for auto-save.
+   const updateNote = React.useCallback(async (note: NoteInput) => {
       setSaved(true)
-      console.log(body)
-      await onSubmit({ title: selectedNoteLocation.noteLocation.note.title, body: body })
+      console.log(note)
+      await onSubmit({ title: note.title, body: note.body })
    }, [])
 
-   useAutosave({ data: body, onSave: updateBody, interval: 3000 })
+   // Register form values.
+   useEffect(() => {
+      register("title", { required: true });
+      register("body");
+      setValue("title", note.title)
+      setValue("body", note.body)
+   }, []);
 
    return (
       <>
@@ -162,6 +157,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
                <Flex mb="1em">
                   <IconButton
                      icon={<BiArrowBack />}
+                     isActive={formState.isSubmitting}
                      aria-label="Search database"
                      colorScheme="teal"
                      as={Link}
@@ -198,29 +194,33 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
                </Flex>
                <FormControl mb="1em">
                   <Input
-                     value={title}
+                     value={note.title}
                      name="title"
                      placeholder="Title"
                      autoComplete="off"
-                     //ref={register({ required: true })}
                      size="lg"
                      border="1px"
                      borderColor="#5CDB95"
                      bg="brand.900"
                      onChange={(event: any) => {
-                        setTitle(event.target.value as string)
+                        setValue("title", event.target.value)
+                        setNote((prevState) => ({ ...prevState, title: event.target.value }))
                      }}
                   />
                </FormControl>
                <FormControl mb="1em">
                   <MDEditor
-                     value={body}
+                     value={note.body}
                      height={windowHeight}
-                     onChange={setBody}
                      commands={MDEditorCommands}
+                     textareaProps={{ name: "body", placeholder: "Enter your notes here!" }}
+                     onChange={(value) => {
+                        setValue("body", value)
+                        setNote((prevState) => ({ ...prevState, body: value }))
+                     }}
                   />
-                  {/* {autosave && <Autosave data={{ title, body }} onSave={updateNote} interval={3000} />} */}
                </FormControl>
+               {autosave && <Autosave data={note} onSave={updateNote} interval={3000} />}
             </form>
          </Flex>
          <GoBackAlertDialog isOpen={isGoBackOpen} onClose={onGoBackClose} deleteNote={deleteNote} user={user} />

@@ -14,8 +14,8 @@ const NoteProvider: React.FC = ({ children }) => {
 
    //console.log('context: ', selectedNoteLocation)
 
-   const selectNoteLocation = (noteLocation: ExactNoteLocation) => {
-      setSelectedNoteLocation(noteLocation)
+   const selectNoteLocation = (exactNoteLocation: ExactNoteLocation) => {
+      setSelectedNoteLocation(exactNoteLocation)
    }
 
    const getSelectedNoteLocation = (): ExactNoteLocation => selectedNoteLocation

@@ -27,7 +27,7 @@ const ListAccordionItem: React.FC<Props> = ({ collection, list }) => {
          noteLocation: {
             collection: collection,
             list: list,
-            note: null
+            note: undefined
          }
       })
       localStorage.setItem('noteLocation', JSON.stringify({ collection, list }))
