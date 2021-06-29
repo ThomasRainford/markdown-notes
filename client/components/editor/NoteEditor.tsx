@@ -16,12 +16,6 @@ import SaveAlertDialog from './SaveAlertDialog';
 import { MDEditorCommands } from '../../utils/MDEditorCommands';
 import { Autosave, useAutosave } from "react-autosave";
 
-type FormValues = {
-   title: string
-   body: string
-}
-
-
 interface Props {
    user: UseQueryState<MeQuery, object>
    location: NoteLocation
@@ -35,11 +29,11 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
    const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
    const selectedNoteLocation = getSelectedNoteLocation()
 
-   const { handleSubmit, formState, setValue, register } = useForm<FormValues>()
+   const { handleSubmit, formState, setValue, register } = useForm<NoteInput>()
 
    const [autosave, setAutoSave] = useState<boolean>(false)
 
-   const [note, setNote] = useState<FormValues>({
+   const [note, setNote] = useState<NoteInput>({
       title: selectedNoteLocation.noteLocation.note?.title || "",
       body: selectedNoteLocation.noteLocation.note?.body || ""
    })
@@ -141,13 +135,14 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
    })
    console.log("change")
 
-   // Function for saving note automatically.
-   const updateNote = React.useCallback(async (note: FormValues) => {
+   // Callback for auto-save.
+   const updateNote = React.useCallback(async (note: NoteInput) => {
       setSaved(true)
       console.log(note)
       await onSubmit({ title: note.title, body: note.body })
    }, [])
 
+   // Register form values.
    useEffect(() => {
       register("title", { required: true });
       register("body");
@@ -162,6 +157,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                <Flex mb="1em">
                   <IconButton
                      icon={<BiArrowBack />}
+                     isActive={formState.isSubmitting}
                      aria-label="Search database"
                      colorScheme="teal"
                      as={Link}
@@ -217,7 +213,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
                      value={note.body}
                      height={windowHeight}
                      commands={MDEditorCommands}
-                     textareaProps={{ name: "body" }}
+                     textareaProps={{ name: "body", placeholder: "Enter your notes here!" }}
                      onChange={(value) => {
                         setValue("body", value)
                         setNote((prevState) => ({ ...prevState, body: value }))

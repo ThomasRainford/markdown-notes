@@ -1,9 +1,30 @@
 import Markdown from 'markdown-to-jsx'
 import React from 'react'
 import { Text } from "@chakra-ui/react"
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 interface Props {
    markdown: string
+}
+
+interface CodeProps {
+   className: string
+}
+
+const Code: React.FC<CodeProps> = ({ className, children }) => {
+   const language = className?.replace("lang-", "");
+
+   return (
+      <>
+         {language ?
+            <SyntaxHighlighter language={language} style={a11yDark}>
+               {children}
+            </SyntaxHighlighter>
+            : <code>{children}</code>
+         }
+      </>
+   );
 }
 
 const MarkdownRenderer: React.FC<Props> = ({ markdown }) => {
@@ -52,7 +73,10 @@ const MarkdownRenderer: React.FC<Props> = ({ markdown }) => {
                      fontSize: "md",
                      fontWeight: "bold"
                   }
-               }
+               },
+               code: {
+                  component: Code,
+               },
             }
          }}>
          {markdown}
