@@ -1,4 +1,4 @@
-import { Accordion, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
+import { Accordion, Divider, ExpandedIndex, Flex, Heading, Text } from '@chakra-ui/react'
 import { initUrqlClient, withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect } from 'react'
@@ -66,10 +66,11 @@ const MyNotes = ({ }) => {
                   />
                </FullCollectionsDisplayLayout>
                <NoteDisplayLayout>
-                  <Flex w="100%" pt="1em" px="2em">
+                  <Flex direction="column" w="100%" pt="1em" px="2em">
                      <Heading textColor="#05386B">
                         {selectedNoteLocation?.noteLocation.note ? selectedNoteLocation.noteLocation.note.title : "Select a Note"}
                      </Heading>
+                     <Divider orientation="horizontal" mt="1em" />
                   </Flex>
                   <Flex direction="column" w="100%" p="2em" whiteSpace="pre-wrap">
                      <MarkdownRenderer

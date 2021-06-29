@@ -15,7 +15,7 @@ interface Props {
 const Login = ({ }) => {
 
    const router = useRouter()
-   const { handleSubmit, errors, register, formState } = useForm()
+   const { handleSubmit, register, formState } = useForm()
    const [invalidLogin, setInvalidLogin] = useState<JSX.Element>(null)
 
    const [result, loginMutation] = useLoginMutation()
@@ -57,26 +57,18 @@ const Login = ({ }) => {
                      name="usernameOrEmail"
                      placeholder="Username or Email"
                      autoComplete="off"
-                     ref={register({ required: true })}
+                     {...register("usernameOrEmail", { required: true })}
                   />
-                  <FormErrorMessage>
-                     {errors.usernameOrEmail && errors.usernameOrEmail.message}
-                  </FormErrorMessage>
                </FormControl>
-
                <FormControl pb="1em">
                   <Input
                      id="password"
                      name="password"
                      placeholder="Password"
                      type="password"
-                     ref={register({ required: true })}
+                     {...register("password", { required: true })}
                   />
-                  <FormErrorMessage>
-                     {errors.password && errors.password.message}
-                  </FormErrorMessage>
                </FormControl>
-
                <Flex direction="column">
                   <NextLink href="/account/forgot-password">
                      <Button

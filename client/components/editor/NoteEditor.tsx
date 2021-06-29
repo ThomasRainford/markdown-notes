@@ -26,22 +26,22 @@ interface Props {
    user: UseQueryState<MeQuery, object>
    location: NoteLocation
    setLocation: React.Dispatch<React.SetStateAction<NoteLocation>>
-   selectedNoteLocation: ExactNoteLocation
 }
 
-const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNoteLocation }) => {
+const NoteEditor: React.FC<Props> = ({ user, location, setLocation }) => {
 
    const router = useRouter()
 
-   const { selectNoteLocation } = useContext(NoteContext)
+   const { selectNoteLocation, getSelectedNoteLocation } = useContext(NoteContext)
+   const selectedNoteLocation = getSelectedNoteLocation()
 
    const { handleSubmit, formState, setValue, register } = useForm<FormValues>()
 
    const [autosave, setAutoSave] = useState<boolean>(false)
 
    const [note, setNote] = useState<FormValues>({
-      title: selectedNoteLocation.noteLocation.note.title,
-      body: selectedNoteLocation.noteLocation.note.body
+      title: selectedNoteLocation.noteLocation.note?.title || "",
+      body: selectedNoteLocation.noteLocation.note?.body || ""
    })
 
    const [saved, setSaved] = useState<boolean>(true)
@@ -56,12 +56,12 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
    const [, updateNoteMutation] = useUpdateNoteMutation()
    const [, deleteNoteMutation] = useDeleteNoteMutation()
 
-   const updateSelectedNoteLocation = (note: Note) => {
+   const updateSelectedNoteLocation = (newNote: Note) => {
       selectNoteLocation({
          noteLocation: {
             collection: selectedNoteLocation.noteLocation.collection,
             list: selectedNoteLocation.noteLocation.list,
-            note
+            note: newNote
          }
       })
    }
@@ -108,9 +108,9 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
             const noteLocation: NoteLocationInput = {
                collectionId: selectedNoteLocation.noteLocation.collection.id,
                listId: selectedNoteLocation.noteLocation.list.id,
-               noteId: selectedNoteLocation.noteLocation.note.id
+               noteId: (JSON.parse(localStorage.getItem("note")) as Note).id
             }
-
+            console.log(noteLocation)
             const response = await updateNoteMutation({ noteLocation, noteInput })
             updateSelectedNoteLocation(response.data?.updateNote.note as Note)
             localStorage.setItem('note', JSON.stringify(response.data?.updateNote.note))
@@ -131,6 +131,7 @@ const NoteEditor: React.FC<Props> = ({ user, location, setLocation, selectedNote
 
          updateSelectedNoteLocation(response.data?.addNote.note as Note)
          localStorage.setItem('note', JSON.stringify(response.data?.addNote.note))
+         console.log(localStorage.getItem("note"))
       }
    }
 
