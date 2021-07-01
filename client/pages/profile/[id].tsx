@@ -1,9 +1,10 @@
-import { Flex } from "@chakra-ui/react"
+import { Flex, Text } from "@chakra-ui/react"
 import { initUrqlClient, withUrqlClient } from "next-urql"
 import { useRouter } from "next/router"
 import React from "react"
 import { ssrExchange, dedupExchange, cacheExchange, fetchExchange } from "urql"
 import PageLoadingIndicator from "../../components/PageLoadingIndicator"
+import ProfilePageLayout from "../../components/profile/ProfilePageLayout"
 import { useMeQuery } from "../../generated/graphql"
 import { createUrqlClient } from "../../utils/createUrqlClient"
 import { COLLECTIONS_QUERY } from "../../utils/ssr-queries/collections"
@@ -22,7 +23,23 @@ const Profile = ({ }) => {
       <>
          {!user.fetching && user.data?.me
             ?
-            <Flex></Flex>
+            <ProfilePageLayout user={user}>
+               {/* profile page layout
+               - Username, email, following, followers, stars
+               - Public collections
+               */}
+               <Flex direction="column" w="100%" align="center">
+                  <Flex direction="column">
+                     <Text>{user.data?.me?.username}</Text>
+                     <Text>{user.data?.me?.email}</Text>
+                  </Flex>
+                  <Flex>
+                     <Text m="0.5em">followers {user.data?.me?.followers?.length}</Text>
+                     <Text m="0.5em">following {user.data?.me?.following?.length}</Text>
+                     <Text m="0.5em">upvoted {user.data?.me?.upvoted?.length}</Text>
+                  </Flex>
+               </Flex>
+            </ProfilePageLayout>
             :
             <PageLoadingIndicator />
          }
