@@ -23,6 +23,7 @@ const invalidateUser = (cache: Cache) => {
    const fieldInfos = allFields.filter((info) => info.fieldName === 'user')
    fieldInfos.forEach((fi) => {
       cache.invalidate('Query', 'user', fi.arguments || null)
+      console.log('invalidate')
    })
 }
 
@@ -47,8 +48,8 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
                      invalidateMe(cache)
                   },
                   follow: (_result, _args, cache, _info) => {
-                     invalidateActivityFeed(cache)
                      invalidateUser(cache)
+                     invalidateMe(cache)
                   },
                   savePublicCollection: (_result, _args, cache, _info) => {
                      invalidateCollections(cache)
