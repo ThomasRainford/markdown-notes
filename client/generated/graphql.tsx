@@ -26,6 +26,7 @@ export type Query = {
   activityFeed?: Maybe<Array<ActivityFeedResponse>>;
   collection: CollectionResponse;
   collections: Array<Collection>;
+  userCollections: Array<Collection>;
   notesList?: Maybe<NotesList>;
   notesLists?: Maybe<Array<NotesList>>;
   note: NoteResponse;
@@ -38,13 +39,18 @@ export type QueryUserArgs = {
 
 
 export type QueryPublicNotesArgs = {
-  targetUserId: Scalars['String'];
+  username: Scalars['String'];
 };
 
 
 export type QueryCollectionArgs = {
   title?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryUserCollectionsArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -663,6 +669,30 @@ export type NoteQuery = (
   ) }
 );
 
+export type PublicNotesQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type PublicNotesQuery = (
+  { __typename?: 'Query' }
+  & { publicNotes?: Maybe<Array<(
+    { __typename?: 'Collection' }
+    & Pick<Collection, 'id' | 'title' | 'visibility' | 'upvotes' | 'createdAt'>
+    & { lists: Array<(
+      { __typename?: 'NotesList' }
+      & Pick<NotesList, 'id' | 'title'>
+      & { collection: (
+        { __typename?: 'Collection' }
+        & Pick<Collection, 'id' | 'title' | 'visibility'>
+      ), notes: Array<(
+        { __typename?: 'Note' }
+        & Pick<Note, 'id' | 'title' | 'body'>
+      )> }
+    )> }
+  )>> }
+);
+
 export type UserQueryVariables = Exact<{
   username: Scalars['String'];
 }>;
@@ -1023,6 +1053,35 @@ export const NoteDocument = gql`
 
 export function useNoteQuery(options: Omit<Urql.UseQueryArgs<NoteQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<NoteQuery>({ query: NoteDocument, ...options });
+};
+export const PublicNotesDocument = gql`
+    query PublicNotes($username: String!) {
+  publicNotes(username: $username) {
+    id
+    title
+    visibility
+    upvotes
+    lists {
+      id
+      title
+      collection {
+        id
+        title
+        visibility
+      }
+      notes {
+        id
+        title
+        body
+      }
+    }
+    createdAt
+  }
+}
+    `;
+
+export function usePublicNotesQuery(options: Omit<Urql.UseQueryArgs<PublicNotesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<PublicNotesQuery>({ query: PublicNotesDocument, ...options });
 };
 export const UserDocument = gql`
     query User($username: String!) {
