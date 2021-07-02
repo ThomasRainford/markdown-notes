@@ -29,6 +29,19 @@ export class UserResolver {
       return user
    }
 
+   @Query(() => User, { nullable: true })
+   @UseMiddleware(isAuth)
+   async user(
+      @Arg('username') username: string,
+      @Ctx() { em }: OrmContext
+   ): Promise<User | null> {
+      const repo = em.getRepository(User)
+
+      const user = await repo.findOne({ username }, ['collections'])
+
+      return user
+   }
+
    @Mutation(() => UserResponse)
    async register(
       @Arg('registerInput') registerInput: UserRegisterInput,
@@ -233,11 +246,18 @@ export class UserResolver {
       }
 
       if (me.following.includes(targetUserId)) {
+         me.following = me.following.filter((value: string) => {
+            return value !== targetUserId
+         })
+         targetUser.followers = targetUser.followers.filter((value: string) => {
+            return value !== meId
+         })
+         console.log(me.following)
          return false
+      } else {
+         me.following.push(targetUserId)
+         targetUser.followers.push(meId)
       }
-
-      me.following.push(targetUserId)
-      targetUser.followers.push(meId)
 
       await em.persistAndFlush(me)
 
@@ -303,19 +323,30 @@ export class UserResolver {
    @Query(() => [Collection], { nullable: true })
    @UseMiddleware(isAuth)
    async publicNotes(
-      @Arg('targetUserId') targetUserId: string,
-      @Ctx() { em }: OrmContext
+      @Arg('username') username: string,
+      @Ctx() { em, req }: OrmContext
    ): Promise<Collection[] | null> {
 
       const collectionsRepo = em.getRepository(Collection)
+      const repo = em.getRepository(User)
 
-      const publicCollections = await collectionsRepo.find({ owner: targetUserId }, { filters: ['visibility'] })
+      const user = await repo.findOne({ username }, ['collections'])
 
-      if (!publicCollections) {
+      let collections;
+      if (user) {
+         if (req.session.userId?.equals(user._id)) {
+            collections = collectionsRepo.find({ owner: user?.id }, ['owner', 'lists'])
+         } else {
+            collections = collectionsRepo.find<("owner" | "lists")[]>({ owner: user?.id }, { filters: ['visibility'] })
+
+         }
+      }
+
+      if (!collections) {
          return null
       }
 
-      return publicCollections
+      return collections
    }
 
    @Mutation(() => CollectionResponse)

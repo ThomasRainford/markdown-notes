@@ -98,6 +98,24 @@ export class CollectionResolver {
       return collections
    }
 
+   @Query(() => [Collection])
+   @UseMiddleware(isAuth)
+   async userCollections(
+      @Arg("id") id: string,
+      @Ctx() { em }: OrmContext
+   ): Promise<Collection[] | null> {
+
+      const repo = em.getRepository(Collection)
+
+      const collections = repo.find({ owner: id }, ['owner', 'lists'])
+
+      if (!collections) {
+         return null
+      }
+
+      return collections
+   }
+
    @Mutation(() => CollectionResponse)
    @UseMiddleware(isAuth)
    async updateCollection(
