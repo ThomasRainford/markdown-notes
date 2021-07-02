@@ -1,4 +1,4 @@
-import { Flex, List, Skeleton, Stack, Text } from "@chakra-ui/react"
+import { Divider, Flex, Icon, List, Skeleton, Stack, Text } from "@chakra-ui/react"
 import { initUrqlClient, withUrqlClient } from "next-urql"
 import { useRouter } from "next/router"
 import React from "react"
@@ -12,6 +12,10 @@ import { GetStaticProps, GetStaticPropsContext } from "next"
 import { ssrExchange, dedupExchange, cacheExchange, fetchExchange } from "urql"
 import { COLLECTIONS_QUERY } from "../../utils/ssr-queries/collections"
 import { USER_QUERY } from "../../utils/ssr-queries/user"
+import { BiUserCircle } from "react-icons/bi"
+import { AiOutlineMail } from "react-icons/ai"
+import { MdPeopleOutline } from "react-icons/md"
+import { FiThumbsUp } from "react-icons/fi"
 
 
 const Profile = ({ }) => {
@@ -35,15 +39,29 @@ const Profile = ({ }) => {
                */}
                {!profileUser.fetching && profileUser.data?.user ?
                   <Flex direction="column" w="100%" align="center">
-                     <Flex direction="column" align="center">
-                        <Flex direction="column">
-                           <Text>{profileUser.data?.user?.username}</Text>
-                           <Text>{profileUser.data?.user?.email}</Text>
+                     <Flex direction="column" align="center" mb="1.5em">
+                        <Flex direction="column" mb="1em">
+                           <Text fontSize="5xl" fontWeight="bold">{profileUser.data?.user?.username}</Text>
+                           <Flex align="center">
+                              <Icon as={AiOutlineMail} mr="0.5em" />
+                              <Text>{profileUser.data?.user?.email}</Text>
+                           </Flex>
                         </Flex>
-                        <Flex>
-                           <Text m="0.5em">followers {profileUser.data?.user?.followers?.length}</Text>
-                           <Text m="0.5em">following {profileUser.data?.user?.following?.length}</Text>
-                           <Text m="0.5em">upvoted {profileUser.data?.user?.upvoted?.length}</Text>
+                        <Flex align="center">
+                           <Icon as={MdPeopleOutline} boxSize={6} color="brand.300" />
+                           <Flex m="0.5em">
+                              <Text mr="0.4em">followers</Text>
+                              <Text fontWeight="bold">{profileUser.data?.user?.followers?.length}</Text>
+                           </Flex>
+                           <Flex m="0.5em">
+                              <Text mr="0.4em">following</Text>
+                              <Text fontWeight="bold">{profileUser.data?.user?.following?.length}</Text>
+                           </Flex>
+                           <Icon as={FiThumbsUp} boxSize={5} color="brand.300" />
+                           <Flex m="0.5em">
+                              <Text mr="0.4em">upvoted</Text>
+                              <Text fontWeight="bold">{profileUser.data?.user?.upvoted?.length}</Text>
+                           </Flex>
                         </Flex>
                      </Flex>
                      <Flex>

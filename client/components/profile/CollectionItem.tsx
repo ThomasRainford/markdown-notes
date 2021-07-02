@@ -4,7 +4,7 @@ import React from 'react'
 import { MdLock, MdLockOpen } from 'react-icons/md'
 import { UseQueryState } from 'urql'
 import { Collection, MeQuery, User, UserQuery } from '../../generated/graphql'
-import CollectionInfo from '../activity/CollectionInfo'
+import CollectionInfo from '../profile/CollectionInfo'
 
 interface Props {
    collection: Collection
@@ -19,7 +19,7 @@ const CollectionItem: React.FC<Props> = ({ collection, user, index }) => {
    return (
       <ListItem key={collection.id}>
          <Tooltip hasArrow label="Click to Open" placement="top" bg="brand.200">
-            <Flex direction="column" bg="brand.100" p="0.5em" border="1px" borderColor="brand.200" borderRadius="md"
+            <Flex direction="column" bg="brand.100" p="1em" border="1px" borderColor="brand.200" borderRadius="md"
                _hover={{ borderColor: "brand.900" }}
                onClick={() => {
                   localStorage.setItem('collectionIndex', index.toString())
@@ -34,7 +34,7 @@ const CollectionItem: React.FC<Props> = ({ collection, user, index }) => {
                <CollectionInfo collection={collection} />
             </Flex>
          </Tooltip>
-      </ListItem>
+      </ListItem >
    )
 }
 
