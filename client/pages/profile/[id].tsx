@@ -35,7 +35,7 @@ const Profile = ({ }) => {
                {!profileUser.fetching && profileUser.data?.user ?
                   <Flex direction="column" w="100%" align="center">
                      <Flex direction="column">
-                        <UserInfo profileUser={profileUser} />
+                        <UserInfo user={user} profileUser={profileUser} />
                         <UserCollections user={user} profileUser={profileUser} collections={collections} />
                      </Flex>
                   </Flex>

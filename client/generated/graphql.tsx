@@ -409,6 +409,16 @@ export type DeleteNotesListMutation = (
   & Pick<Mutation, 'deleteNotesList'>
 );
 
+export type FollowMutationVariables = Exact<{
+  targetUserId: Scalars['String'];
+}>;
+
+
+export type FollowMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'follow'>
+);
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -789,6 +799,15 @@ export const DeleteNotesListDocument = gql`
 
 export function useDeleteNotesListMutation() {
   return Urql.useMutation<DeleteNotesListMutation, DeleteNotesListMutationVariables>(DeleteNotesListDocument);
+};
+export const FollowDocument = gql`
+    mutation Follow($targetUserId: String!) {
+  follow(targetUserId: $targetUserId)
+}
+    `;
+
+export function useFollowMutation() {
+  return Urql.useMutation<FollowMutation, FollowMutationVariables>(FollowDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {

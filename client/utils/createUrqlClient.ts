@@ -18,6 +18,14 @@ const invalidateMe = (cache: Cache) => {
    })
 }
 
+const invalidateUser = (cache: Cache) => {
+   const allFields = cache.inspectFields('Query')
+   const fieldInfos = allFields.filter((info) => info.fieldName === 'user')
+   fieldInfos.forEach((fi) => {
+      cache.invalidate('Query', 'user', fi.arguments || null)
+   })
+}
+
 const invalidateCollections = (cache: Cache) => {
    const allFields = cache.inspectFields('Query')
    const fieldInfos = allFields.filter((info) => info.fieldName === 'collections')
@@ -37,6 +45,10 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
                   vote: (_result, _args, cache, _info) => {
                      invalidateActivityFeed(cache)
                      invalidateMe(cache)
+                  },
+                  follow: (_result, _args, cache, _info) => {
+                     invalidateActivityFeed(cache)
+                     invalidateUser(cache)
                   },
                   savePublicCollection: (_result, _args, cache, _info) => {
                      invalidateCollections(cache)

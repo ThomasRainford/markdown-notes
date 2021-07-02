@@ -4,6 +4,7 @@ import React from 'react'
 import { MdLock, MdLockOpen } from 'react-icons/md'
 import { UseQueryState } from 'urql'
 import { Collection, MeQuery, User, UserQuery } from '../../generated/graphql'
+import { isMyProfile } from '../../utils/isMyProfile'
 import CollectionInfo from '../profile/CollectionInfo'
 
 interface Props {
@@ -13,7 +14,19 @@ interface Props {
    index: number
 }
 
-const MyCollectionItems: React.FC<Props> = ({ collection, profileUser, user, index }) => {
+const CollectionContent: React.FC<Pick<Props, "collection">> = ({ collection }) => {
+   return (
+      <>
+         <Flex align="center">
+            <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} />
+            <Text fontSize="lg" fontWeight="bold" textColor="brand.300" mb="0.25em" ml="0.5em">{collection.title}</Text>
+         </Flex>
+         <CollectionInfo collection={collection} />
+      </>
+   )
+}
+
+const MyCollectionItems: React.FC<Props> = ({ collection, user, index }) => {
 
    const router = useRouter()
 
@@ -37,34 +50,22 @@ const MyCollectionItems: React.FC<Props> = ({ collection, profileUser, user, ind
    )
 }
 
-const OthersCollectionItems: React.FC<Props> = ({ collection, profileUser, user, index }) => {
+const OthersCollectionItems: React.FC<Pick<Props, "collection">> = ({ collection }) => {
    return (
       <Flex direction="column" w="100%" bg="brand.100" p="1em" border="1px" borderColor="brand.200" borderRadius="md">
-         <Flex align="center">
-            <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} />
-            <Text fontSize="lg" fontWeight="bold" textColor="brand.300" mb="0.25em" ml="0.5em">{collection.title}</Text>
-         </Flex>
-         <CollectionInfo collection={collection} />
+         <CollectionContent collection={collection} />
       </Flex>
    )
 }
 
 const CollectionItem: React.FC<Props> = ({ collection, profileUser, user, index }) => {
 
-   // Check if the current profile is owned by the user logged in.
-   const isMyProfile = (): boolean => {
-      if (user.data?.me?._id === profileUser.data?.user?.id) {
-         return true
-      }
-      return false
-   }
-
    return (
       <>
-         {isMyProfile() ?
+         {isMyProfile(user, profileUser) ?
             <MyCollectionItems collection={collection} profileUser={profileUser} user={user} index={index} />
             :
-            <OthersCollectionItems collection={collection} profileUser={profileUser} user={user} index={index} />
+            <OthersCollectionItems collection={collection} />
          }
       </>
    )
