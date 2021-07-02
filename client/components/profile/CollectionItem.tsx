@@ -4,11 +4,11 @@ import React from 'react'
 import { MdLock, MdLockOpen } from 'react-icons/md'
 import { UseQueryState } from 'urql'
 import { Collection, MeQuery, User, UserQuery } from '../../generated/graphql'
-import CollectionInfo from './CollectionInfo'
+import CollectionInfo from '../activity/CollectionInfo'
 
 interface Props {
    collection: Collection
-   user: UseQueryState<MeQuery, object>
+   user: UseQueryState<UserQuery, object>
    index: number
 }
 
@@ -24,7 +24,7 @@ const CollectionItem: React.FC<Props> = ({ collection, user, index }) => {
                onClick={() => {
                   localStorage.setItem('collectionIndex', index.toString())
                   localStorage.removeItem('selectedNote')
-                  router.push(`/my-notes/${user.data?.me?.username}`)
+                  router.push(`/my-notes/${user.data?.user?.username}`)
                }}
             >
                <Flex align="center">
