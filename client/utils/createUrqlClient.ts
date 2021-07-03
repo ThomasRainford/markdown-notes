@@ -23,7 +23,6 @@ const invalidateUser = (cache: Cache) => {
    const fieldInfos = allFields.filter((info) => info.fieldName === 'user')
    fieldInfos.forEach((fi) => {
       cache.invalidate('Query', 'user', fi.arguments || null)
-      console.log('invalidate')
    })
 }
 
@@ -36,8 +35,9 @@ const invalidateCollections = (cache: Cache) => {
 }
 
 export const createUrqlClient = (ssrExchange: SSRExchange) => {
+   console.log(process.env.NEXT_PUBLIC_PRODAPI)
    return {
-      url: 'https://markdown-notes-app-api.herokuapp.com/graphql',
+      url: process.env.NEXT_PUBLIC_PRODAPI,
       exchanges: [
          dedupExchange,
          cacheExchange({
