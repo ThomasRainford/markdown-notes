@@ -35,7 +35,6 @@ const invalidateCollections = (cache: Cache) => {
 }
 
 export const createUrqlClient = (ssrExchange: SSRExchange) => {
-   console.log(process.env.NEXT_PUBLIC_PRODAPI)
    return {
       url: process.env.NEXT_PUBLIC_PRODAPI,
       exchanges: [

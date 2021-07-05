@@ -18,7 +18,7 @@ const CollectionContent: React.FC<Pick<Props, "collection">> = ({ collection }) 
    return (
       <>
          <Flex align="center">
-            <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} />
+            {/* <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} /> */}
             <Text fontSize="lg" fontWeight="bold" textColor="brand.300" mb="0.25em" ml="0.5em">{collection.title}</Text>
          </Flex>
          <CollectionInfo collection={collection} />
@@ -40,11 +40,7 @@ const MyCollectionItems: React.FC<Props> = ({ collection, user, index }) => {
                router.push(`/my-notes/${user.data?.me?.username}`)
             }}
          >
-            <Flex align="center">
-               <ListIcon as={collection.visibility === 'public' ? MdLockOpen : MdLock} />
-               <Text fontSize="lg" fontWeight="bold" textColor="brand.300" mb="0.25em" ml="0.5em">{collection.title}</Text>
-            </Flex>
-            <CollectionInfo collection={collection} />
+            <CollectionContent collection={collection} />
          </Flex>
       </Tooltip>
    )

@@ -2,7 +2,6 @@ import { Divider, Flex, Icon, List, Skeleton, Stack, Text } from "@chakra-ui/rea
 import { initUrqlClient, withUrqlClient } from "next-urql"
 import { useRouter } from "next/router"
 import React from "react"
-import CollectionItem from "../../components/profile/CollectionItem"
 import PageLoadingIndicator from "../../components/PageLoadingIndicator"
 import ProfilePageLayout from "../../components/profile/ProfilePageLayout"
 import { Collection, useCollectionsQuery, useMeQuery, usePublicNotesQuery, useUserQuery } from "../../generated/graphql"
@@ -10,14 +9,13 @@ import { createUrqlClient } from "../../utils/createUrqlClient"
 import { useIsAuth } from "../../utils/useIsAuth"
 import { GetStaticPropsContext } from "next"
 import { ssrExchange, dedupExchange, cacheExchange, fetchExchange } from "urql"
-import { COLLECTIONS_QUERY } from "../../utils/ssr-queries/collections"
 import { USER_QUERY } from "../../utils/ssr-queries/user"
 import UserCollections from "../../components/profile/UserCollections"
 import UserInfo from "../../components/profile/UserInfo"
 import { PUBLICNOTES_QUERY } from "../../utils/ssr-queries/publicNotes"
 
 
-const Profile = ({ }) => {
+const Profile = () => {
 
    const router = useRouter()
 
@@ -34,7 +32,7 @@ const Profile = ({ }) => {
             <ProfilePageLayout user={user}>
                {!profileUser.fetching && profileUser.data?.user ?
                   <Flex direction="column" w="100%" align="center">
-                     <Flex direction="column">
+                     <Flex direction="row" maxW="80%" p="2em">
                         <UserInfo user={user} profileUser={profileUser} />
                         <UserCollections user={user} profileUser={profileUser} collections={collections} />
                      </Flex>

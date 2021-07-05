@@ -63,7 +63,8 @@ const NavBar: React.FC<Props> = ({ user }) => {
                <NextLink href={`/profile/${user.data?.me?.username}`}>
                   <Button
                      rightIcon={<MdAccountCircle />}
-                     colorScheme="blue"
+
+                     colorScheme="twitter"
                      variant="outline"
                      p="0.4rem"
                      mr="0.5em"

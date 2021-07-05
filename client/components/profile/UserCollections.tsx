@@ -1,4 +1,4 @@
-import { Flex, Icon, List, Text } from '@chakra-ui/react'
+import { Flex, Icon, List, SimpleGrid, Text } from '@chakra-ui/react'
 import React from 'react'
 import { UseQueryResponse, UseQueryState } from 'urql'
 import { Collection, CollectionsQuery, MeQuery, PublicNotesQuery, UserQuery } from '../../generated/graphql'
@@ -15,7 +15,7 @@ const UserCollections: React.FC<Props> = ({ user, profileUser, collections }) =>
    return (
       <Flex align="center" justify="center" w="100%">
          {!collections.fetching && collections.data?.publicNotes &&
-            <List spacing={2} py="0.5em" w="100%">
+            <SimpleGrid columns={{ lg: 2, xl: 3 }} spacing="20px">
                {
                   collections.data?.publicNotes.map((collection: Collection) => (
                      <CollectionItem
@@ -27,7 +27,7 @@ const UserCollections: React.FC<Props> = ({ user, profileUser, collections }) =>
                      />
                   ))
                }
-            </List>
+            </SimpleGrid>
          }
       </Flex>
    )

@@ -15,7 +15,7 @@ interface Props {
 
 const MyUserInfo: React.FC<Pick<Props, "profileUser">> = ({ profileUser }) => {
    return (
-      <Flex direction="column" align="center" mb="1.5em">
+      <Flex direction="column" align="center" mr="1.5em">
          <Flex direction="column" mb="1em">
             <Text fontSize="5xl" fontWeight="bold">{profileUser.data?.user?.username}</Text>
             <Flex align="center">
@@ -48,7 +48,7 @@ const OthersUserInfo: React.FC<Props> = ({ user, profileUser }) => {
    const [data, follow] = useFollowMutation()
 
    return (
-      <Flex direction="column" align="center" mb="1.5em">
+      <Flex direction="column" align="center" mr="1.5em">
          <Flex direction="column" mb="1em">
             <Text fontSize="5xl" fontWeight="bold">{profileUser.data?.user?.username}</Text>
             <Flex align="center">
@@ -59,10 +59,9 @@ const OthersUserInfo: React.FC<Props> = ({ user, profileUser }) => {
          <Flex w="100%" my="1em">
             <Button colorScheme="blue"
                w="100%"
-               disabled={data.fetching}
-               onClick={() => {
-                  console.log(profileUser.data?.user?.id)
-                  follow({ targetUserId: profileUser.data?.user?.id })
+               isLoading={data.fetching}
+               onClick={async () => {
+                  await follow({ targetUserId: profileUser.data?.user?.id })
                }}
             >
                {followed(user, profileUser) ? 'Unfollow' : 'Follow'}
