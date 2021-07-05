@@ -15,7 +15,7 @@ const UserCollections: React.FC<Props> = ({ user, profileUser, collections }) =>
    return (
       <Flex align="center" justify="center" w="100%">
          {!collections.fetching && collections.data?.publicNotes &&
-            <SimpleGrid columns={{ lg: 2, xl: 3 }} spacing="20px">
+            <SimpleGrid columns={{ lg: 2, xl: 2 }} spacing="20px">
                {
                   collections.data?.publicNotes.map((collection: Collection) => (
                      <CollectionItem

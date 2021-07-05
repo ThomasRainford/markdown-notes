@@ -32,7 +32,7 @@ const Profile = () => {
             <ProfilePageLayout user={user}>
                {!profileUser.fetching && profileUser.data?.user ?
                   <Flex direction="column" w="100%" align="center">
-                     <Flex direction="row" maxW="80%" p="2em">
+                     <Flex direction="row" maxW="85%" p="2em">
                         <UserInfo user={user} profileUser={profileUser} />
                         <UserCollections user={user} profileUser={profileUser} collections={collections} />
                      </Flex>
