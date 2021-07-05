@@ -52,6 +52,7 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
                   aria-label="Edit Note"
                   color="brand.300"
                   icon={<MdEdit />}
+                  disabled={selectedNoteLocation === undefined}
                   variant="ghost"
                   fontSize="3xl"
                   mb="0.5em"
@@ -71,6 +72,7 @@ const NoteEditorPanel: React.FC<Props> = ({ user, selectedNoteLocation }) => {
                   aria-label="Delete Note"
                   color="brand.300"
                   icon={<MdDelete />}
+                  disabled={selectedNoteLocation === undefined}
                   variant="ghost"
                   fontSize="3xl"
                   mb="0.5em"

@@ -78,9 +78,7 @@ const MyNotes = ({ }) => {
                      />
                   </Flex>
                </NoteDisplayLayout>
-               {selectedNoteLocation?.noteLocation.note &&
-                  <NoteEditorPanel user={user} selectedNoteLocation={selectedNoteLocation} />
-               }
+               <NoteEditorPanel user={user} selectedNoteLocation={selectedNoteLocation} />
             </MyNotesPageLayout>
             :
             <PageLoadingIndicator />
