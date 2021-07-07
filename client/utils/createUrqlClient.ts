@@ -18,6 +18,14 @@ const invalidateMe = (cache: Cache) => {
    })
 }
 
+const invalidateUser = (cache: Cache) => {
+   const allFields = cache.inspectFields('Query')
+   const fieldInfos = allFields.filter((info) => info.fieldName === 'user')
+   fieldInfos.forEach((fi) => {
+      cache.invalidate('Query', 'user', fi.arguments || null)
+   })
+}
+
 const invalidateCollections = (cache: Cache) => {
    const allFields = cache.inspectFields('Query')
    const fieldInfos = allFields.filter((info) => info.fieldName === 'collections')
@@ -28,7 +36,7 @@ const invalidateCollections = (cache: Cache) => {
 
 export const createUrqlClient = (ssrExchange: SSRExchange) => {
    return {
-      url: 'https://markdown-notes-app-api.herokuapp.com/graphql',
+      url: process.env.NEXT_PUBLIC_PRODAPI,
       exchanges: [
          dedupExchange,
          cacheExchange({
@@ -36,6 +44,10 @@ export const createUrqlClient = (ssrExchange: SSRExchange) => {
                Mutation: {
                   vote: (_result, _args, cache, _info) => {
                      invalidateActivityFeed(cache)
+                     invalidateMe(cache)
+                  },
+                  follow: (_result, _args, cache, _info) => {
+                     invalidateUser(cache)
                      invalidateMe(cache)
                   },
                   savePublicCollection: (_result, _args, cache, _info) => {

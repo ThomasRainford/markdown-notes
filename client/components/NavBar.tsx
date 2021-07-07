@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Divider, Flex, Heading, Icon, Link, localStorageManager, Text } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Divider, Flex, Heading, Icon, IconButton, Link, localStorageManager, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { UseQueryState } from 'urql'
 import { MeQuery, useLogoutMutation } from '../generated/graphql'
@@ -6,6 +6,7 @@ import { MdAccountCircle, MdList } from 'react-icons/md'
 import { useRef } from 'react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
+import { EmailIcon } from '@chakra-ui/icons'
 
 interface Props {
    user: UseQueryState<MeQuery, object>
@@ -59,12 +60,18 @@ const NavBar: React.FC<Props> = ({ user }) => {
                </Flex>
             </Flex>
             <Flex align="center">
-               <Flex border="2px" borderRadius="md" p="0.4rem" mr="0.5em">
-                  <Icon as={MdAccountCircle} h={6} w={6} mr="0.5em" />
-                  {!user.fetching && user.data &&
-                     <Text fontWeight="bold">{user.data.me.username}</Text>
-                  }
-               </Flex>
+               <NextLink href={`/profile/${user.data?.me?.username}`}>
+                  <Button
+                     rightIcon={<MdAccountCircle />}
+
+                     colorScheme="twitter"
+                     variant="outline"
+                     p="0.4rem"
+                     mr="0.5em"
+                  >
+                     {user.data?.me?.username}
+                  </Button>
+               </NextLink>
                <Button
                   variant="outline"
                   colorScheme="teal"

@@ -1,0 +1,23 @@
+query PublicNotes($username: String!) {
+	publicNotes(username: $username) {
+		id
+		title
+		visibility
+		upvotes
+		lists {
+			id
+			title
+			collection {
+				id
+				title
+				visibility
+			}
+			notes {
+				id
+				title
+				body
+			}
+		}
+		createdAt
+	}
+}

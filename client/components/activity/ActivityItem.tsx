@@ -70,6 +70,7 @@ const ActivityItem: React.FC<Props> = ({ activity, user }) => {
                   <Flex align="center">
                      <Button
                         size="sm"
+                        disabled={voteResult.fetching}
                         colorScheme="teal"
                         variant="solid"
                         mr="0.5em"

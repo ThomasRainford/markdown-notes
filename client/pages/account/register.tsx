@@ -15,7 +15,7 @@ interface Props {
 const Register = ({ }) => {
 
    const router = useRouter()
-   const { handleSubmit, errors, register, formState } = useForm()
+   const { handleSubmit, register, formState } = useForm()
 
    const [result, registerMutation] = useRegisterMutation()
 
@@ -38,11 +38,8 @@ const Register = ({ }) => {
                      name="email"
                      placeholder="Email"
                      autoComplete="off"
-                     ref={register({ required: true })}
+                     {...register("email", { required: true })}
                   />
-                  <FormErrorMessage>
-                     {errors.email && errors.email.message}
-                  </FormErrorMessage>
                </FormControl>
 
                <FormControl id="username" pb="1em">
@@ -50,11 +47,8 @@ const Register = ({ }) => {
                      name="username"
                      placeholder="Username"
                      autoComplete="off"
-                     ref={register({ required: true })}
+                     {...register("username", { required: true })}
                   />
-                  <FormErrorMessage>
-                     {errors.username && errors.username.message}
-                  </FormErrorMessage>
                </FormControl>
 
                <FormControl id="password" pb="1em">
@@ -62,11 +56,8 @@ const Register = ({ }) => {
                      name="password"
                      placeholder="Password"
                      type="password"
-                     ref={register({ required: true })}
+                     {...register("password", { required: true })}
                   />
-                  <FormErrorMessage>
-                     {errors.password && errors.password.message}
-                  </FormErrorMessage>
                </FormControl>
 
                <Flex direction="column" pt="1em">

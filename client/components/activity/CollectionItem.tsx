@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { MdLock, MdLockOpen } from 'react-icons/md'
 import { UseQueryState } from 'urql'
-import { Collection, MeQuery, User } from '../../generated/graphql'
+import { Collection, MeQuery, User, UserQuery } from '../../generated/graphql'
 import CollectionInfo from './CollectionInfo'
 
 interface Props {
